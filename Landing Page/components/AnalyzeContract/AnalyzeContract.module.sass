@@ -3,7 +3,6 @@
 .container
     display: flex
     gap: 32px
-    height: 100%
     background: rgba(0, 0, 0, 0.4)
     padding: 48px
     border-radius: 32px
@@ -131,19 +130,44 @@
     padding: 16px
     border: none
     border-radius: 12px
-    background: linear-gradient(135deg, #6B46C1 0%, #B83280 100%)
+    background: radial-gradient(circle at center, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 50%, rgba(248, 91, 66, 1) 100%)
     color: white
     font-size: 16px
     font-weight: 600
     cursor: pointer
     transition: all 0.3s ease
+    position: relative
+    overflow: hidden
     display: flex
     align-items: center
     justify-content: center
     gap: 8px
-    &:hover
-        opacity: 0.9
+    box-shadow: 0 6px 16px -3px #FE53B9, inset 0 4px 4px rgba(0, 0, 0, 0.3)
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        background: radial-gradient(circle at center, rgba(138, 48, 255, 0.8) 0%, rgba(248, 66, 178, 0.8) 50%, rgba(248, 91, 66, 0.8) 100%)
+        opacity: 0
+        transition: opacity 0.3s ease
+    &:after
+        content: ''
+        position: absolute
+        inset: 0px
+        border-radius: 10px
+        border: 2px solid transparent
+        background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
+        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: destination-out
+        mask-composite: exclude
+    &:hover:before
+        opacity: 1
+    span
+        position: relative
+        z-index: 1
     svg
+        position: relative
+        z-index: 1
         transition: transform 0.3s ease
     &:hover svg
         transform: translateX(4px)
