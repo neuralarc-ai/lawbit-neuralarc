@@ -6,3 +6,130 @@
 @import blocks/container
 @import blocks/titles
 @import blocks/swiper-custom
+
+*
+    box-sizing: border-box
+    padding: 0
+    margin: 0
+
+html,
+body
+    font-family: var(--font-rubik)
+    background: #1A1A1A
+    color: $n2
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+
+a
+    color: inherit
+    text-decoration: none
+
+button
+    font-family: var(--font-rubik)
+    background: none
+    border: 0
+    cursor: pointer
+
+.section
+    position: relative
+    overflow: hidden
+    &:not(:first-child)
+        margin-top: 128px
+        +d
+            margin-top: 112px
+        +t
+            margin-top: 96px
+        +m
+            margin-top: 64px
+
+.container
+    max-width: 1400px
+    margin: 0 auto
+    padding: 0 80px
+    +d
+        padding: 0 64px
+    +t
+        padding: 0 40px
+    +m
+        padding: 0 32px
+
+.h1
+    font-size: 96px
+    line-height: 1
+    font-weight: 700
+    letter-spacing: -0.03em
+    font-family: var(--font-host)
+    +d
+        font-size: 80px
+    +t
+        font-size: 64px
+    +m
+        font-size: 48px
+
+.h2
+    font-size: 48px
+    line-height: 1.1666666667
+    font-weight: 700
+    letter-spacing: -0.02em
+    font-family: var(--font-host)
+    +d
+        font-size: 40px
+    +m
+        font-size: 32px
+
+.h3
+    font-size: 32px
+    line-height: 1.25
+    font-weight: 700
+    letter-spacing: -0.02em
+    font-family: var(--font-host)
+    +m
+        font-size: 24px
+
+.h4
+    font-size: 24px
+    line-height: 1.3333333333
+    font-weight: 700
+    letter-spacing: -0.02em
+    font-family: var(--font-host)
+    +m
+        font-size: 20px
+
+.body-1
+    font-size: 24px
+    line-height: 1.5
+    +m
+        font-size: 18px
+
+.body-2
+    font-size: 16px
+    line-height: 1.5
+
+.caption-1
+    font-size: 14px
+    line-height: 1.4285714286
+
+.caption-2
+    font-size: 12px
+    line-height: 1.3333333333
+
+.hairline-1
+    font-size: 16px
+    line-height: 1
+    font-weight: 700
+    text-transform: uppercase
+    letter-spacing: 0.1em
+
+.hairline-2
+    font-size: 14px
+    line-height: 1
+    font-weight: 700
+    text-transform: uppercase
+    letter-spacing: 0.1em
+
+.hairline-3
+    font-size: 12px
+    line-height: 1
+    font-weight: 700
+    text-transform: uppercase
+    letter-spacing: 0.1em

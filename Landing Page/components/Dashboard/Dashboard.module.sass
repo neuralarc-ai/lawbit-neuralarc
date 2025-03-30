@@ -1,0 +1,89 @@
+@import @/styles/variables
+
+.dashboard
+    min-height: 100vh
+    background: #1A1A1A
+    color: $n2
+
+.header
+    padding: 24px 40px
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+    background: rgba(255, 255, 255, 0.02)
+    backdrop-filter: blur(20px)
+    .logo
+        width: 120px
+        img
+            width: 100%
+            height: auto
+
+.container
+    max-width: 1400px
+    margin: 0 auto
+    padding: 40px
+
+.tabsWrapper
+    margin-bottom: 32px
+    display: flex
+    justify-content: center
+
+.tabs
+    position: relative
+    display: flex
+    width: 320px
+    padding: 4px
+    background: rgba(18, 18, 18, 0.40)
+    border-radius: 22px
+    &:before,
+    &:after
+        content: ""
+        position: absolute
+        left: 4px
+        width: calc(50% - 4px)
+        height: 44px
+        border-radius: 18px
+        pointer-events: none
+        transition: transform .2s
+    &:before
+        background: rgba(248, 248, 248, 0.05)
+        box-shadow: 0px 4px 4px 0px rgba(255, 255, 255, 0.05) inset, 0px 8px 16px -4px rgba(18, 18, 18, 0.20)
+    &:after
+        border: 1.5px solid rgba(255, 255, 255, 0.05)
+        mask-image: linear-gradient(172deg, black, transparent 50%)
+    &[data-state="analyze"]
+        &:before,
+        &:after
+            transform: translateX(100%)
+
+.tab
+    position: relative
+    z-index: 2
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 44px
+    flex: 1
+    font-size: 15px
+    font-weight: 600
+    color: rgba($n2, .56)
+    transition: color .2s
+    background: none
+    border: none
+    cursor: pointer
+    svg
+        width: 18px
+        height: 18px
+        margin-right: 8px
+        path
+            stroke: currentColor
+    &:hover,
+    &.active
+        color: $text-primary
+
+.mainContent
+    background: rgba(255, 255, 255, 0.03)
+    border-radius: 24px
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.03)
+    backdrop-filter: blur(20px)
+    padding: 32px
+    min-height: calc(100vh - 240px) 
