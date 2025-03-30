@@ -1,17 +1,15 @@
 import cn from "classnames";
 import "@/styles/app.sass";
 import type { Metadata } from "next";
-import { Rubik } from "next/font/google";
+import { Fustat } from "next/font/google";
 import localFont from "next/font/local";
 import { Providers } from "./providers";
 
-const hostGrotesk = localFont({ src: "./fonts/HostGrotesk-Bold.woff2" });
-
-const rubik = Rubik({
-    weight: ["300", "400", "500", "600", "700"],
+const fustat = Fustat({
+    weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
     subsets: ["latin"],
     display: "block",
-    variable: "--font-rubik",
+    variable: "--font-fustat",
 });
 
 export const metadata: Metadata = {
@@ -97,7 +95,7 @@ export default function RootLayout({
                     content="Minimal to-do list app UI design kit + landing page"
                 />
             </head>
-            <body className={cn(rubik.className, hostGrotesk.className)}>
+            <body className={fustat.className}>
                 <Providers>{children}</Providers>
             </body>
         </html>

@@ -38,7 +38,7 @@ const CreateContract = () => {
             <div className={styles.formSection}>
                 <form onSubmit={handleSubmit}>
                     <div className={styles.field}>
-                        <label>Contract type</label>
+                        <label className="text-white">Contract type</label>
                         <input
                             type="text"
                             name="contractType"

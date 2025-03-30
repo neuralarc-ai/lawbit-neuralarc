@@ -15,6 +15,27 @@ const Dashboard = () => {
                 <div className={styles.logo}>
                     <img src="/images/logo.svg" alt="LawBit" />
                 </div>
+                <div className={styles.actions}>
+                    <button className={styles.headerButton}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 15V3M12 3L7 8M12 3L17 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M3 15V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        Import
+                    </button>
+                    <button className={styles.headerButton}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        New Contract
+                    </button>
+                    <button className={styles.headerButton}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 6V18M12 18L7 13M12 18L17 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        Download
+                    </button>
+                </div>
             </div>
             <div className={styles.container}>
                 <div className={styles.tabsWrapper}>
@@ -43,8 +64,10 @@ const Dashboard = () => {
                         </button>
                     </div>
                 </div>
-                <div className={styles.mainContent}>
-                    {activeTab === 'create' ? <CreateContract /> : <AnalyzeContract />}
+                <div className={styles.contentWrapper}>
+                    <div className={styles.mainContent}>
+                        {activeTab === 'create' ? <CreateContract /> : <AnalyzeContract />}
+                    </div>
                 </div>
             </div>
         </div>
