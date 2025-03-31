@@ -5,6 +5,9 @@ import styles from './History.module.sass';
 import HistoryCard from '@/components/HistoryCard';
 import cn from 'classnames';
 import Image from 'next/image';
+import StarField from '@/components/StarField';
+import { motion, AnimatePresence } from 'framer-motion';
+import Navbar from '@/components/Navbar';
 
 const mockGeneratedData = [
     {
@@ -99,22 +102,91 @@ const mockAnalyzedData = [
 const HistoryPage = () => {
     const [activeTab, setActiveTab] = useState<'generated' | 'analyzed'>('generated');
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.5,
+                ease: "easeOut"
+            }
+        }
+    };
+
+    const starfieldVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                duration: 1,
+                ease: "easeOut"
+            }
+        }
+    };
+
+    const ellipseVariants = {
+        hidden: { opacity: 0, scale: 0.8 },
+        visible: {
+            opacity: 1,
+            scale: 1,
+            transition: {
+                duration: 1.5,
+                ease: "easeOut"
+            }
+        }
+    };
+
     return (
         <div className={styles.container}>
+            <Navbar />
+            <motion.div 
+                className={styles.starfieldWrapper}
+                variants={starfieldVariants}
+                initial="hidden"
+                animate="visible"
+            >
+                <StarField />
+            </motion.div>
+            <motion.div 
+                className={styles.ellipse}
+                variants={ellipseVariants}
+                initial="hidden"
+                animate="visible"
+            >
+                <Image 
+                    src="/images/white-radial.svg"
+                    alt="Radial gradient"
+                    width={1000}
+                    height={1000}
+                    priority
+                />
+            </motion.div>
             <div className={styles.content}>
-                <div className={styles.logoWrapper}>
-                    <Image 
-                        src="/icons/lawbit-logo.svg" 
-                        alt="LawBit" 
-                        width={120} 
-                        height={40}
-                        className={styles.logo}
-                    />
-                </div>
+                <motion.h1
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                    Usage History
+                </motion.h1>
 
-                <h1>Usage History</h1>
-
-                <div className={styles.tabsWrapper}>
+                <motion.div 
+                    className={styles.tabsWrapper}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                >
                     <div className={styles.tabs} data-state={activeTab}>
                         <button 
                             className={cn(styles.tab, { [styles.active]: activeTab === 'generated' })}
@@ -143,15 +215,29 @@ const HistoryPage = () => {
                             Analyzed
                         </button>
                     </div>
-                </div>
+                </motion.div>
 
-                <div className={styles.grid}>
-                    {activeTab === 'generated' ? mockGeneratedData.map((item, index) => (
-                        <HistoryCard key={index} {...item} />
-                    )) : mockAnalyzedData.map((item, index) => (
-                        <HistoryCard key={index} {...item} />
-                    ))}
-                </div>
+                <AnimatePresence mode="wait">
+                    <motion.div 
+                        key={activeTab}
+                        className={styles.grid}
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit={{ opacity: 0, y: 20 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {activeTab === 'generated' ? mockGeneratedData.map((item, index) => (
+                            <motion.div key={index} variants={itemVariants}>
+                                <HistoryCard {...item} />
+                            </motion.div>
+                        )) : mockAnalyzedData.map((item, index) => (
+                            <motion.div key={index} variants={itemVariants}>
+                                <HistoryCard {...item} />
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                </AnimatePresence>
             </div>
         </div>
     );
