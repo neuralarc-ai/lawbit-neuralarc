@@ -1,0 +1,98 @@
+.navbar
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    z-index: 50
+    padding: 24px 0
+    background: rgba(18, 18, 18, 0.5)
+    backdrop-filter: blur(20px)
+
+.container
+    max-width: 1280px
+    margin: 0 auto
+    padding: 0 32px
+    display: flex
+    align-items: center
+    justify-content: space-between
+
+.logo
+    padding: 0 32px
+    display: flex
+    align-items: center
+
+.nav
+    display: flex
+    align-items: center
+    gap: 48px
+
+.link
+    color: rgba(255, 255, 255, 0.7)
+    text-decoration: none
+    font-size: 16px
+    font-weight: 500
+    transition: color 0.3s ease
+    &:hover
+        color: rgba(255, 255, 255, 1)
+
+.buttons
+    display: flex
+    align-items: center
+    gap: 16px
+
+.button
+    padding: 12px 24px
+    border: none
+    border-radius: 12px
+    font-size: 16px
+    font-weight: 600
+    cursor: pointer
+    transition: all 0.3s ease
+    position: relative
+    overflow: hidden
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 8px
+    color: white
+
+.loginButton
+    background: transparent
+    border: 2px solid rgba(255, 255, 255, 0.2)
+    color: rgba(255, 255, 255, 0.7)
+    transition: all 0.3s ease
+    &:hover
+        border-color: rgba(255, 255, 255, 0.4)
+        color: rgba(255, 255, 255, 1)
+
+.tryNowButton
+    background: radial-gradient(circle at center, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 50%, rgba(248, 91, 66, 1) 100%)
+    box-shadow: 0 8px 16px -4px rgba(18, 18, 18, 0.2), 0 8px 20px 3px rgba(254, 83, 185, 0.25), inset 0 4px 4px rgba(255, 255, 255, 0.05)
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        background: radial-gradient(circle at center, rgba(138, 48, 255, 0.8) 0%, rgba(248, 66, 178, 0.8) 50%, rgba(248, 91, 66, 0.8) 100%)
+        opacity: 0
+        transition: opacity 0.3s ease
+    &:after
+        content: ''
+        position: absolute
+        inset: 0px
+        border-radius: 10px
+        border: 2px solid transparent
+        background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
+        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: destination-out
+        mask-composite: exclude
+    &:hover:before
+        opacity: 1
+    span
+        position: relative
+        z-index: 1
+    svg
+        position: relative
+        z-index: 1
+        transition: transform 0.3s ease
+    &:hover svg
+        transform: translateX(4px) 

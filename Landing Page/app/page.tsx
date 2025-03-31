@@ -4,7 +4,7 @@ import React from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import styles from './page.module.sass'
-import Navbar from '@/components/Navbar'
+import LandingNavbar from '@/components/LandingNavbar'
 import Button from '@/components/Button'
 import StarField from '@/components/StarField'
 
@@ -117,7 +117,7 @@ const pricing = [
 export default function Home() {
     return (
         <main className={styles.main}>
-            <Navbar />
+            <LandingNavbar />
             
             {/* Hero Section */}
             <section className={styles.hero}>
@@ -151,7 +151,7 @@ export default function Home() {
                 </div>
                 <div className={styles.heroImage}>
                     <Image 
-                        src="/images/hero-preview.png" 
+                        src="/images/contract.svg" 
                         alt="LawBit Interface Preview"
                         width={800}
                         height={450}
