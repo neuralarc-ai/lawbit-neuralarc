@@ -11,35 +11,37 @@
     max-width: 1440px
     margin: 0 auto
     padding: 0 48px
-    display: flex
-    justify-content: space-between
+    display: grid
+    grid-template-columns: 1fr auto 1fr
     align-items: center
     position: relative
+    min-height: 40px
     @media (max-width: 768px)
         padding: 0 24px
 
 .logo
-    position: absolute
-    left: 50%
-    transform: translateX(-50%)
+    grid-column: 2
     width: 172px
     height: auto
-    z-index: 1
+    object-fit: contain
 
 .menuButton
-    position: relative
-    z-index: 2
+    grid-column: 3
+    justify-self: end
     cursor: pointer
     transition: opacity 0.2s
+    display: flex
+    align-items: center
+    height: 40px
     &:hover
         opacity: 0.8
 
 .dialogWrapper
     position: fixed
-    top: 50%
-    left: 50%
+    top: 42%
+    left: 42%
     transform: translate(-50%, -50%)
-    z-index: 1000
+    z-index: 999
     padding: 2px
     background-image: url('/images/hover-gradient.png')
     background-size: cover
@@ -47,6 +49,10 @@
     border-radius: 32px
     min-width: 320px
     max-width: 620px
+    margin: 0
+    display: flex
+    align-items: center
+    justify-content: center
 
 .dialog
     position: relative

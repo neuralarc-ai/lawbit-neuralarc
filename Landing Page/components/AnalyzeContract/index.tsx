@@ -306,9 +306,12 @@ const AnalyzeContract = () => {
                                 <div className={styles.textBox}>
                                     <p>{analysisData?.jurisdictionClause.extractedText}</p>
                                     <button className={styles.copyTextButton}>
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-2M8 5v14h12V5H8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                        </svg>
+                                        <Image 
+                                            src="/icons/copy.svg" 
+                                            alt="Copy" 
+                                            width={16} 
+                                            height={16}
+                                        />
                                     </button>
                                 </div>
                             </div>
@@ -323,9 +326,12 @@ const AnalyzeContract = () => {
                                         <p>{alternative}</p>
                                         <button className={styles.copyAltButton}>
                                             Copy
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-2M8 5v14h12V5H8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                            </svg>
+                                            <Image 
+                                                src="/icons/copy.svg" 
+                                                alt="Copy" 
+                                                width={16} 
+                                                height={16}
+                                            />
                                         </button>
                                     </div>
                                 ))}
