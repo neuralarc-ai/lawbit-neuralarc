@@ -52,8 +52,9 @@ export async function POST(request: Request) {
 
         Format the contract as a professional legal document with proper spacing, indentation, and structure. Ensure there are no markdown symbols or special characters.`;
 
-        // Generate contract using Gemini
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+        // Select model based on preference
+        const modelName = preference === 'Option A' ? 'gemini-2.0-flash' : 'gemini-2.0-flash-lite';
+        const model = genAI.getGenerativeModel({ model: modelName });
         const geminiResponse = await model.generateContent(prompt);
         const geminiText = geminiResponse.response.text();
 

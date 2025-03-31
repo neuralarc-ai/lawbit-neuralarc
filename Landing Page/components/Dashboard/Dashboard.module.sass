@@ -1,8 +1,10 @@
 @import @/styles/variables
 
 .dashboard
-    background: #1A1A1A
+    background: #202020
     color: $n2
+    min-height: 100vh
+    padding: 48px 0
 
 .header
     padding: 24px 40px
@@ -46,8 +48,17 @@
 .container
     max-width: 1400px
     margin: 0 auto
-    padding: 40px
+    padding: 0 40px
     position: relative
+
+.logoWrapper
+    display: flex
+    justify-content: center
+    margin-bottom: 48px
+
+.logo
+    width: 160px
+    height: auto
 
 .tabsWrapper
     margin-bottom: 32px
@@ -57,7 +68,7 @@
 .tabs
     position: relative
     display: flex
-    width: 320px
+    width: 40%
     padding: 4px
     background: rgba(18, 18, 18, 0.40)
     border-radius: 22px

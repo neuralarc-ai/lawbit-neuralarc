@@ -1,7 +1,9 @@
 export type ContractData = {
     contractType: string;
     firstPartyName: string;
+    firstPartyAddress?: string;
     secondPartyName: string;
+    secondPartyAddress?: string;
     jurisdiction: string;
     keyTerms: string;
     description: string;

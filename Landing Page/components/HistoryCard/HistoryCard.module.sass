@@ -1,0 +1,200 @@
+.cardWrapper
+    background: #1B1B1B
+    padding: 16px
+    border-radius: 48px
+    position: relative
+    transition: all 0.3s ease
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 48px
+        background: url('/images/hover-gradient.png') no-repeat center center / cover
+        opacity: 0
+        transition: opacity 0.3s ease
+        pointer-events: none
+    &:hover
+        &:before
+            opacity: 1
+
+.card
+    background: rgba(31, 31, 31, 0.8)
+    border-radius: 32px
+    overflow: hidden
+    height: 100%
+    transition: all 0.3s ease
+    position: relative
+    box-shadow: 0 24px 24px -16px rgba(0, 0, 0, 0.5), inset 2px 4px 32px rgba(255, 255, 255, 0.1)
+    &:hover
+        transform: translateY(-2px)
+        box-shadow: 0 24px 24px -16px rgba(5, 5, 5, 0.9), inset 0 0 32px rgba(255, 255, 255, 0.08)
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 32px
+        padding: 1px
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0))
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: destination-out
+        mask-composite: exclude
+        opacity: 0
+        transition: opacity 0.3s ease
+
+.header
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding: 24px 24px 16px 24px
+
+.icon
+    width: 40px
+    height: 40px
+    border-radius: 12px
+    background: rgba(255, 255, 255, 0.05)
+    display: flex
+    align-items: center
+    justify-content: center
+    color: rgba(255, 255, 255, 0.7)
+
+.riskBadge
+    padding: 8px 20px
+    border-radius: 50px
+    font-size: 14px
+    font-weight: 200
+    border: 1px solid #E2B922
+    background: rgba(226, 185, 34, 0.1)
+    color: #FEE176
+
+.content
+    padding: 20px
+    h3
+        margin: 0 0 8px
+        font-size: 18px
+        font-weight: 600
+        color: rgba(255, 255, 255, 0.9)
+
+.date
+    margin: 0 0 16px
+    font-size: 14px
+    color: rgba(255, 255, 255, 0.5)
+
+.statusRow
+    display: flex
+    align-items: center
+    gap: 16px
+    margin-bottom: 20px
+
+.status
+    padding: 8px 20px
+    border-radius: 50px
+    background: rgba(29, 165, 81, 0.1)
+    color: #61D18E
+    font-size: 12px
+    font-weight: 500
+
+.clauseCount
+    display: flex
+    align-items: center
+    border: 1.5px solid rgba(255, 255, 255, 0.1)
+    padding: 8px 20px
+    border-radius: 50px
+    gap: 6px
+    color: rgba(255, 255, 255, 0.6)
+    font-size: 14px
+    svg
+        color: rgba(255, 255, 255, 0.4)
+
+.riskScore
+    margin-bottom: 20px
+
+.scoreLabel
+    font-size: 14px
+    color: rgba(255, 255, 255, 0.5)
+    margin-bottom: 4px
+
+.scoreValue
+    font-size: 16px
+    font-weight: 600
+    color: white
+    margin-bottom: 8px
+
+.scoreBar
+    width: 100%
+    height: 4px
+    background: rgba(255, 255, 255, 0.1)
+    border-radius: 2px
+    overflow: hidden
+
+.scoreProgress
+    height: 100%
+    background: rgba(255, 255, 255, 0.9)
+    border-radius: 2px
+    position: relative
+    transition: width 0.3s ease
+    &:after
+        content: ''
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        background: inherit
+        filter: blur(4px)
+        opacity: 0.6
+
+.stats
+    margin-bottom: 20px
+
+.statsLabel
+    font-size: 14px
+    color: rgba(255, 255, 255, 0.5)
+    margin-bottom: 8px
+
+.statsTags
+    display: flex
+    flex-wrap: wrap
+    gap: 8px
+
+.statTag
+    padding: 8px 20px
+    border-radius: 50px
+    font-size: 14px
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    color: rgba(255, 255, 255, 0.8)
+    display: flex
+    align-items: center
+    gap: 4px
+    &.warning
+        border: 1.5px solid #DD473C
+    &.moreTag
+        background: rgba(255, 255, 255, 0.05)
+        color: rgba(255, 255, 255, 0.6)
+        font-size: 14px
+        cursor: pointer
+        transition: all 0.3s ease
+        &:hover
+            background: rgba(255, 255, 255, 0.1)
+            color: white
+
+.jurisdictionLabel
+    color: rgba(255, 255, 255, 0.5)
+
+.jurisdiction
+    font-size: 14px
+    color: rgba(255, 255, 255, 0.8)
+    span
+        color: rgba(255, 255, 255, 0.5)
+
+.moreButton
+    padding: 4px 8px
+    border-radius: 6px
+    background: rgba(255, 255, 255, 0.05)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    color: rgba(255, 255, 255, 0.6)
+    font-size: 12px
+    cursor: pointer
+    transition: all 0.3s ease
+    &:hover
+        background: rgba(255, 255, 255, 0.1)
+        color: white 

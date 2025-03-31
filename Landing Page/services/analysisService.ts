@@ -1,7 +1,17 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import * as mammoth from 'mammoth';
+import { PDFDocument } from 'pdf-lib';
 
-// Initialize Gemini API
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+// Initialize Gemini API with error checking
+const initializeGeminiAPI = () => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+        throw new Error('Gemini API key not found. Please check your environment variables.');
+    }
+    return new GoogleGenerativeAI(apiKey);
+};
+
+const genAI = initializeGeminiAPI();
 
 export interface AnalysisResponse {
     documentInfo: {
@@ -25,62 +35,122 @@ export interface AnalysisResponse {
     }>;
 }
 
+async function extractTextFromFile(file: File): Promise<string> {
+    const buffer = await file.arrayBuffer();
+    const fileType = file.type;
+
+    try {
+        switch (fileType) {
+            case 'application/pdf':
+                const pdfDoc = await PDFDocument.load(buffer);
+                let text = '';
+                for (let i = 0; i < pdfDoc.getPageCount(); i++) {
+                    const page = pdfDoc.getPage(i);
+                    const { width, height } = page.getSize();
+                    const textContent = await page.getTextContent();
+                    text += textContent + '\n';
+                }
+                return text;
+
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            case 'application/msword':
+                const result = await mammoth.extractRawText({ arrayBuffer: buffer });
+                return result.value;
+
+            case 'text/plain':
+                return new TextDecoder().decode(buffer);
+
+            default:
+                throw new Error('Unsupported file type');
+        }
+    } catch (error) {
+        console.error('Error extracting text:', error);
+        throw new Error('Failed to extract text from file');
+    }
+}
+
 export async function analyzeDocument(content: string): Promise<AnalysisResponse> {
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        if (!content || typeof content !== 'string') {
+            throw new Error('Invalid content provided for analysis');
+        }
 
-        const prompt = `Analyze the following legal document and provide a detailed analysis in JSON format exactly matching this structure:
+        const model = genAI.getGenerativeModel({ 
+            model: "gemini-2.0-flash",
+            generationConfig: {
+                temperature: 0.3,
+                topP: 0.8,
+                topK: 40,
+            }
+        });
+
+        const prompt = `You are a legal document analyzer. Analyze the following document and provide a structured analysis in valid JSON format.
+
+The response MUST follow this exact structure and be valid JSON:
 
 {
     "documentInfo": {
-        "title": "string (document title)",
-        "dateTime": "string (current date and time)",
-        "riskAssessment": "string (must be exactly one of: 'Low Risk', 'Medium Risk', 'High Risk')",
+        "title": "Document Title",
+        "dateTime": "${new Date().toISOString()}",
+        "riskAssessment": "Medium Risk",
         "keyStatistics": {
-            "highRiskItems": "number (count of high risk items found)",
-            "clausesIdentified": "number (total number of clauses found)"
+            "highRiskItems": 0,
+            "clausesIdentified": 0
         },
-        "jurisdiction": "string (jurisdiction name)"
+        "jurisdiction": "Jurisdiction Name"
     },
     "jurisdictionClause": {
-        "text": "string (the relevant jurisdiction clause text)",
-        "riskLevel": "string (must be exactly one of: 'Low Risk', 'Medium Risk', 'High Risk')"
+        "text": "Relevant jurisdiction clause",
+        "riskLevel": "Medium Risk"
     },
-    "extractedText": "string (important text that needs attention)",
+    "extractedText": "Important text that needs attention",
     "suggestedAlternatives": [
         {
-            "id": "number (1-based index)",
-            "text": "string (suggested alternative phrasing)"
+            "id": 1,
+            "text": "Alternative 1"
         }
     ]
 }
 
-Analyze this document for:
-1. Overall risk level
-2. Potentially problematic clauses
+Analyze for:
+1. Overall risk level (Low/Medium/High Risk)
+2. Problematic clauses
 3. Jurisdiction and governing law
 4. Legal compliance issues
-5. Unclear or ambiguous language
-6. Missing essential clauses
-7. Unfair or one-sided terms
-8. Provide 4 alternative phrasings for risky clauses
+5. Unclear language
+6. Missing clauses
+7. Unfair terms
+8. Provide 4 alternative phrasings
 
 Document to analyze:
 ${content}
 
-Return ONLY the JSON object with no additional text or explanation.`;
+Return ONLY valid JSON matching the above structure.`;
 
         const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const analysisText = response.text();
+        if (!result.response) {
+            throw new Error('No response received from the AI model');
+        }
         
+        const analysisText = result.response.text();
+        if (!analysisText) {
+            throw new Error('No analysis generated from the AI model');
+        }
+
         // Parse the response into structured format
         let analysis: AnalysisResponse;
         try {
-            analysis = JSON.parse(analysisText);
+            // Remove any markdown code block markers if present
+            const cleanJson = analysisText.replace(/```json\n?|\n?```/g, '').trim();
+            analysis = JSON.parse(cleanJson);
             
             // Ensure the response matches our interface
-            if (!analysis.documentInfo?.dateTime) {
+            if (!analysis.documentInfo) {
+                throw new Error('Invalid analysis format: missing documentInfo');
+            }
+
+            // Add current date if missing
+            if (!analysis.documentInfo.dateTime) {
                 analysis.documentInfo.dateTime = new Date().toISOString();
             }
             
@@ -104,42 +174,21 @@ Return ONLY the JSON object with no additional text or explanation.`;
             }
             
         } catch (error) {
-            // If parsing fails, create a structured response
-            analysis = {
-                documentInfo: {
-                    title: 'Document Analysis',
-                    dateTime: new Date().toISOString(),
-                    riskAssessment: 'Medium Risk',
-                    keyStatistics: {
-                        highRiskItems: 0,
-                        clausesIdentified: 0
-                    },
-                    jurisdiction: 'Not specified'
-                },
-                jurisdictionClause: {
-                    text: 'No jurisdiction clause found',
-                    riskLevel: 'Medium Risk'
-                },
-                extractedText: analysisText,
-                suggestedAlternatives: [
-                    { id: 1, text: 'No suggestions available' },
-                    { id: 2, text: 'No suggestions available' },
-                    { id: 3, text: 'No suggestions available' },
-                    { id: 4, text: 'No suggestions available' }
-                ]
-            };
+            console.error('Error parsing analysis:', error);
+            console.error('Raw analysis text:', analysisText);
+            throw new Error('Failed to parse analysis response');
         }
 
         return analysis;
     } catch (error) {
         console.error('Error analyzing document:', error);
-        throw new Error('Failed to analyze document');
+        throw new Error(error instanceof Error ? error.message : 'Failed to analyze document');
     }
 }
 
 export async function analyzeFile(file: File): Promise<AnalysisResponse> {
     try {
-        const content = await file.text();
+        const content = await extractTextFromFile(file);
         return analyzeDocument(content);
     } catch (error) {
         console.error('Error reading file:', error);

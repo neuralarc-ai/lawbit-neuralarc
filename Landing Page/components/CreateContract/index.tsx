@@ -6,11 +6,24 @@ import { jsPDF } from 'jspdf';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
 
+const contractTypes = [
+    'Employment Contract',
+    'Non-Disclosure Agreement',
+    'Service Agreement',
+    'Lease Agreement',
+    'Sales Contract',
+    'Partnership Agreement',
+    'Consulting Agreement',
+    'License Agreement'
+];
+
 const CreateContract = () => {
     const [contractData, setContractData] = useState<ContractData>({
         contractType: '',
         firstPartyName: '',
+        firstPartyAddress: '',
         secondPartyName: '',
+        secondPartyAddress: '',
         jurisdiction: '',
         keyTerms: '',
         description: '',
@@ -22,7 +35,7 @@ const CreateContract = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setContractData((prev: ContractData) => ({
             ...prev,
@@ -37,11 +50,29 @@ const CreateContract = () => {
         }));
     };
 
-    const handlePreferenceChange = (preference: ContractData['preference']) => {
+    const handlePreferenceChange = async (preference: ContractData['preference']) => {
         setContractData((prev: ContractData) => ({
             ...prev,
             preference
         }));
+
+        // If we have a generated contract, regenerate it with the new preference
+        if (generatedContract) {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const response = await generateContract({
+                    ...contractData,
+                    preference
+                });
+                setGeneratedContract(response);
+            } catch (err) {
+                setError('Failed to regenerate contract. Please try again.');
+                console.error('Error regenerating contract:', err);
+            } finally {
+                setIsLoading(false);
+            }
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -198,13 +229,19 @@ const CreateContract = () => {
                 <form onSubmit={handleSubmit}>
                     <div className={styles.field}>
                         <label>Contract type</label>
-                        <input
-                            type="text"
+                        <select
                             name="contractType"
                             value={contractData.contractType}
                             onChange={handleChange}
-                            placeholder="Select contract type"
-                        />
+                            className={styles.select}
+                        >
+                            <option value="">Select contract type</option>
+                            {contractTypes.map((type) => (
+                                <option key={type} value={type}>
+                                    {type}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className={styles.field}>
                         <label>First party name</label>
@@ -213,7 +250,18 @@ const CreateContract = () => {
                             name="firstPartyName"
                             value={contractData.firstPartyName}
                             onChange={handleChange}
-                            placeholder="Select contract type"
+                            placeholder="Enter first party name"
+                        />
+                    </div>
+                    <div className={styles.field}>
+                        <label>First party address (Optional)</label>
+                        <textarea
+                            name="firstPartyAddress"
+                            value={contractData.firstPartyAddress}
+                            onChange={handleChange}
+                            placeholder="Enter first party address"
+                            className={styles.addressInput}
+                            rows={3}
                         />
                     </div>
                     <div className={styles.field}>
@@ -223,7 +271,18 @@ const CreateContract = () => {
                             name="secondPartyName"
                             value={contractData.secondPartyName}
                             onChange={handleChange}
-                            placeholder="Select contract type"
+                            placeholder="Enter second party name"
+                        />
+                    </div>
+                    <div className={styles.field}>
+                        <label>Second party address (Optional)</label>
+                        <textarea
+                            name="secondPartyAddress"
+                            value={contractData.secondPartyAddress}
+                            onChange={handleChange}
+                            placeholder="Enter second party address"
+                            className={styles.addressInput}
+                            rows={3}
                         />
                     </div>
                     <div className={styles.field}>
@@ -320,7 +379,7 @@ const CreateContract = () => {
                                         color: '#FFFFFF',
                                         letterSpacing: '0.2px',
                                         textAlign: 'left',
-                                        height: '832px',
+                                        height: '1160px',
                                         width: '100%',
                                         overflowY: 'auto',
                                         boxSizing: 'border-box'
