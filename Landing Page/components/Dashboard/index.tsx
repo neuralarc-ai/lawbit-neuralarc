@@ -6,6 +6,7 @@ import AnalyzeContract from '../AnalyzeContract';
 import Image from 'next/image';
 import StarField from '@/components/StarField';
 import { motion, AnimatePresence } from 'framer-motion';
+import Navbar from '../Navbar';
 
 type TabType = 'create' | 'analyze';
 
@@ -37,6 +38,7 @@ const Dashboard = () => {
 
     return (
         <div className={styles.dashboard}>
+            <Navbar />
             <motion.div 
                 className={styles.starfieldWrapper}
                 variants={starfieldVariants}
@@ -61,25 +63,10 @@ const Dashboard = () => {
             </motion.div>
             <div className={styles.container}>
                 <motion.div 
-                    className={styles.logoWrapper}
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <Image 
-                        src="/icons/lawbit-logo.svg" 
-                        alt="LawBit" 
-                        width={120} 
-                        height={40}
-                        className={styles.logo}
-                    />
-                </motion.div>
-
-                <motion.div 
                     className={styles.tabsWrapper}
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
                 >
                     <div className={styles.tabs} data-state={activeTab}>
                         <button 
@@ -87,26 +74,26 @@ const Dashboard = () => {
                             onClick={() => setActiveTab('create')}
                         >
                             <Image 
-                                src="/icons/generated.svg" 
+                                src="/icons/document.svg" 
                                 alt="Create" 
-                                width={20} 
-                                height={20}
+                                width={28} 
+                                height={28}
                                 className={styles.tabIcon}
                             />
-                            Create Contract
+                            Create Legal Draft
                         </button>
                         <button 
                             className={cn(styles.tab, { [styles.active]: activeTab === 'analyze' })}
                             onClick={() => setActiveTab('analyze')}
                         >
                             <Image 
-                                src="/icons/analyzed.svg" 
+                                src="/icons/analyze.svg" 
                                 alt="Analyze" 
-                                width={20} 
-                                height={20}
+                                width={28} 
+                                height={28}
                                 className={styles.tabIcon}
                             />
-                            Analyze Contract
+                            Analyze Legal Agreement
                         </button>
                     </div>
                 </motion.div>
@@ -130,4 +117,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard; 
+export default Dashboard;

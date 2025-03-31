@@ -1,0 +1,88 @@
+@import @/styles/variables
+
+.navbar
+    position: relative
+    width: 100%
+    z-index: 100
+    padding: 24px 0
+    background: transparent
+
+.container
+    max-width: 1440px
+    margin: 0 auto
+    padding: 0 48px
+    display: flex
+    justify-content: space-between
+    align-items: center
+    @media (max-width: 768px)
+        padding: 0 24px
+
+.logo
+    width: 120px
+    height: auto
+
+.menuButton
+    cursor: pointer
+    transition: opacity 0.2s
+    &:hover
+        opacity: 0.8
+
+.dialogWrapper
+    position: fixed
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    z-index: 1000
+    padding: 2px
+    background-image: url('/images/hover-gradient.png')
+    background-size: cover
+    background-position: center
+    border-radius: 32px
+    min-width: 320px
+    max-width: 620px
+
+.dialog
+    position: relative
+    display: grid
+    place-items: center
+    background: rgba(36, 36, 36, 1)
+    backdrop-filter: blur(24px)
+    border-radius: 32px
+    padding: 48px
+    width: 100%
+    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.32)
+
+.overlay
+    position: fixed
+    inset: 0
+    background: rgba(0, 0, 0, 0.1)
+    backdrop-filter: blur(4px)
+    z-index: 999
+
+.menuItem
+    display: flex
+    width: 100%
+    align-items: center
+    justify-content: center
+    text-align: center
+    padding: 16px 24px
+    color: white
+    cursor: pointer
+    font-size: 20px
+    font-weight: 400
+    transition: all 0.2s
+    position: relative
+    &:hover
+        background: rgba(255, 255, 255, 0.05)
+    &:not(:last-child)
+        margin-bottom: 8px
+        &:after
+            content: ""
+            position: absolute
+            bottom: -4px
+            left: 0
+            right: 0
+            height: 1px
+            background: rgba(255, 255, 255, 0.1)
+    svg
+        display: none 

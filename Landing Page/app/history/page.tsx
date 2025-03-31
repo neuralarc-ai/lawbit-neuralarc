@@ -7,6 +7,7 @@ import cn from 'classnames';
 import Image from 'next/image';
 import StarField from '@/components/StarField';
 import { motion, AnimatePresence } from 'framer-motion';
+import Navbar from '@/components/Navbar';
 
 const mockGeneratedData = [
     {
@@ -148,6 +149,7 @@ const HistoryPage = () => {
 
     return (
         <div className={styles.container}>
+            <Navbar />
             <motion.div 
                 className={styles.starfieldWrapper}
                 variants={starfieldVariants}
@@ -171,21 +173,6 @@ const HistoryPage = () => {
                 />
             </motion.div>
             <div className={styles.content}>
-                <motion.div 
-                    className={styles.logoWrapper}
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <Image 
-                        src="/icons/lawbit-logo.svg" 
-                        alt="LawBit" 
-                        width={120} 
-                        height={40}
-                        className={styles.logo}
-                    />
-                </motion.div>
-
                 <motion.h1
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
