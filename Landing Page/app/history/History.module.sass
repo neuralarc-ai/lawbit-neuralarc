@@ -1,0 +1,96 @@
+.container
+    min-height: 100vh
+    background: #202020
+    color: white
+    padding: 48px 0
+
+.header
+    padding: 24px 48px
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+    margin-bottom: 48px
+
+.logoWrapper
+    display: flex
+    justify-content: center
+    margin-bottom: 48px
+
+.logo
+    width: 160px
+    height: auto
+
+.content
+    max-width: 1440px
+    margin: 0 auto
+    padding: 0 24px
+
+    h1
+        margin: 0 0 32px
+        font-size: 32px
+        font-weight: 600
+        background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.7))
+        -webkit-background-clip: text
+        -webkit-text-fill-color: transparent
+        text-align: center
+
+.tabsWrapper
+    margin-bottom: 32px
+    display: flex
+    justify-content: center
+
+.tabs
+    position: relative
+    display: flex
+    width: 320px
+    padding: 4px
+    background: rgba(18, 18, 18, 0.4)
+    border-radius: 22px
+    &:before,
+    &:after
+        content: ""
+        position: absolute
+        left: 4px
+        width: calc(50% - 4px)
+        height: 44px
+        border-radius: 18px
+        pointer-events: none
+        transition: transform .2s
+    &:before
+        background: rgba(248, 248, 248, 0.05)
+        box-shadow: 0px 4px 4px 0px rgba(255, 255, 255, 0.05) inset, 0px 8px 16px -4px rgba(18, 18, 18, 0.20)
+    &:after
+        border: 1.5px solid rgba(255, 255, 255, 0.05)
+        mask-image: linear-gradient(172deg, black, transparent 50%)
+    &[data-state="analyzed"]
+        &:before,
+        &:after
+            transform: translateX(100%)
+
+.tab
+    position: relative
+    z-index: 2
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 44px
+    flex: 1
+    font-size: 15px
+    font-weight: 600
+    color: rgba(255, 255, 255, 0.56)
+    transition: color .2s
+    background: none
+    border: none
+    cursor: pointer
+    .tabIcon
+        margin-right: 8px
+        opacity: 0.56
+        transition: opacity .2s
+    &:hover,
+    &.active
+        color: #fff
+        .tabIcon
+            opacity: 1
+
+.grid
+    display: grid
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))
+    gap: 24px 
