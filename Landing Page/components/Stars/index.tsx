@@ -9,6 +9,7 @@ const Stars = ({}: StarsProps) => {
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
+        const mountElement = mountRef.current;
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(
             75,
@@ -67,13 +68,13 @@ const Stars = ({}: StarsProps) => {
 
         setIsReady(true);
 
-        if (mountRef.current) {
-            mountRef.current.appendChild(renderer.domElement);
+        if (mountElement) {
+            mountElement.appendChild(renderer.domElement);
         }
 
         return () => {
-            if (mountRef.current) {
-                mountRef.current.removeChild(renderer.domElement);
+            if (mountElement) {
+                mountElement.removeChild(renderer.domElement);
             }
         };
     }, []);

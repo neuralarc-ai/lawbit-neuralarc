@@ -1,3 +1,4 @@
+import '@/utils/domMatrixPolyfill';
 import { NextRequest, NextResponse } from 'next/server';
 import { analyzeDocument } from '@/services/analysisService';
 

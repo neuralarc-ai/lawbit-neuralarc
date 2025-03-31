@@ -87,6 +87,27 @@
   resolved "https://registry.npmjs.org/@n8tb1t/use-scroll-position/-/use-scroll-position-2.0.3.tgz"
   integrity sha512-6GO4FHVJTMI4jbRHborzemuL6B319qh2cVLOLj8DApJhjyT71eLgANbQ4bNKSZ51zBm3uJ3WmqnyNF17eSsDyw==
 
+"@napi-rs/canvas-win32-x64-msvc@0.1.68":
+  version "0.1.68"
+  resolved "https://registry.npmjs.org/@napi-rs/canvas-win32-x64-msvc/-/canvas-win32-x64-msvc-0.1.68.tgz"
+  integrity sha512-Fc5Dez23u0FoSATurT6/w1oMytiRnKWEinHivdMvXpge6nG4YvhrASrtqMk8dGJMVQpHr8QJYF45rOrx2YU2Aw==
+
+"@napi-rs/canvas@^0.1.67":
+  version "0.1.68"
+  resolved "https://registry.npmjs.org/@napi-rs/canvas/-/canvas-0.1.68.tgz"
+  integrity sha512-LQESrePLEBLvhuFkXx9jjBXRC2ClYsO5mqQ1m/puth5z9SOuM3N/B3vDuqnC3RJFktDktyK9khGvo7dTkqO9uQ==
+  optionalDependencies:
+    "@napi-rs/canvas-android-arm64" "0.1.68"
+    "@napi-rs/canvas-darwin-arm64" "0.1.68"
+    "@napi-rs/canvas-darwin-x64" "0.1.68"
+    "@napi-rs/canvas-linux-arm-gnueabihf" "0.1.68"
+    "@napi-rs/canvas-linux-arm64-gnu" "0.1.68"
+    "@napi-rs/canvas-linux-arm64-musl" "0.1.68"
+    "@napi-rs/canvas-linux-riscv64-gnu" "0.1.68"
+    "@napi-rs/canvas-linux-x64-gnu" "0.1.68"
+    "@napi-rs/canvas-linux-x64-musl" "0.1.68"
+    "@napi-rs/canvas-win32-x64-msvc" "0.1.68"
+
 "@next/env@15.2.3":
   version "15.2.3"
   resolved "https://registry.npmjs.org/@next/env/-/env-15.2.3.tgz"
@@ -2487,6 +2508,13 @@ pdf-lib@^1.17.1:
     "@pdf-lib/upng" "^1.0.1"
     pako "^1.0.11"
     tslib "^1.11.1"
+
+pdfjs-dist@^5.1.91:
+  version "5.1.91"
+  resolved "https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-5.1.91.tgz"
+  integrity sha512-qSIADdagooJB4wWCBnrBJjRvASevmxL0BwafvOuKJG5uTQdYoFBrhrRYnucKNiSc9qS6JIk0hC5y1yktFljXkA==
+  optionalDependencies:
+    "@napi-rs/canvas" "^0.1.67"
 
 performance-now@^2.1.0:
   version "2.1.0"

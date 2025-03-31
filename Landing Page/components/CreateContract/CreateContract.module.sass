@@ -4,10 +4,11 @@
     display: flex
     gap: 32px
     height: 100%
-    background: rgba(0, 0, 0, 0.4)
+    background: rgba(31, 31, 31, 0.8)
     backdrop-filter: blur(150px)
     padding: 48px
     border-radius: 32px
+    box-shadow: 0 5px 1.5px -4px rgba(5, 5, 5, 0.25), 0 6px 4px -4px rgba(5, 5, 5, 0.1), 0 6px 13px 0 rgba(5, 5, 5, 0.1), 0 24px 24px -16px rgba(5, 5, 5, 0.1), inset 2px 4px 16px 0 rgba(248, 248, 248, 0.06)
 
 .formSection
     flex: 1
@@ -25,7 +26,7 @@
         width: 100%
         padding: 16px 20px
         background: rgba(18, 18, 18, 0.3)
-        border: 1px solid rgba(255, 255, 255, 0.15)
+        border: 1.5px solid rgba(255, 255, 255, 0.1)
         border-radius: 12px
         color: white
         font-size: 16px
@@ -47,6 +48,8 @@
         background-size: 20px
         padding: 16px 20px
         cursor: pointer
+        &::placeholder
+            color: rgba(255, 255, 255, 0.3)
         option
             background: #1A1A1A
             color: white
@@ -190,8 +193,8 @@
 
 .actionsSection
     display: flex
-        flex-direction: row
-    align-items: center
+    flex-direction: row
+    align-items: flex-start
     justify-content: space-between
     gap: 24px
 
@@ -208,6 +211,8 @@
 .downloadButtons
     display: flex
     gap: 12px
+    align-items: flex-end
+    height: 100%
 
 .buttonWrapper
     width: 72px
