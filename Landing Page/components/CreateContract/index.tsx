@@ -5,6 +5,8 @@ import { generateContract, ContractData, ContractResponse } from '@/services/con
 import { jsPDF } from 'jspdf';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
+import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const contractTypes = [
     'Employment Contract',
@@ -356,43 +358,95 @@ const CreateContract = () => {
             <div className={styles.rightSection}>
                 <div className={styles.previewSection}>
                     <div className={styles.previewContent}>
-                        {isLoading ? (
-                            <div className={styles.loading}>
-                                <div className={styles.spinner}></div>
-                                <p>Generating contract...</p>
-                            </div>
-                        ) : error ? (
-                            <div className={styles.error}>
-                                <p>{error}</p>
-                            </div>
-                        ) : generatedContract ? (
-                            <div className={styles.contractPreview}>
-                                <div className={styles.contractContent}>
-                                    <pre style={{ 
-                                        whiteSpace: 'pre-wrap',
-                                        fontFamily: 'inherit',
-                                        fontSize: '14px',
-                                        lineHeight: '1.8',
-                                        padding: '20px',
-                                        margin: '0',
-                                        backgroundColor: '#1A1A1A',
-                                        color: '#FFFFFF',
-                                        letterSpacing: '0.2px',
-                                        textAlign: 'left',
-                                        height: '1160px',
-                                        width: '100%',
-                                        overflowY: 'auto',
-                                        boxSizing: 'border-box'
-                                    }}>
-                                        {generatedContract.content}
-                                    </pre>
+                        <AnimatePresence mode="wait">
+                            {isLoading ? (
+                                <motion.div 
+                                    className={styles.loading}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.3, ease: "easeOut" }}
+                                >
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.2, duration: 0.3 }}
+                                    >
+                                        <Image 
+                                            src="/icons/lawbit-preview.svg" 
+                                            alt="LawBit Logo" 
+                                            width={120} 
+                                            height={120} 
+                                            className={styles.logo}
+                                        />
+                                    </motion.div>
+                                    <motion.div 
+                                        className={styles.loadingText}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.4, duration: 0.3 }}
+                                    >
+                                        Generating...
+                                    </motion.div>
+                                </motion.div>
+                            ) : error ? (
+                                <div className={styles.error}>
+                                    <p>{error}</p>
                                 </div>
-                            </div>
-                        ) : (
-                        <div className={styles.previewPlaceholder}>
-                            <img src="/images/preview-icon.svg" alt="Preview" />
-                        </div>
-                        )}
+                            ) : generatedContract ? (
+                                <div className={styles.contractPreview}>
+                                    <div className={styles.contractContent}>
+                                        <pre style={{ 
+                                            whiteSpace: 'pre-wrap',
+                                            fontFamily: 'inherit',
+                                            fontSize: '14px',
+                                            lineHeight: '1.8',
+                                            padding: '20px',
+                                            margin: '0',
+                                            backgroundColor: '#1A1A1A',
+                                            color: '#FFFFFF',
+                                            letterSpacing: '0.2px',
+                                            textAlign: 'left',
+                                            height: '1160px',
+                                            width: '100%',
+                                            overflowY: 'auto',
+                                            boxSizing: 'border-box'
+                                        }}>
+                                            {generatedContract.content}
+                                        </pre>
+                                    </div>
+                                </div>
+                            ) : (
+                            <motion.div 
+                                className={styles.previewPlaceholder}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <motion.div
+                                    initial={{ opacity: 0.5 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <Image 
+                                        src="/icons/lawbit-preview.svg" 
+                                        alt="Preview" 
+                                        width={120} 
+                                        height={120}
+                                        className={styles.previewIcon} 
+                                    />
+                                </motion.div>
+                                <motion.div 
+                                    className={styles.placeholderText}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 0.6, y: 0 }}
+                                    transition={{ delay: 0.2, duration: 0.3 }}
+                                >
+                                    This is where your results will appear...
+                                </motion.div>
+                            </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
                 <div className={styles.actionsSection}>
@@ -422,28 +476,22 @@ const CreateContract = () => {
                     <div className={styles.downloadButtons}>
                         <div className={styles.buttonWrapper}>
                             <div className={styles.buttonInner}>
-                                <button type="button" className={styles.iconButton} onClick={handleDownloadPDF}>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 3v10m0 0l-4-4m4 4l4-4m-10 7v4h12v-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
+                                <button type="button" className={styles.iconButton} onClick={handleDownloadDOCX}>
+                                    <Image src="/icons/word.svg" alt="Word" width={24} height={24} />
                                 </button>
                             </div>
                         </div>
                         <div className={styles.buttonWrapper}>
                             <div className={styles.buttonInner}>
-                                <button type="button" className={styles.iconButton} onClick={handleDownloadDOCX}>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M19 9h-4V5M5 15v4h4m10-4v4h-4M5 9h4V5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
+                                <button type="button" className={styles.iconButton} onClick={handleDownloadPDF}>
+                                    <Image src="/icons/pdf.svg" alt="PDF" width={24} height={24} />
                                 </button>
                             </div>
                         </div>
                         <div className={styles.buttonWrapper}>
                             <div className={styles.buttonInner}>
                                 <button type="button" className={styles.iconButton}>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-2M8 5v14h12V5H8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
+                                    <Image src="/icons/copy.svg" alt="Copy" width={24} height={24} />
                                 </button>
                             </div>
                         </div>
