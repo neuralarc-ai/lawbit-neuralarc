@@ -4,6 +4,7 @@ import React from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
+import cn from 'classnames'
 import styles from './page.module.sass'
 import LandingNavbar from '@/components/LandingNavbar'
 import Button from '@/components/Button'
@@ -147,15 +148,16 @@ export default function Home() {
                         className={styles.description}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
+                        transition={{ duration: 0.5, delay: 0.4 }}
                     >
                         LawBit helps startups and individuals create legal documents and analyze agreements to identify risks instantly
                     </motion.p>
+
                     <motion.div 
                         className={styles.buttons}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.4 }}
+                        transition={{ duration: 0.5, delay: 0.6 }}
                     >
                         <button 
                             className={styles.tryNowButton}
@@ -289,7 +291,7 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        Simple, <span>Transparent</span> Pricing
+                        Simple, <span>Transparent Pricing </span>
                     </motion.h2>
                     <motion.p 
                         className={styles.sectionSubtitle}
