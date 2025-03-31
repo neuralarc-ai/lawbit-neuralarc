@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './Navbar.module.sass';
 import { motion, AnimatePresence } from 'framer-motion';
+import cn from 'classnames';
 
 const Navbar = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setIsOpen(!isOpen);
+    };
 
     const handleLogout = () => {
         // Add logout logic here
-        setIsMenuOpen(false);
+        setIsOpen(false);
     };
 
     const navbarVariants = {
@@ -94,90 +100,62 @@ const Navbar = () => {
     };
 
     return (
-        <>
-            <AnimatePresence>
-                <motion.nav 
-                    className={styles.navbar}
-                    variants={navbarVariants}
-                    initial="hidden"
-                    animate="visible"
+        <nav className={styles.navbar}>
+            <div className={styles.container}>
+                <Link href="/" className={styles.logoLink}>
+                    <Image
+                        src="/icons/lawbit-preview.svg"
+                        alt="LawBit"
+                        width={78}
+                        height={78}
+                        className={styles.logo}
+                        priority
+                    />
+                </Link>
+                <button
+                    className={styles.menuButton}
+                    onClick={toggleMenu}
+                    aria-label="Toggle menu"
                 >
-                    <div className={styles.container}>
-                        <div></div>
-                        <motion.div variants={childVariants}>
-                            <Image 
-                                src="/icons/lawbit-logo.svg" 
-                                alt="LawBit" 
-                                width={160} 
-                                height={40}
-                                className={styles.logo}
-                            />
-                        </motion.div>
-                        <motion.div 
-                            className={styles.menuButton}
-                            onClick={() => setIsMenuOpen(true)}
-                            variants={childVariants}
-                            whileHover={{ opacity: 0.8 }}
-                        >
-                            <Image 
-                                src="/icons/menu.svg" 
-                                alt="Menu" 
-                                width={72} 
-                                height={72}
-                            />
-                        </motion.div>
+                    <div className={styles.menuSquare}>
+                        <div className={styles.menuCircle}>
+                            <div className={cn(styles.menuLine, { [styles.open]: isOpen })} />
+                            <div className={cn(styles.menuLine, { [styles.open]: isOpen })} />
+                        </div>
                     </div>
-                </motion.nav>
-            </AnimatePresence>
+                </button>
+            </div>
 
             <AnimatePresence>
-                {isMenuOpen && (
+                {isOpen && (
                     <>
-                        <motion.div 
+                        <motion.div
                             className={styles.overlay}
-                            variants={overlayVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            onClick={() => setIsMenuOpen(false)}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={toggleMenu}
                         />
-                        <motion.div 
-                            className={styles.dialogWrapper}
-                            variants={dialogVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
+                        <motion.div
+                            className={styles.dialog}
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.2 }}
                         >
-                            <motion.div className={styles.dialog}>
-                                <motion.div 
-                                    className={styles.menuItem}
-                                    variants={menuItemVariants}
-                                    initial="hidden"
-                                    animate="visible"
-                                    custom={0}
-                                    onClick={() => {
-                                        window.location.href = '/history';
-                                        setIsMenuOpen(false);
-                                    }}
-                                >
+                            <div className={styles.menuItems}>
+                                <a href="/history" className={styles.menuItem}>
                                     History
-                                </motion.div>
-                                <motion.div 
-                                    className={styles.menuItem}
-                                    variants={menuItemVariants}
-                                    initial="hidden"
-                                    animate="visible"
-                                    custom={1}
-                                    onClick={handleLogout}
-                                >
+                                </a>
+                                <button onClick={handleLogout} className={styles.menuItem}>
                                     Logout
-                                </motion.div>
-                            </motion.div>
+                                </button>
+                            </div>
                         </motion.div>
                     </>
                 )}
             </AnimatePresence>
-        </>
+        </nav>
     );
 };
 

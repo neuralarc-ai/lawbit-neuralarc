@@ -29,7 +29,7 @@ const LandingNavbar = () => {
                     <Image 
                         src="/images/logo.svg" 
                         alt="LawBit Logo" 
-                        width={120} 
+                        width={160} 
                         height={60}
                     />
                 </Link>

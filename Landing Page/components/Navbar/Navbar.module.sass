@@ -4,7 +4,6 @@
     position: relative
     width: 100%
     z-index: 100
-    padding: 24px 0
     background: transparent
 
 .container
@@ -19,10 +18,18 @@
     @media (max-width: 768px)
         padding: 0 24px
 
-.logo
+.logoLink
     grid-column: 2
-    width: 172px
-    height: auto
+    display: flex
+    align-items: center
+    justify-content: center
+    transition: opacity 0.2s
+    &:hover
+        opacity: 0.8
+
+.logo
+    width: 78px
+    height: 78px
     object-fit: contain
 
 .menuButton
@@ -32,20 +39,70 @@
     transition: opacity 0.2s
     display: flex
     align-items: center
-    height: 40px
+    justify-content: center
+    width: 72px
+    height: 72px
+    padding: 0
+    background: none
+    border: none
+    position: relative
     &:hover
         opacity: 0.8
 
+.menuSquare
+    width: 72px
+    height: 72px
+    background: rgba(248, 248, 248, 0.02)
+    backdrop-filter: blur(30px)
+    border-radius: 16px
+    display: flex
+    align-items: center
+    justify-content: center
+    transition: all 0.3s ease
+    position: relative
+    filter: drop-shadow(0 15px 16px rgba(0, 0, 0, 0.1))
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 16px
+        padding: 1.5px
+        background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1))
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: destination-out
+        mask-composite: exclude
+
+.menuCircle
+    width: 48px
+    height: 48px
+    background: rgba(255, 255, 255, 0.05)
+    border-radius: 50%
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    gap: 6px
+    transition: all 0.3s ease
+
+.menuLine
+    width: 24px
+    height: 2px
+    background: white
+    border-radius: 2px
+    transition: all 0.3s ease
+    transform-origin: center
+    &:first-child
+        &.open
+            transform: translateY(4px) rotate(45deg)
+    &:last-child
+        &.open
+            transform: translateY(-4px) rotate(-45deg)
+
 .dialogWrapper
-    position: fixed
+    position: relative
     top: 42%
-    left: 42%
-    transform: translate(-50%, -50%)
     z-index: 999
     padding: 2px
-    background-image: url('/images/hover-gradient.png')
-    background-size: cover
-    background-position: center
     border-radius: 32px
     min-width: 320px
     max-width: 620px
@@ -55,47 +112,53 @@
     justify-content: center
 
 .dialog
-    position: relative
-    display: grid
-    place-items: center
-    background: rgba(36, 36, 36, 1)
-    backdrop-filter: blur(24px)
-    border-radius: 32px
-    padding: 48px
-    width: 100%
-    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.32)
+    position: absolute
+    right: 48px
+    background: rgba(248, 248, 248, 0.02)
+    backdrop-filter: blur(50px)
+    border-radius: 12px
+    padding: 12px
+    width: 400px
+    box-shadow: 0 15px 50px 0 rgba(0, 0, 0, 0.4)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    overflow: hidden
+    z-index: 999
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 12px
+        padding: 1px
+        background: linear-gradient(to top right, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1))
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: xor
+        mask-composite: exclude
+        pointer-events: none
+    @media (min-width: 1440px)
+        right: calc((100vw - 1440px) / 2 + 48px)
+    @media (max-width: 768px)
+        right: 24px
 
 .overlay
     position: fixed
     inset: 0
-    background: rgba(0, 0, 0, 0.1)
-    backdrop-filter: blur(4px)
-    z-index: 999
+    background: transparent
+    z-index: 998
 
 .menuItem
     display: flex
     width: 100%
     align-items: center
-    justify-content: center
-    text-align: center
-    padding: 16px 24px
-    color: white
+    padding: 12px 16px
+    color: rgba(255, 255, 255, 0.8)
     cursor: pointer
-    font-size: 20px
+    font-size: 16px
     font-weight: 400
     transition: all 0.2s
-    position: relative
+    border-radius: 8px
     &:hover
-        background: rgba(255, 255, 255, 0.05)
+        background: rgba(0, 0, 0, 0.11)
     &:not(:last-child)
-        margin-bottom: 8px
-        &:after
-            content: ""
-            position: absolute
-            bottom: -4px
-            left: 0
-            right: 0
-            height: 1px
-            background: rgba(255, 255, 255, 0.1)
+        margin-bottom: 4px
     svg
         display: none 

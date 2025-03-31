@@ -31,6 +31,7 @@ const AnalyzeContract = () => {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
@@ -47,16 +48,24 @@ const AnalyzeContract = () => {
         setIsDragging(false);
         const droppedFile = e.dataTransfer.files[0];
         if (droppedFile) {
+            setIsUploading(true);
             setFile(droppedFile);
             setError(null);
+            setTimeout(() => {
+                setIsUploading(false);
+            }, 1000);
         }
     };
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
         if (selectedFile) {
+            setIsUploading(true);
             setFile(selectedFile);
             setError(null);
+            setTimeout(() => {
+                setIsUploading(false);
+            }, 1000);
         }
     };
 
@@ -141,7 +150,9 @@ const AnalyzeContract = () => {
                     {activeTab === 'upload' ? (
                         <div
                             className={cn(styles.dropZone, {
-                                [styles.dragging]: isDragging
+                                [styles.dragging]: isDragging,
+                                [styles.uploading]: isUploading,
+                                [styles.uploaded]: file && !isUploading
                             })}
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
@@ -163,10 +174,18 @@ const AnalyzeContract = () => {
                             />
                             <div className={styles.uploadText}>
                                 <p>
-                                    Drag and drop file or{' '}
-                                    <label htmlFor="fileInput" className={styles.chooseFile}>
-                                        Choose file
-                                    </label>
+                                    {isUploading ? (
+                                        'Uploading...'
+                                    ) : file ? (
+                                        `File uploaded: ${file.name}`
+                                    ) : (
+                                        <>
+                                            Drag and drop file or{' '}
+                                            <label htmlFor="fileInput" className={styles.chooseFile}>
+                                                Choose file
+                                            </label>
+                                        </>
+                                    )}
                                 </p>
                             </div>
                         </div>

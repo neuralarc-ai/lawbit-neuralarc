@@ -134,6 +134,15 @@ export default function Home() {
                         Simplify <span>Your Legal Workflow</span>
                         <br />with <span>AI Precision</span>
                     </motion.h1>
+                    <div className={styles.heroImage}>
+                        <Image 
+                            src="/images/contract.svg" 
+                            alt="LawBit Interface Preview"
+                            width={800}
+                            height={450}
+                            priority
+                        />
+                    </div>
                     <motion.p 
                         className={styles.description}
                         initial={{ opacity: 0, y: 20 }}
@@ -148,21 +157,19 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.4 }}
                     >
-                        <Button 
-                            title="Try Now" 
+                        <button 
+                            className={styles.tryNowButton}
                             onClick={() => router.push('/contracts')}
-                        />
-                        <Button title="Get Started" className={styles.secondary} />
+                        >
+                            <span>Try Now</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
+                        <button className={styles.loginButton}>
+                            Get Started
+                        </button>
                     </motion.div>
-                </div>
-                <div className={styles.heroImage}>
-                    <Image 
-                        src="/images/contract.svg" 
-                        alt="LawBit Interface Preview"
-                        width={800}
-                        height={450}
-                        priority
-                    />
                 </div>
             </section>
 
