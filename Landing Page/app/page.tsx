@@ -4,6 +4,7 @@ import React from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
+import cn from 'classnames'
 import styles from './page.module.sass'
 import LandingNavbar from '@/components/LandingNavbar'
 import Button from '@/components/Button'
@@ -134,35 +135,48 @@ export default function Home() {
                         Simplify <span>Your Legal Workflow</span>
                         <br />with <span>AI Precision</span>
                     </motion.h1>
-                    <motion.p 
-                        className={styles.description}
+
+                    <motion.div 
+                        className={styles.heroImage}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
-                        LawBit helps startups and individuals create legal documents and analyze agreements to identify risks instantly
-                    </motion.p>
-                    <motion.div 
-                        className={styles.buttons}
+                        <Image 
+                            src="/images/contract.svg" 
+                            alt="LawBit Interface Preview"
+                            width={800}
+                            height={450}
+                            priority
+                        />
+                    </motion.div>
+
+                    <motion.p 
+                        className={styles.description}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.4 }}
                     >
-                        <Button 
-                            title="Try Now" 
+                        LawBit helps startups and individuals create legal documents and analyze agreements to identify risks instantly
+                    </motion.p>
+
+                    <motion.div 
+                        className={styles.buttons}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.6 }}
+                    >
+                        <button 
+                            className={cn(styles.button, styles.tryNowButton)}
                             onClick={() => router.push('/contracts')}
-                        />
+                        >
+                            <span>Try Now</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
                         <Button title="Get Started" className={styles.secondary} />
                     </motion.div>
-                </div>
-                <div className={styles.heroImage}>
-                    <Image 
-                        src="/images/contract.svg" 
-                        alt="LawBit Interface Preview"
-                        width={800}
-                        height={450}
-                        priority
-                    />
                 </div>
             </section>
 
