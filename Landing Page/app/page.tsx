@@ -3,6 +3,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import styles from './page.module.sass'
 import LandingNavbar from '@/components/LandingNavbar'
 import Button from '@/components/Button'
@@ -115,6 +116,8 @@ const pricing = [
 ]
 
 export default function Home() {
+    const router = useRouter()
+
     return (
         <main className={styles.main}>
             <LandingNavbar />
@@ -145,7 +148,10 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.4 }}
                     >
-                        <Button title="Try Now" />
+                        <Button 
+                            title="Try Now" 
+                            onClick={() => router.push('/contracts')}
+                        />
                         <Button title="Get Started" className={styles.secondary} />
                     </motion.div>
                 </div>
@@ -161,7 +167,7 @@ export default function Home() {
             </section>
 
             {/* Features Section */}
-            <section className={styles.features}>
+            <section id="features" className={styles.features}>
                 <div className={styles.container}>
                     <div className={styles.featureGrid}>
                         {features.map((feature, index) => (
@@ -187,7 +193,7 @@ export default function Home() {
             </section>
 
             {/* Benefits Section */}
-            <section className={styles.benefits}>
+            <section id="benefits" className={styles.benefits}>
                 <div className={styles.container}>
                     <motion.h2 
                         className={styles.sectionTitle}
@@ -229,7 +235,7 @@ export default function Home() {
             </section>
 
             {/* Testimonials Section */}
-            <section className={styles.testimonials}>
+            <section id="testimonials" className={styles.testimonials}>
                 <div className={styles.container}>
                     <motion.h2 
                         className={styles.sectionTitle}
@@ -268,7 +274,7 @@ export default function Home() {
             </section>
 
             {/* Pricing Section */}
-            <section className={styles.pricing}>
+            <section id="pricing" className={styles.pricing}>
                 <div className={styles.container}>
                     <motion.h2 
                         className={styles.sectionTitle}
