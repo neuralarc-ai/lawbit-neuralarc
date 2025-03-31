@@ -1,6 +1,10 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import * as mammoth from 'mammoth';
 import { PDFDocument } from 'pdf-lib';
+import * as pdfjsLib from 'pdfjs-dist';
+
+// Initialize PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 // Initialize Gemini API with error checking
 const initializeGeminiAPI = () => {
@@ -42,13 +46,16 @@ async function extractTextFromFile(file: File): Promise<string> {
     try {
         switch (fileType) {
             case 'application/pdf':
-                const pdfDoc = await PDFDocument.load(buffer);
+                const pdfData = new Uint8Array(buffer);
+                const loadingTask = pdfjsLib.getDocument({ data: pdfData });
+                const pdf = await loadingTask.promise;
                 let text = '';
-                for (let i = 0; i < pdfDoc.getPageCount(); i++) {
-                    const page = pdfDoc.getPage(i);
-                    const { width, height } = page.getSize();
-                    const textContent = await page.getTextContent();
-                    text += textContent + '\n';
+                
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const content = await page.getTextContent();
+                    const strings = content.items.map((item: any) => item.str);
+                    text += strings.join(' ') + '\n';
                 }
                 return text;
 

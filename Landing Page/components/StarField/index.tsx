@@ -5,8 +5,6 @@ import styles from "./StarField.module.sass";
 type StarFieldProps = {};
 
 const StarField = ({}: StarFieldProps) => {
-    const sizes = [2, 2, 1, 1, 1];
-
     const randomPosition = (min: number, max: number) => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
@@ -14,6 +12,7 @@ const StarField = ({}: StarFieldProps) => {
     const [stars, setStars] = useState<JSX.Element[]>([]);
 
     useEffect(() => {
+        const sizes = [2, 2, 1, 1, 1];
         const newStars = [];
         for (let i = 0; i < 200; i++) {
             const top = randomPosition(1, 100);
