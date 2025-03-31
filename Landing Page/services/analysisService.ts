@@ -58,9 +58,17 @@ async function extractTextFromFile(file: File): Promise<string> {
                 const loadingTask = pdfjsLib.getDocument({ data: pdfData });
                 const pdf = await loadingTask.promise;
                 let text = '';
-                // For PDF-lib, we don't have direct text extraction
-                // Instead, return a placeholder message
-                return `[PDF content extracted - ${pdfDoc.getPageCount()} pages]`;
+                
+                // Extract text from all pages
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const content = await page.getTextContent();
+                    const pageText = content.items
+                        .map((item: any) => item.str)
+                        .join(' ');
+                    text += pageText + '\n';
+                }
+                return text;
 
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
             case 'application/msword':
