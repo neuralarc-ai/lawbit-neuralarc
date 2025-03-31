@@ -1,0 +1,229 @@
+@import @/styles/variables
+
+.main
+    min-height: 100vh
+    background: #1A1A1A
+    color: white
+    overflow-x: hidden
+
+.container
+    max-width: 1440px
+    margin: 0 auto
+    padding: 0 48px
+    @media (max-width: 768px)
+        padding: 0 24px
+
+// Hero Section
+.hero
+    position: relative
+    padding: 120px 0
+    overflow: hidden
+    .container
+        display: flex
+        flex-direction: column
+        align-items: center
+        text-align: center
+
+.title
+    font-size: 64px
+    line-height: 1.2
+    margin-bottom: 24px
+    span
+        background: linear-gradient(90deg, #FF3B3B 0%, #FF3B77 50%, #FF3BD3 100%)
+        -webkit-background-clip: text
+        -webkit-text-fill-color: transparent
+    @media (max-width: 768px)
+        font-size: 40px
+
+.description
+    font-size: 20px
+    line-height: 1.5
+    color: rgba(255, 255, 255, 0.7)
+    max-width: 600px
+    margin-bottom: 40px
+    @media (max-width: 768px)
+        font-size: 16px
+
+.buttons
+    display: flex
+    gap: 16px
+    margin-bottom: 64px
+
+.heroImage
+    position: relative
+    width: 100%
+    max-width: 1200px
+    margin: 0 auto
+    img
+        width: 100%
+        height: auto
+        border-radius: 24px
+        border: 1px solid rgba(255, 255, 255, 0.1)
+
+// Features Section
+.features
+    padding: 120px 0
+    background: rgba(255, 255, 255, 0.02)
+
+.featureGrid
+    display: grid
+    grid-template-columns: repeat(3, 1fr)
+    gap: 32px
+    @media (max-width: 1024px)
+        grid-template-columns: repeat(2, 1fr)
+    @media (max-width: 768px)
+        grid-template-columns: 1fr
+
+.featureCard
+    background: rgba(255, 255, 255, 0.03)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    border-radius: 24px
+    padding: 32px
+    transition: all 0.3s ease
+    &:hover
+        transform: translateY(-4px)
+        background: rgba(255, 255, 255, 0.05)
+    h3
+        font-size: 24px
+        margin: 24px 0 16px
+    p
+        color: rgba(255, 255, 255, 0.7)
+        line-height: 1.6
+
+// Benefits Section
+.benefits
+    padding: 120px 0
+
+.sectionTitle
+    font-size: 48px
+    text-align: center
+    margin-bottom: 16px
+    span
+        background: linear-gradient(90deg, #FF3B3B 0%, #FF3B77 50%, #FF3BD3 100%)
+        -webkit-background-clip: text
+        -webkit-text-fill-color: transparent
+    @media (max-width: 768px)
+        font-size: 32px
+
+.sectionSubtitle
+    font-size: 20px
+    text-align: center
+    color: rgba(255, 255, 255, 0.7)
+    margin-bottom: 64px
+    @media (max-width: 768px)
+        font-size: 16px
+
+.benefitsGrid
+    display: grid
+    grid-template-columns: repeat(2, 1fr)
+    gap: 32px
+    @media (max-width: 768px)
+        grid-template-columns: 1fr
+
+.benefitCard
+    background: rgba(255, 255, 255, 0.03)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    border-radius: 24px
+    padding: 32px
+    h3
+        font-size: 24px
+        margin: 24px 0 16px
+    p
+        color: rgba(255, 255, 255, 0.7)
+        line-height: 1.6
+
+// Testimonials Section
+.testimonials
+    padding: 120px 0
+    background: rgba(255, 255, 255, 0.02)
+
+.testimonialGrid
+    display: grid
+    grid-template-columns: repeat(3, 1fr)
+    gap: 32px
+    @media (max-width: 1024px)
+        grid-template-columns: repeat(2, 1fr)
+    @media (max-width: 768px)
+        grid-template-columns: 1fr
+
+.testimonialCard
+    background: rgba(255, 255, 255, 0.03)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    border-radius: 24px
+    padding: 32px
+    p
+        font-size: 18px
+        line-height: 1.6
+        color: rgba(255, 255, 255, 0.9)
+        margin-bottom: 24px
+    .author
+        h4
+            font-size: 20px
+            margin-bottom: 4px
+        p
+            font-size: 16px
+            color: rgba(255, 255, 255, 0.6)
+            margin: 0
+
+// Pricing Section
+.pricing
+    padding: 120px 0
+
+.pricingGrid
+    display: grid
+    grid-template-columns: repeat(3, 1fr)
+    gap: 32px
+    @media (max-width: 1024px)
+        grid-template-columns: repeat(2, 1fr)
+    @media (max-width: 768px)
+        grid-template-columns: 1fr
+
+.pricingCard
+    position: relative
+    background: rgba(255, 255, 255, 0.03)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    border-radius: 24px
+    padding: 32px
+    &.popular
+        background: linear-gradient(135deg, rgba(255, 59, 59, 0.1) 0%, rgba(255, 59, 211, 0.1) 100%)
+        border: 1px solid rgba(255, 59, 59, 0.2)
+
+.popularBadge
+    position: absolute
+    top: -12px
+    left: 50%
+    transform: translateX(-50%)
+    background: linear-gradient(90deg, #FF3B3B 0%, #FF3B77 50%, #FF3BD3 100%)
+    padding: 4px 16px
+    border-radius: 16px
+    font-size: 14px
+    font-weight: 500
+
+.price
+    margin: 24px 0
+    .amount
+        font-size: 48px
+        font-weight: 600
+    .period
+        font-size: 20px
+        color: rgba(255, 255, 255, 0.6)
+
+.planDescription
+    font-size: 18px
+    color: rgba(255, 255, 255, 0.7)
+    margin-bottom: 32px
+
+.features
+    list-style: none
+    padding: 0
+    margin: 0 0 32px
+    li
+        position: relative
+        padding-left: 28px
+        margin-bottom: 16px
+        color: rgba(255, 255, 255, 0.8)
+        &:before
+            content: "✓"
+            position: absolute
+            left: 0
+            color: #FF3B77 
