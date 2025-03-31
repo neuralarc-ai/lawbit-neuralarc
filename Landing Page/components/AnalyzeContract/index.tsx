@@ -3,6 +3,7 @@ import cn from 'classnames';
 import styles from './AnalyzeContract.module.sass';
 import { AnalysisResponse } from '@/services/analysisService';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import Image from 'next/image';
 
 type AnalysisData = {
     documentName: string;
@@ -135,9 +136,51 @@ const AnalyzeContract = () => {
 
     return (
         <div className={styles.container}>
-            {!showAnalysis ? (
-                <div className={styles.mainContent}>
-                    <div className={styles.uploadContainer}>
+            <div className={styles.mainContent}>
+                <div className={styles.uploadContainer}>
+                    {activeTab === 'upload' ? (
+                        <div
+                            className={cn(styles.dropZone, {
+                                [styles.dragging]: isDragging
+                            })}
+                            onDragOver={handleDragOver}
+                            onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
+                        >
+                            <input
+                                type="file"
+                                onChange={handleFileSelect}
+                                className={styles.fileInput}
+                                accept=".txt,.doc,.docx,.pdf"
+                                id="fileInput"
+                            />
+                            <Image 
+                                src="/icons/upload.svg" 
+                                alt="Upload" 
+                                width={70} 
+                                height={70}
+                                className={styles.uploadIcon}
+                            />
+                            <div className={styles.uploadText}>
+                                <p>
+                                    Drag and drop file or{' '}
+                                    <label htmlFor="fileInput" className={styles.chooseFile}>
+                                        Choose file
+                                    </label>
+                                </p>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={styles.pasteZone}>
+                            <textarea
+                                placeholder="Paste your text here..."
+                                value={text}
+                                onChange={handleTextChange}
+                            />
+                        </div>
+                    )}
+                    
+                    <div className={styles.actionsRow}>
                         <div className={styles.tabSelector}>
                             <button
                                 type="button"
@@ -164,52 +207,6 @@ const AnalyzeContract = () => {
                                 Paste Text
                             </button>
                         </div>
-                        
-                        {activeTab === 'upload' ? (
-                            <div
-                                className={cn(styles.dropZone, {
-                                    [styles.dragging]: isDragging
-                                })}
-                                onDragOver={handleDragOver}
-                                onDragLeave={handleDragLeave}
-                                onDrop={handleDrop}
-                            >
-                                <input
-                                    type="file"
-                                    onChange={handleFileSelect}
-                                    className={styles.fileInput}
-                                    accept=".txt,.doc,.docx,.pdf"
-                                />
-                                <div className={styles.uploadIcon}>
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                                    </svg>
-                                </div>
-                                <div className={styles.uploadText}>
-                                    <p className={styles.mainText}>
-                                        {file ? file.name : 'Drag and drop file or Choose file'}
-                                    </p>
-                                    <p className={styles.subText}>
-                                        Supported formats: .txt, .doc, .docx, .pdf (Max 10MB)
-                                    </p>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className={styles.pasteZone}>
-                                <textarea
-                                    placeholder="Paste your text here..."
-                                    className={styles.pasteInput}
-                                    value={text}
-                                    onChange={handleTextChange}
-                                />
-                            </div>
-                        )}
-                        
-                        {error && (
-                            <div className={styles.error}>
-                                {error}
-                            </div>
-                        )}
 
                         <button 
                             type="button" 
@@ -219,14 +216,22 @@ const AnalyzeContract = () => {
                             onClick={handleAnalyze}
                             disabled={isAnalyzing}
                         >
-                            <span>{isAnalyzing ? 'Analyzing...' : 'Analyze your document now'}</span>
+                            <span>{isAnalyzing ? 'Analyzing...' : 'Analyze your document now    '}</span>
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
                     </div>
+
+                    {error && (
+                        <div className={styles.error}>
+                            {error}
+                        </div>
+                    )}
                 </div>
-            ) : (
+            </div>
+
+            {showAnalysis && (
                 <div className={styles.analysisContent}>
                     <div className={styles.documentInfo}>
                         <div className={styles.documentContainer}>

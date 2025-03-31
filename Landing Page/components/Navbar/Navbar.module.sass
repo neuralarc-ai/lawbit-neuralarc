@@ -14,14 +14,21 @@
     display: flex
     justify-content: space-between
     align-items: center
+    position: relative
     @media (max-width: 768px)
         padding: 0 24px
 
 .logo
+    position: absolute
+    left: 50%
+    transform: translateX(-50%)
     width: 172px
     height: auto
+    z-index: 1
 
 .menuButton
+    position: relative
+    z-index: 2
     cursor: pointer
     transition: opacity 0.2s
     &:hover
