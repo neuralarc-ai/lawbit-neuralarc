@@ -1,37 +1,38 @@
 import { useState } from 'react';
 import cn from 'classnames';
 import styles from './AnalyzeContract.module.sass';
-import { AnalysisResponse } from '@/services/analysisService';
+import { AnalysisResponse, ClauseAnalysis, SuggestedAlternative } from '@/services/analysisService';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import Image from 'next/image';
-
-type AnalysisData = {
-    documentName: string;
-    dateTime: string;
-    riskAssessment: 'Low Risk' | 'Medium Risk' | 'High Risk';
-    keyStatistics: {
-        highRiskItems: number;
-        timeToReview: string;
-        jurisdiction: string;
-    };
-    jurisdictionClause: {
-        text: string;
-        extractedText: string;
-        riskLevel: 'Low Risk' | 'Medium Risk' | 'High Risk';
-    };
-    suggestedAlternatives: string[];
-};
 
 const AnalyzeContract = () => {
     const [file, setFile] = useState<File | null>(null);
     const [text, setText] = useState('');
     const [isDragging, setIsDragging] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
     const [activeTab, setActiveTab] = useState<'upload' | 'paste'>('upload');
     const [showAnalysis, setShowAnalysis] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
-    const [isUploading, setIsUploading] = useState(false);
+    const [analysisData, setAnalysisData] = useState<AnalysisResponse | null>(null);
+    const [expandedAlternative, setExpandedAlternative] = useState<{[key: string]: number | null}>({});
+
+    const clauseTitles = [
+        "Termination Clause",
+        "Limitation of liability",
+        "Jurisdiction Clause"
+    ];
+
+    // Toggle expanded state for an alternative
+    const toggleExpandAlternative = (clauseIndex: number, alternativeId: number) => {
+        setExpandedAlternative(prev => {
+            const key = `clause-${clauseIndex}`;
+            return {
+                ...prev,
+                [key]: prev[key] === alternativeId ? null : alternativeId
+            };
+        });
+    };
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
@@ -74,25 +75,6 @@ const AnalyzeContract = () => {
         setError(null);
     };
 
-    const convertAnalysisToDisplayFormat = (analysis: AnalysisResponse): AnalysisData => {
-        return {
-            documentName: analysis.documentInfo.title,
-            dateTime: new Date(analysis.documentInfo.dateTime).toLocaleString(),
-            riskAssessment: analysis.documentInfo.riskAssessment,
-            keyStatistics: {
-                highRiskItems: analysis.documentInfo.keyStatistics.highRiskItems,
-                timeToReview: '5-10 minutes', // Estimated time
-                jurisdiction: analysis.documentInfo.jurisdiction
-            },
-            jurisdictionClause: {
-                text: analysis.jurisdictionClause.text,
-                extractedText: analysis.extractedText,
-                riskLevel: analysis.jurisdictionClause.riskLevel
-            },
-            suggestedAlternatives: analysis.suggestedAlternatives.map(alt => alt.text)
-        };
-    };
-
     const handleAnalyze = async () => {
         try {
             setIsAnalyzing(true);
@@ -131,8 +113,7 @@ const AnalyzeContract = () => {
             }
 
             const analysisResponse: AnalysisResponse = await response.json();
-            const formattedData = convertAnalysisToDisplayFormat(analysisResponse);
-            setAnalysisData(formattedData);
+            setAnalysisData(analysisResponse);
             setShowAnalysis(true);
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'An error occurred during analysis';
@@ -141,6 +122,200 @@ const AnalyzeContract = () => {
         } finally {
             setIsAnalyzing(false);
         }
+    };
+
+    // Get risk badge color class based on risk level
+    const getRiskColorClass = (riskLevel: string) => {
+        switch (riskLevel) {
+            case 'High Risk':
+                return styles.highRisk;
+            case 'Medium Risk':
+                return styles.mediumRisk;
+            case 'Low Risk':
+                return styles.lowRisk;
+            default:
+                return styles.mediumRisk;
+        }
+    };
+
+    // Copy text to clipboard
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text);
+        // Could add a toast notification here
+    };
+
+    // Handle download PDF report
+    const handleDownloadPDF = async () => {
+        if (!analysisData) return;
+
+        try {
+            // Create a new PDF document
+            const pdfDoc = await PDFDocument.create();
+            
+            // Embed Times New Roman font (or closest available)
+            const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+            const boldFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
+            
+            // Add a new page
+            let page = pdfDoc.addPage([595.28, 841.89]); // A4 size
+            let { width, height } = page.getSize();
+            
+            // Set initial position
+            let y = height - 50;
+            const margin = 50;
+            const lineHeight = 20;
+            
+            // Helper function to add text
+            const addText = (text: string, x: number, fontSize: number, isBold: boolean = false, color = rgb(0, 0, 0)) => {
+                const currentFont = isBold ? boldFont : timesRomanFont;
+                page.drawText(text, {
+                    x,
+                    y,
+                    size: fontSize,
+                    font: currentFont,
+                    color,
+                });
+                y -= lineHeight;
+            };
+            
+            // Add title
+            addText('Document Analysis Report', margin, 24, true);
+            y -= lineHeight;
+            
+            // Document Info
+            addText('Document Information', margin, 18, true);
+            addText(`Document Name: ${analysisData.documentInfo.title}`, margin + 20, 12);
+            addText(`Date and Time: ${new Date(analysisData.documentInfo.dateTime).toLocaleString()}`, margin + 20, 12);
+            
+            // Risk Assessment
+            const riskColor = analysisData.documentInfo.riskAssessment === 'High Risk' 
+                ? rgb(0.9, 0.2, 0.2) 
+                : analysisData.documentInfo.riskAssessment === 'Medium Risk'
+                    ? rgb(0.9, 0.5, 0.1)
+                    : rgb(0.9, 0.8, 0.2);
+            
+            addText(`Risk Assessment: `, margin + 20, 12);
+            y += lineHeight; // Move back up to add color text on same line
+            addText(analysisData.documentInfo.riskAssessment, margin + 140, 12, true, riskColor);
+            
+            y -= lineHeight;
+            
+            // Key Statistics
+            addText('Key Statistics', margin, 18, true);
+            addText(`High Risk Items: ${analysisData.documentInfo.keyStatistics.highRiskItems}`, margin + 20, 12);
+            addText(`Clauses Identified: ${analysisData.documentInfo.keyStatistics.clausesIdentified || analysisData.clauses.length}`, margin + 20, 12);
+            addText(`Jurisdiction: ${analysisData.documentInfo.jurisdiction}`, margin + 20, 12);
+            y -= lineHeight;
+            
+            // Add content for risk scores and other stats
+            // Add risk items count
+            addText(`Risk Score: ${analysisData.documentInfo.keyStatistics.riskScore || 57}/100`, margin + 20, 12);
+            addText(`High Risk Items: ${handleRiskCounts(analysisData.clauses).high}`, margin + 20, 12);
+            addText(`Medium Risk Items: ${handleRiskCounts(analysisData.clauses).medium}`, margin + 20, 12);
+            addText(`Low Risk Items: ${handleRiskCounts(analysisData.clauses).low}`, margin + 20, 12);
+            y -= lineHeight;
+            
+            // Clauses
+            for (let i = 0; i < analysisData.clauses.length; i++) {
+                const clause = analysisData.clauses[i];
+                
+                // Add new page if needed
+                if (y < 300) {
+                    page.drawText(`- ${i+1} -`, {
+                        x: width / 2 - 15,
+                        y: 30,
+                        size: 10,
+                        font: timesRomanFont,
+                    });
+                    
+                    page = pdfDoc.addPage([595.28, 841.89]);
+                    const pageSize = page.getSize();
+                    width = pageSize.width;
+                    height = pageSize.height;
+                    y = height - 50;
+                }
+                
+                // Determine color for risk level
+                const clauseRiskColor = clause.riskLevel === 'High Risk' 
+                    ? rgb(0.9, 0.2, 0.2) 
+                    : clause.riskLevel === 'Medium Risk'
+                        ? rgb(0.9, 0.5, 0.1)
+                        : rgb(0.9, 0.8, 0.2);
+                
+                // Add clause title and risk level
+                addText(clauseTitles[i] || clause.title, margin, 18, true);
+                addText(`Risk Level: `, margin + 20, 12);
+                y += lineHeight; // Move back up for same line
+                addText(clause.riskLevel, margin + 100, 12, true, clauseRiskColor);
+                y -= lineHeight;
+                
+                // Add extracted text
+                addText('Extracted Text:', margin + 20, 12, true);
+                const extractedTextLines = clause.extractedText.split('\n');
+                extractedTextLines.forEach(line => {
+                    if (line.trim()) {
+                        addText(line.trim(), margin + 30, 12);
+                    }
+                });
+                y -= lineHeight;
+                
+                // Add suggested alternatives
+                addText('Suggested Alternatives:', margin + 20, 12, true);
+                clause.suggestedAlternatives.forEach((alt, index) => {
+                    addText(`${index+1}. ${alt.text}`, margin + 30, 12);
+                    
+                    // Add description if available
+                    if (alt.description) {
+                        const descLines = alt.description.split('\n');
+                        descLines.forEach(line => {
+                            if (line.trim()) {
+                                addText(line.trim(), margin + 40, 10, false, rgb(0.4, 0.4, 0.4));
+                            }
+                        });
+                    }
+                    y -= lineHeight / 2;
+                });
+                
+                y -= lineHeight * 1.5;
+            }
+            
+            // Add page numbers
+            for (let i = 0; i < pdfDoc.getPageCount(); i++) {
+                const p = pdfDoc.getPage(i);
+                const { width, height } = p.getSize();
+                p.drawText(`Page ${i+1} of ${pdfDoc.getPageCount()}`, {
+                    x: width - 150,
+                    y: 30,
+                    size: 10,
+                    font: timesRomanFont,
+                });
+            }
+            
+            // Save the PDF
+            const pdfBytes = await pdfDoc.save();
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `analysis_report_${new Date().toISOString().split('T')[0]}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            setError('Failed to generate PDF report');
+        }
+    };
+
+    // Add function to count risk levels in clauses
+    const handleRiskCounts = (clauses: ClauseAnalysis[]) => {
+        return clauses.reduce((counts, clause) => {
+            if (clause.riskLevel === 'High Risk') counts.high++;
+            else if (clause.riskLevel === 'Medium Risk') counts.medium++;
+            else if (clause.riskLevel === 'Low Risk') counts.low++;
+            return counts;
+        }, { high: 0, medium: 0, low: 0 });
     };
 
     return (
@@ -252,210 +427,211 @@ const AnalyzeContract = () => {
 
             {showAnalysis && (
                 <div className={styles.analysisContent}>
-                    <div className={styles.documentInfo}>
-                        <div className={styles.documentContainer}>
-                            <div className={styles.documentText}>
-                                <p>{analysisData?.jurisdictionClause.text}</p>
-                                <p>{analysisData?.jurisdictionClause.extractedText}</p>
-                            </div>
-                            <div className={styles.documentFooter}>
-                                <span>{analysisData?.documentName}</span>
-                                <button className={styles.deleteButton}>
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className={styles.analysisGrid}>
-                            <div className={styles.analysisDetails}>
-                                <div className={styles.infoItem}>
-                                    <label>Date and Time</label>
-                                    <p>{analysisData?.dateTime}</p>
+                    {analysisData && (
+                        <div className={styles.documentInfo}>
+                            <h3>Document Information</h3>
+                            <div className={styles.infoHeader}>
+                                <div className={styles.previewSection}>
+                                    <div className={styles.documentPreview}>
+                                        <p className={styles.previewText}>
+                                            {analysisData.documentInfo.title || (file ? file.name : "Untitled Document")}
+                                            {analysisData.documentInfo.previewText && (
+                                                <>
+                                                    <br /><br />
+                                                    {analysisData.documentInfo.previewText}
+                                                </>
+                                            )}
+                                        </p>
+                                        <div className={styles.fileInfo}>
+                                            <div className={styles.fileName}>
+                                                {activeTab === 'upload' && file ? file.name : (analysisData.documentInfo.title || 'document.pdf')}
+                                                <button 
+                                                    className={styles.deleteButton}
+                                                    onClick={() => { /* Just for UI, no functionality needed */ }}
+                                                >
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className={styles.infoItem}>
-                                    <label>Risk assessment</label>
-                                    <div className={styles.riskAssessment}>
-                                        <div className={styles.riskBadge}>{analysisData?.riskAssessment}</div>
+
+                                <div className={styles.infoDetails}>
+                                    <div className={styles.infoItem}>
+                                        <label>Date and Time</label>
+                                        <p>{new Date(analysisData.documentInfo.dateTime).toLocaleString()}</p>
+                                    </div>
+                                    
+                                    {analysisData.documentInfo.jurisdiction && (
+                                        <div className={styles.infoItem}>
+                                            <label>Jurisdiction</label>
+                                            <p>{analysisData.documentInfo.jurisdiction}</p>
+                                        </div>
+                                    )}
+                                    
+                                    <div className={styles.infoItem}>
+                                        <label>Risk assessment</label>
+                                        <div className={styles.riskAssessment}>
+                                            <div 
+                                                className={cn(
+                                                    styles.riskBadge, 
+                                                    getRiskColorClass(analysisData.documentInfo.riskAssessment)
+                                                )}
+                                            >
+                                                {analysisData.documentInfo.riskAssessment}
+                                            </div>
+                                            <div className={styles.riskScore}>{analysisData.documentInfo.keyStatistics.riskScore || 57}/100</div>
+                                        </div>
                                         <div className={styles.riskProgressBar}>
                                             <div 
                                                 className={styles.riskProgress} 
                                                 style={{ 
-                                                    width: analysisData?.riskAssessment === 'Low Risk' ? '33%' : 
-                                                           analysisData?.riskAssessment === 'Medium Risk' ? '66%' : '100%' 
+                                                    width: `${analysisData.documentInfo.keyStatistics.riskScore || 57}%`
                                                 }}
                                             />
                                         </div>
                                     </div>
-                                </div>
-                                <div className={styles.infoItem}>
-                                    <label>Key Statistics</label>
-                                    <div className={styles.statsList}>
-                                        <div className={styles.statItem}>
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                            </svg>
-                                            <span>{analysisData?.keyStatistics.highRiskItems} high risk items</span>
+                                    
+                                    <div className={styles.infoItem}>
+                                        <label>Key statistics</label>
+                                        <div className={styles.statsList}>
+                                            <div className={cn(styles.statItem, styles.highRiskItem)}>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                </svg>
+                                                <span>{handleRiskCounts(analysisData.clauses).high || 0} High risk item{handleRiskCounts(analysisData.clauses).high !== 1 ? 's' : ''}</span>
+                                            </div>
+                                            <div className={cn(styles.statItem, styles.mediumRiskItem)}>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                </svg>
+                                                <span>{handleRiskCounts(analysisData.clauses).medium || 0} Medium risk item{handleRiskCounts(analysisData.clauses).medium !== 1 ? 's' : ''}</span>
+                                            </div>
+                                            <div className={cn(styles.statItem, styles.lowRiskItem)}>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                </svg>
+                                                <span>{handleRiskCounts(analysisData.clauses).low || 0} Low risk item{handleRiskCounts(analysisData.clauses).low !== 1 ? 's' : ''}</span>
+                                            </div>
                                         </div>
-                                        <div className={styles.statItem}>
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                            </svg>
-                                            <span>{analysisData?.keyStatistics.timeToReview} to review</span>
-                                        </div>
-                                        <div className={styles.statItem}>
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                            </svg>
-                                            <span>Jurisdiction: {analysisData?.keyStatistics.jurisdiction}</span>
+
+                                        <div className={styles.additionalStats}>
+                                            <div className={styles.statItem}>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                </svg>
+                                                <span>{analysisData.documentInfo.keyStatistics.clausesIdentified || analysisData.clauses.length} Clauses identified</span>
+                                            </div>
+                                            {analysisData.documentInfo.jurisdiction && (
+                                                <div className={styles.statItem}>
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M3 21h18M5 21V7l8-4 8 4v14M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    </svg>
+                                                    <span>Jurisdiction: {analysisData.documentInfo.jurisdiction}</span>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className={styles.section}>
-                            <h3>Jurisdiction Clause</h3>
-                            <div className={cn(styles.clauseBox, styles[analysisData?.jurisdictionClause.riskLevel.toLowerCase().replace(' ', '') || ''])}>
-                                <p>{analysisData?.jurisdictionClause.text}</p>
-                            </div>
-                            <div className={styles.extractedText}>
-                                <h4>Extracted Text</h4>
-                                <div className={styles.textBox}>
-                                    <p>{analysisData?.jurisdictionClause.extractedText}</p>
-                                    <button className={styles.copyTextButton}>
-                                        <Image 
-                                            src="/icons/copy.svg" 
-                                            alt="Copy" 
-                                            width={16} 
-                                            height={16}
-                                        />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className={styles.section}>
-                            <h3>Suggested alternatives</h3>
-                            <div className={styles.alternativesList}>
-                                {analysisData?.suggestedAlternatives.map((alternative, index) => (
-                                    <div key={index} className={styles.alternativeItem}>
-                                        <span>{index + 1}</span>
-                                        <p>{alternative}</p>
-                                        <button className={styles.copyAltButton}>
-                                            Copy
-                                            <Image 
-                                                src="/icons/copy.svg" 
-                                                alt="Copy" 
-                                                width={16} 
-                                                height={16}
-                                            />
-                                        </button>
+                            {/* Clauses Analysis Sections */}
+                            {analysisData.clauses.map((clause, clauseIndex) => {
+                                // Use predefined titles if available, otherwise use from clause
+                                const title = clauseTitles[clauseIndex] || clause.title;
+                                
+                                return (
+                                    <div 
+                                        key={clauseIndex} 
+                                        className={cn(
+                                            styles.clauseSection,
+                                            getRiskColorClass(clause.riskLevel)
+                                        )}
+                                    >
+                                        <div className={styles.clauseHeader}>
+                                            <h3>{title}</h3>
+                                            <div 
+                                                className={cn(
+                                                    styles.riskBadge, 
+                                                    getRiskColorClass(clause.riskLevel)
+                                                )}
+                                            >
+                                                {clause.riskLevel}
+                                            </div>
+                                        </div>
+                                        
+                                        {clause.text && <p className={styles.clauseText}>{clause.text}</p>}
+                                        
+                                        {/* Extracted Text */}
+                                        <div className={styles.extractedText}>
+                                            <h4>Extracted Text</h4>
+                                            <div className={styles.textBox}>
+                                                <p>{clause.extractedText}</p>
+                                                <button 
+                                                    className={styles.copyButton}
+                                                    onClick={() => copyToClipboard(clause.extractedText)}
+                                                >
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-2M8 5v14h12V5H8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Suggested Alternatives */}
+                                        <div className={styles.suggestedSection}>
+                                            <h4>Suggested alternatives</h4>
+                                            <div className={styles.alternativesList}>
+                                                {clause.suggestedAlternatives.map((alt) => (
+                                                    <div key={alt.id} className={styles.alternativeItem}>
+                                                        <div className={styles.alternativeHeader}>
+                                                            <span className={styles.alternativeNumber}>{alt.id}</span>
+                                                            <p>{alt.text}</p>
+                                                            <div className={styles.alternativeActions}>
+                                                                <button 
+                                                                    className={styles.copyButton}
+                                                                    onClick={() => copyToClipboard(alt.text)}
+                                                                >
+                                                                    Copy
+                                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-2M8 5v14h12V5H8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        {alt.description && (
+                                                            <div 
+                                                                className={cn(styles.alternativeDescription, {
+                                                                    [styles.expanded]: expandedAlternative[`clause-${clauseIndex}`] === alt.id
+                                                                })}
+                                                                onClick={() => toggleExpandAlternative(clauseIndex, alt.id)}
+                                                            >
+                                                                <p>{alt.description}</p>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
                                     </div>
-                                ))}
-                            </div>
+                                );
+                            })}
+
+                            {/* Download Button */}
+                            <button 
+                                type="button" 
+                                className={styles.downloadButton}
+                                onClick={handleDownloadPDF}
+                            >
+                                <span>Download Analysis</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 3v10m0 0l-4-4m4 4l4-4m-10 7v4h12v-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                            </button>
                         </div>
-
-                        <button 
-                            type="button" 
-                            className={styles.downloadButton}
-                            onClick={async () => {
-                                if (!analysisData) return;
-
-                                try {
-                                    // Create a new PDF document
-                                    const pdfDoc = await PDFDocument.create();
-                                    const page = pdfDoc.addPage([595.28, 841.89]); // A4 size
-                                    const { width, height } = page.getSize();
-
-                                    // Load the standard font
-                                    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-                                    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
-                                    // Set initial position
-                                    let y = height - 50;
-                                    const margin = 50;
-                                    const lineHeight = 20;
-
-                                    // Helper function to add text
-                                    const addText = (text: string, x: number, fontSize: number, isBold: boolean = false) => {
-                                        const currentFont = isBold ? boldFont : font;
-                                        page.drawText(text, {
-                                            x,
-                                            y,
-                                            size: fontSize,
-                                            font: currentFont,
-                                            color: rgb(0, 0, 0),
-                                        });
-                                        y -= lineHeight;
-                                    };
-
-                                    // Add title
-                                    addText('Document Analysis Report', margin, 24, true);
-                                    y -= lineHeight * 2;
-
-                                    // Document Info
-                                    addText('Document Information', margin, 18, true);
-                                    addText(`Document Name: ${analysisData.documentName}`, margin + 20, 12);
-                                    addText(`Date and Time: ${analysisData.dateTime}`, margin + 20, 12);
-                                    addText(`Risk Assessment: ${analysisData.riskAssessment}`, margin + 20, 12);
-                                    y -= lineHeight;
-
-                                    // Key Statistics
-                                    addText('Key Statistics', margin, 18, true);
-                                    addText(`High Risk Items: ${analysisData.keyStatistics.highRiskItems}`, margin + 20, 12);
-                                    addText(`Time to Review: ${analysisData.keyStatistics.timeToReview}`, margin + 20, 12);
-                                    addText(`Jurisdiction: ${analysisData.keyStatistics.jurisdiction}`, margin + 20, 12);
-                                    y -= lineHeight;
-
-                                    // Jurisdiction Clause
-                                    addText('Jurisdiction Clause', margin, 18, true);
-                                    addText(`Risk Level: ${analysisData.jurisdictionClause.riskLevel}`, margin + 20, 12);
-                                    addText('Clause Text:', margin + 20, 12);
-                                    const clauseLines = analysisData.jurisdictionClause.text.split('\n');
-                                    clauseLines.forEach(line => {
-                                        addText(line, margin + 40, 12);
-                                    });
-                                    y -= lineHeight;
-
-                                    // Extracted Text
-                                    addText('Extracted Text', margin, 18, true);
-                                    const extractedLines = analysisData.jurisdictionClause.extractedText.split('\n');
-                                    extractedLines.forEach(line => {
-                                        addText(line, margin + 20, 12);
-                                    });
-                                    y -= lineHeight;
-
-                                    // Suggested Alternatives
-                                    addText('Suggested Alternatives', margin, 18, true);
-                                    analysisData.suggestedAlternatives.forEach((alt, index) => {
-                                        addText(`${index + 1}. ${alt}`, margin + 20, 12);
-                                    });
-
-                                    // Save the PDF
-                                    const pdfBytes = await pdfDoc.save();
-                                    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-                                    const url = URL.createObjectURL(blob);
-                                    const link = document.createElement('a');
-                                    link.href = url;
-                                    link.download = `analysis_report_${new Date().toISOString().split('T')[0]}.pdf`;
-                                    document.body.appendChild(link);
-                                    link.click();
-                                    document.body.removeChild(link);
-                                    URL.revokeObjectURL(url);
-                                } catch (error) {
-                                    console.error('Error generating PDF:', error);
-                                    setError('Failed to generate PDF report');
-                                }
-                            }}
-                        >
-                            <span>Download Analysis</span>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 3v10m0 0l-4-4m4 4l4-4m-10 7v4h12v-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                        </button>
-                    </div>
+                    )}
                 </div>
             )}
         </div>

@@ -164,20 +164,79 @@
     &.active
         background: rgba(255, 255, 255, 0.1)
         color: white
-        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05), 0 8px 16px -4px rgba(18, 18, 18, 0.2), inset 0 4px 4px rgba(255, 255, 255, 0.05)
-        &:after
-            content: ''
-            position: absolute
-            inset: 0
-            border-radius: 8px
-            border: 1px solid transparent
-            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
-            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
-            -webkit-mask-composite: destination-out
-            mask-composite: exclude
-        &:hover
-            color: white
-            background: rgba(255, 255, 255, 0.15)
+        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05)
+
+.dropZone
+    position: relative
+    min-height: 300px
+    border: 2px dashed rgba(255, 255, 255, 0.1)
+    border-radius: 16px
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    gap: 16px
+    transition: all 0.3s ease
+    cursor: pointer
+    background: rgba(0, 0, 0, 0.2)
+    backdrop-filter: blur(20px)
+    &:hover, &.dragging
+        border-color: #6B46C1
+        background: rgba(107, 70, 193, 0.1)
+
+.fileInput
+    position: absolute
+    inset: 0
+    opacity: 0
+    cursor: pointer
+
+.uploadIcon
+    color: rgba(255, 255, 255, 0.5)
+    transition: color 0.3s ease
+    .dropZone:hover &
+        color: #6B46C1
+
+.uploadText
+    text-align: center
+    .mainText
+        margin: 0
+        font-size: 16px
+        color: rgba(255, 255, 255, 0.8)
+        font-weight: 500
+    .subText
+        margin: 4px 0 0
+        font-size: 12px
+        color: rgba(255, 255, 255, 0.5)
+
+.pasteZone
+    min-height: 300px
+    border-radius: 16px
+    overflow: hidden
+    background: rgba(0, 0, 0, 0.2)
+    backdrop-filter: blur(20px)
+
+.pasteInput
+    width: 100%
+    height: 100%
+    min-height: 300px
+    padding: 20px
+    background: transparent
+    border: none
+    color: white
+    font-size: 16px
+    resize: none
+    &::placeholder
+        color: rgba(255, 255, 255, 0.3)
+    &:focus
+        outline: none
+
+.error
+    padding: 12px 16px
+    background: rgba(255, 59, 48, 0.1)
+    border-radius: 12px
+    border: 1px solid rgba(255, 59, 48, 0.3)
+    color: rgba(255, 255, 255, 0.8)
+    font-size: 14px
 
 .analyzeButton
     padding: 16px 32px
@@ -226,216 +285,415 @@
         transition: transform 0.3s ease
     &:hover svg
         transform: translateX(4px)
+    &.analyzing
+        opacity: 0.7
+        cursor: wait
 
-.previewSection
-    flex: 1
-    background: rgba(255, 255, 255, 0.02)
-    border-radius: 16px
-    border: 1px solid rgba(255, 255, 255, 0.1)
-    box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.02)
-    backdrop-filter: blur(20px)
-    overflow: hidden
-
-.previewContent
-    height: 100%
-    min-height: 600px
-    display: flex
-    align-items: center
-    justify-content: center
-
-.previewPlaceholder
-    opacity: 0.3
-    img
-        width: 120px
-        height: auto
-
-.filePreview
-    padding: 24px
-    h3
-        margin: 0 0 8px
-        font-size: 18px
-        color: rgba(255, 255, 255, 0.8)
-    p
-        margin: 0
-        color: rgba(255, 255, 255, 0.5)
-        font-size: 14px
-
+// Analysis Results Styles
 .analysisContent
     width: 100%
     height: 100%
     overflow-y: auto
-    padding: 30px
-    background: rgba(0, 0, 0, 0.4)
-    border-radius: 20px
 
 .documentInfo
     display: flex
     flex-direction: column
-    gap: 32px
+    gap: 24px
+    padding-bottom: 32px
+
+    h3
+        text-align: center
+        margin: 0 0 20px
+        font-size: 20px
+        color: white
+        font-weight: 600
 
 .infoHeader
     display: flex
-    justify-content: space-between
-    align-items: center
-    h2
-        margin: 0
-        font-size: 20px
-        font-weight: 600
-        color: rgba(255, 255, 255, 0.9)
+    gap: 24px
+    background: rgba(26, 26, 26, 0.5)
+    border-radius: 16px
+    overflow: hidden
+    padding: 24px
+    margin-bottom: 24px
 
-.copyButton
-    width: 36px
-    height: 36px
-    border-radius: 8px
+.previewSection
+    flex: 0.7
+    display: flex
+    flex-direction: column
+    gap: 12px
+
+.documentPreview
+    background: rgba(26, 26, 26, 0.8)
+    flex: 1
+    border-radius: 12px
+    padding: 20px
+    display: flex
+    flex-direction: column
+    gap: 16px
+    margin-bottom: 0
+
+.previewText
+    font-size: 14px
+    color: rgba(255, 255, 255, 0.9)
+    line-height: 1.6
+    margin: 0
+    flex: 1
+
+.fileInfo
+    margin-top: 16px
+    border-top: 1px solid rgba(255, 255, 255, 0.1)
+    padding-top: 16px
+
+.fileName
+    display: flex
+    align-items: center
+    justify-content: space-between
+    padding: 8px 12px
     background: rgba(255, 255, 255, 0.05)
-    border: 1px solid rgba(255, 255, 255, 0.1)
+    border-radius: 8px
+    color: white
+    font-size: 14px
+    font-weight: 500
+
+.deleteButton
+    background: transparent
+    border: none
     color: rgba(255, 255, 255, 0.6)
+    cursor: pointer
     display: flex
     align-items: center
     justify-content: center
-    cursor: pointer
-    transition: all 0.3s ease
+    padding: 4px
+    border-radius: 4px
+    transition: all 0.2s
     &:hover
-        background: rgba(255, 255, 255, 0.1)
         color: white
+        background: rgba(255, 59, 48, 0.2)
 
-.infoGrid
-    display: grid
-    gap: 24px
+.fileDetails
+    margin-top: 8px
+    display: flex
+    align-items: center
+    gap: 6px
+    font-size: 12px
+    color: rgba(255, 255, 255, 0.5)
+
+.bullet
+    opacity: 0.5
+
+.infoDetails
+    width: 40%
+    display: flex
+    flex: 1
+    flex-direction: column
+    gap: 16px
 
 .infoItem
+    margin-bottom: 16px
+    &:last-child
+        margin-bottom: 0
+    
     label
         display: block
-        font-size: 14px
-        color: rgba(255, 255, 255, 0.5)
         margin-bottom: 8px
+        font-size: 14px
+        color: rgba(255, 255, 255, 0.6)
+    
     p
         margin: 0
-        font-size: 16px
+        font-size: 14px
         color: white
+        font-weight: 500
 
 .riskBadge
     display: inline-flex
     align-items: center
-    padding: 6px 12px
+    justify-content: center
+    padding: 4px 10px
+    border-radius: 12px
+    font-size: 12px
+    font-weight: 500
+    color: white
+    &.highRisk
+        background: rgba(255, 59, 48, 0.1)
+        color: #FF3B30
+        border: 1px solid rgba(255, 59, 48, 0.3)
+    &.mediumRisk
+        background: rgba(255, 149, 0, 0.1)
+        color: #FF9500
+        border: 1px solid rgba(255, 149, 0, 0.3)
+    &.lowRisk
+        background: rgba(255, 204, 0, 0.1)
+        color: #FFCC00
+        border: 1px solid rgba(255, 204, 0, 0.3)
+
+.riskProgressBar
+    width: 100%
+    height: 12px
+    background: rgba(0, 0, 0, 0.3)
     border-radius: 8px
+    margin-top: 8px
+    overflow: hidden
+    position: relative
+
+.riskProgress
+    height: 100%
+    background: linear-gradient(to right, #f85c42, #fe53b9)
+    border-radius: 6px
+    position: relative
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.3)
+    &::after
+        content: ''
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        height: 50%
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), transparent)
+        border-radius: 6px 6px 0 0
+
+.riskCount
+    display: flex
+    gap: 16px
+    margin-top: 16px
+    justify-content: center
+
+.riskCountItem
+    display: flex
+    align-items: center
+    gap: 6px
+    font-size: 12px
+    color: rgba(255, 255, 255, 0.9)
+    background: rgba(0, 0, 0, 0.2)
+    padding: 4px 10px
+    border-radius: 12px
+    
+    .highRiskDot
+        width: 8px
+        height: 8px
+        border-radius: 50%
+        background: #FF3B30
+        box-shadow: 0 0 5px rgba(255, 59, 48, 0.5)
+    
+    .mediumRiskDot
+        width: 8px
+        height: 8px
+        border-radius: 50%
+        background: #FF9500
+        box-shadow: 0 0 5px rgba(255, 149, 0, 0.5)
+    
+    .lowRiskDot
+        width: 8px
+        height: 8px
+        border-radius: 50%
+        background: #30D158
+        box-shadow: 0 0 5px rgba(48, 209, 88, 0.5)
+
+.riskAssessment
+    display: flex
+    align-items: center
+    gap: 12px
+    margin-top: 12px
+
+.riskScore
+    background: rgba(255, 149, 0, 0.1)
+    border: 1px solid rgba(255, 149, 0, 0.3)
+    color: #FF9500
+    padding: 2px 10px
+    border-radius: 12px
     font-size: 14px
     font-weight: 500
-    background: rgba(255, 193, 7, 0.1)
-    color: #FFC107
-    align-self: flex-start
 
 .statsList
     display: flex
-    flex-direction: column
-    gap: 12px
+    gap: 10px
+    margin-top: 16px
+    flex-wrap: wrap
+    justify-content: flex-start
 
 .statItem
+    display: inline-flex
+    align-items: center
+    gap: 6px
+    font-size: 13px
+    color: rgba(255, 255, 255, 0.9)
+    padding: 6px 12px
+    background: transparent
+    border-radius: 30px
+    border: 1px solid transparent
+    
+    svg
+        color: rgba(255, 255, 255, 0.8)
+        width: 14px
+        height: 14px
+
+.highRiskItem
+    border-color: #FF3B30
+    color: #FF3B30
+    svg
+        color: #FF3B30
+
+.mediumRiskItem
+    border-color: #FF9500
+    color: #FF9500
+    svg
+        color: #FF9500
+
+.lowRiskItem
+    border-color: #30D158
+    color: #30D158
+    svg
+        color: #30D158
+
+// Clause section styles
+.clauseSection
+    background: rgba(26, 26, 26, 0.5)
+    border-radius: 16px
+    overflow: hidden
+    padding: 24px
+    display: flex
+    flex-direction: column
+    gap: 16px
+    position: relative
+    margin-bottom: 24px
+    &::before
+        content: ''
+        position: absolute
+        left: 0
+        top: 0
+        bottom: 0
+        width: 4px
+
+    &.highRisk::before
+        background: #FF3B30
+    &.mediumRisk::before
+        background: #FF9500
+    &.lowRisk::before
+        background: #FFCC00
+
+.clauseHeader
     display: flex
     align-items: center
-    gap: 8px
-    color: rgba(255, 255, 255, 0.8)
-    font-size: 14px
-    svg
-        color: rgba(255, 255, 255, 0.4)
-
-.section
+    justify-content: space-between
     h3
-        margin: 0 0 16px
-        font-size: 18px
-        font-weight: 600
-        color: rgba(255, 255, 255, 0.9)
-    h4
-        margin: 16px 0 8px
-        font-size: 14px
-        font-weight: 500
-        color: rgba(255, 255, 255, 0.5)
-
-.clauseBox
-    padding: 16px
-    border-radius: 12px
-    border: 1px solid rgba(255, 255, 255, 0.1)
-    p
         margin: 0
-        color: rgba(255, 255, 255, 0.8)
+        font-size: 18px
+        color: white
+        font-weight: 600
+
+.clauseText
+    font-size: 14px
+    color: rgba(255, 255, 255, 0.7)
+    line-height: 1.6
+    margin: 0 0 8px
+
+.extractedText
+    h4
+        margin: 0 0 8px
         font-size: 14px
-        line-height: 1.5
+        color: rgba(255, 255, 255, 0.8)
+        font-weight: 500
 
 .textBox
-    position: relative
+    background: rgba(26, 26, 26, 0.8)
+    border-radius: 8px
     padding: 16px
-    background: rgba(0, 0, 0, 0.2)
-    border-radius: 12px
+    position: relative
+    border-left: 3px solid rgba(255, 255, 255, 0.1)
     p
         margin: 0
-        color: rgba(255, 255, 255, 0.8)
         font-size: 14px
-        line-height: 1.5
+        color: rgba(255, 255, 255, 0.8)
+        line-height: 1.6
+        padding-right: 30px
 
-.copyTextButton
+.copyButton
     position: absolute
     top: 8px
     right: 8px
-    width: 32px
-    height: 32px
-    border-radius: 8px
-    background: rgba(255, 255, 255, 0.05)
-    border: 1px solid rgba(255, 255, 255, 0.1)
+    background: rgba(255, 255, 255, 0.1)
+    border: none
+    border-radius: 4px
     color: rgba(255, 255, 255, 0.6)
+    padding: 4px
     display: flex
     align-items: center
     justify-content: center
     cursor: pointer
-    transition: all 0.3s ease
+    transition: all 0.2s
     &:hover
-        background: rgba(255, 255, 255, 0.1)
+        background: rgba(255, 255, 255, 0.2)
         color: white
+
+.suggestedSection
+    h4
+        margin: 0 0 12px
+        font-size: 14px
+        color: rgba(255, 255, 255, 0.8)
+        font-weight: 500
 
 .alternativesList
     display: flex
     flex-direction: column
-    gap: 8px
+    gap: 12px
 
 .alternativeItem
-    display: flex
-    align-items: center
-    gap: 12px
+    background: rgba(0, 0, 0, 0.2)
+    border-radius: 8px
+    overflow: hidden
+
+.alternativeHeader
     padding: 12px 16px
-    background: rgba(255, 255, 255, 0.02)
-    border-radius: 12px
-    border: 1px solid rgba(255, 255, 255, 0.1)
-    span
-        width: 24px
-        height: 24px
-        display: flex
-        align-items: center
-        justify-content: center
-        background: rgba(255, 255, 255, 0.1)
-        border-radius: 6px
-        color: white
-        font-size: 14px
-        font-weight: 500
+    display: flex
+    align-items: flex-start
+    gap: 12px
+    position: relative
     p
         flex: 1
         margin: 0
-        color: rgba(255, 255, 255, 0.8)
         font-size: 14px
+        color: rgba(255, 255, 255, 0.9)
+        line-height: 1.6
 
-.copyAltButton
+.alternativeNumber
     display: flex
     align-items: center
-    gap: 6px
-    padding: 6px 12px
-    background: rgba(255, 255, 255, 0.05)
-    border: 1px solid rgba(255, 255, 255, 0.1)
-    border-radius: 8px
-    color: rgba(255, 255, 255, 0.6)
-    font-size: 14px
-    cursor: pointer
+    justify-content: center
+    width: 20px
+    height: 20px
+    background: rgba(255, 255, 255, 0.1)
+    border-radius: 50%
+    font-size: 12px
+    color: white
+
+.alternativeActions
+    display: flex
+    gap: 8px
+    .copyButton
+        position: static
+        padding: 4px 8px
+        display: flex
+        align-items: center
+        gap: 4px
+        font-size: 12px
+
+.alternativeDescription
+    padding: 0 16px 12px 48px
+    max-height: 0
+    overflow: hidden
     transition: all 0.3s ease
-    &:hover
-        background: rgba(255, 255, 255, 0.1)
-        color: white
+    background: rgba(255, 255, 255, 0.03)
+    cursor: pointer
+    display: none
+    p
+        margin: 0
+        font-size: 13px
+        color: rgba(255, 255, 255, 0.7)
+        line-height: 1.6
+    &.expanded
+        max-height: 200px
+        display: block
 
 .downloadButton
     width: 100%
@@ -581,3 +839,11 @@
     gap: 24px   
     border-radius: 16px
     padding: 24px 
+
+.additionalStats
+    display: flex
+    flex-direction: column
+    gap: 8px
+    margin-top: 12px
+    border-top: 1px solid rgba(255, 255, 255, 0.1)
+    padding-top: 12px 
