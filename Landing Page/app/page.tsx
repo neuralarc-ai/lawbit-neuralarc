@@ -282,7 +282,7 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        Simple, <span>Transparent</span> Pricing
+                        Simple, <span>Transparent Pricing </span>
                     </motion.h2>
                     <motion.p 
                         className={styles.sectionSubtitle}
