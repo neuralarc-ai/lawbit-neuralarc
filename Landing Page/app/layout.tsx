@@ -1,4 +1,3 @@
-import cn from "classnames";
 import "@/styles/app.sass";
 import type { Metadata } from "next";
 import { Fustat } from "next/font/google";
@@ -38,10 +37,6 @@ export default function RootLayout({
                 />
                 <meta name="twitter:creator" content="@ui8" />
                 {/* Twitter Summary card images must be at least 120x120px */}
-                <meta
-                    name="twitter:image"
-                    content="%PUBLIC_URL%/twitter-card.png"
-                />
             </head>
             <body className={fustat.className}>
                 <Providers>{children}</Providers>
