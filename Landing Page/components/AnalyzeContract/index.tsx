@@ -666,7 +666,10 @@ const AnalyzeContract = () => {
                     )}
                     
                     <div className={styles.actionsRow}>
-                        <div className={styles.tabSelector}>
+                        <div 
+                            className={styles.tabSelector}
+                            data-state={activeTab}
+                        >
                             <button
                                 type="button"
                                 className={cn(styles.tabButton, {

@@ -24,23 +24,16 @@
         align-items: center
         text-align: center
 
-.heroImage
-    width: 100%
-    max-width: 1440px
-    margin-bottom: 48px
-    img
-        width: 100%
-        height: auto
-        object-fit: contain
-
 .title
     font-size: 64px
     line-height: 1.2
-    margin-bottom: 24px
+    margin-bottom: 40px
+    max-width: 900px
     span
         +gradient-text
     @media (max-width: 768px)
         font-size: 40px
+        margin-bottom: 32px
 
 .heroImage
     position: relative
@@ -51,20 +44,26 @@
     img
         width: 100%
         height: auto
+        object-fit: contain
 
 .description
     font-size: 20px
     line-height: 1.5
     color: rgba(255, 255, 255, 0.7)
-    max-width: 100%
+    max-width: 700px
     margin-bottom: 40px
     @media (max-width: 768px)
         font-size: 16px
+        margin-bottom: 32px
 
 .buttons
     display: flex
     gap: 16px
     margin-bottom: 64px
+    @media (max-width: 768px)
+        flex-direction: column
+        width: 100%
+        max-width: 320px
 
 .tryNowButton
     padding: 20px 32px
@@ -252,10 +251,10 @@
         font-size: 32px
 
 .sectionSubtitle
-    font-size: 20px
+    font-size: 24px
     text-align: center
     color: rgba(255, 255, 255, 0.7)
-    margin-bottom: 64px
+    margin-bottom: 32px
     @media (max-width: 768px)
         font-size: 16px
 
@@ -322,10 +321,12 @@
 
 // Pricing Section
 .pricing
-    padding: 120px 0
+    padding: 20px 0 120px 0px
     scroll-margin-top: 80px
+    
 
 .pricingGrid
+    padding-top: 24px
     display: grid
     grid-template-columns: repeat(3, 1fr)
     gap: 32px
@@ -333,6 +334,23 @@
         grid-template-columns: repeat(2, 1fr)
     @media (max-width: 768px)
         grid-template-columns: 1fr
+    position: relative
+    &::before
+        content: "Invite Only Access"
+        position: absolute
+        inset: 0
+        background: rgba(255, 255, 255, 0.01)
+        backdrop-filter: blur(10px)
+        z-index: 1
+        display: flex
+        align-items: center
+        justify-content: center
+        font-size: 32px
+        font-weight: 600
+        color: rgba(255, 255, 255, 0.8)
+    .container
+        position: relative
+        z-index: 2
 
 .pricingCard
     position: relative
@@ -371,7 +389,7 @@
         border-radius: 12px
         border-width: 1.5px
         gap: 10px
-        padding: 16px 32px
+        padding: 18px 24px
         display: flex
         align-items: center
         justify-content: center

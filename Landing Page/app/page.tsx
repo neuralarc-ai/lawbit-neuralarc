@@ -128,32 +128,39 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        Simplify <span>Your Legal Workflow</span>
-                        <br />with <span>AI Precision</span>
+                       <span>AI-powered legal intelligence for modern businesses</span>
                     </motion.h1>
-                    <div className={styles.heroImage}>
-                        <Image 
-                            src="/images/contract.svg" 
-                            alt="LawBit Interface Preview"
-                            width={800}
-                            height={450}
+                    <motion.div 
+                        className={styles.heroImage}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ 
+                            duration: 0.8, 
+                            delay: 0.1,
+                            ease: [0.04, 0.62, 0.23, 0.98] 
+                        }}
+                    >
+                        <Image
+                            src="/images/contract.svg"
+                            alt="LawBit Hero"
+                            width={1200}
+                            height={600}
                             priority
                         />
-                    </div>
+                    </motion.div>
                     <motion.p 
                         className={styles.description}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.4 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
                     >
-                        LawBit helps startups and individuals create legal documents and analyze agreements to identify risks instantly
+                        Streamline your legal workflow with AI-powered document analysis, risk assessment, and intelligent insights
                     </motion.p>
-
                     <motion.div 
                         className={styles.buttons}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.6 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
                     >
                         <button 
                             className={styles.tryNowButton}

@@ -1,80 +1,62 @@
 @import @/styles/variables
 
-.row
-    display: flex
-    align-items: center
-    margin-bottom: 32px
-    +t
-        display: block
-
-.line
-    display: flex
-    align-items: center
-    margin-right: auto
-    +t
-        flex-direction: column
-        margin: 0 0 32px
-
-.logo
-    margin-right: 24px
-    +t
-        margin: 0 0 24px
-    img
-        opacity: 1
-
-.text
-    max-width: 330px
-    +info
-    color: rgba($n2, .4)
-    +t
-        text-align: center
-
-.form
+.footer
     position: relative
-    width: 400px
-    background: rgba(18, 18, 18, 0.30)
-    border-radius: 30px
-    +t
-        width: 488px
-        margin: 0 auto
-    +m
-        width: 100%
-    &:before,
-    &:after
-        content: ""
+    padding: 24px 0
+    background: rgba(255, 255, 255, 0.02)
+    backdrop-filter: blur(100px)
+    border-radius: 12px 12px 0 0
+    box-shadow: inset 2px 4px 16px 0 rgba(0, 0, 0, 0.25)
+    &::before
+        content: ''
         position: absolute
         inset: 0
-        border-radius: 30px
-        border: 1.5px solid rgba(255, 255, 255, 0.02)
-        mask-image: linear-gradient(175deg, black, transparent 50%)
-        pointer-events: none
-    svg
-        position: absolute
-        top: 18px
-        left: 22px
-        fill: rgba($n2, .4)
+        border-radius: 12px
+        padding: 1px
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1))
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: xor
+        mask-composite: exclude
         pointer-events: none
 
-.input
-    width: 100%
-    height: 60px
-    padding: 0 148px 0 60px
-    border-radius: 30px
-    background: transparent
-    +base-2r
-    color: $text-primary
-    +m
-        padding-right: 132px
-    &::placeholder
-        color: rgba($n2, .25)
-
-.button
-    position: absolute
-    top: 4px
-    right: 4px
-    +m
+.container
+    max-width: 1440px
+    margin: 0 auto
+    padding: 0 48px
+    @media (max-width: 768px)
         padding: 0 24px
 
-.textImage
-    width: 100%
-    height: auto
+.content
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 24px
+
+.links
+    display: flex
+    align-items: center
+    gap: 16px
+    a
+        color: rgba(121, 134, 130, 1)
+        text-decoration: underline
+        font-size: 14px
+        transition: color 0.3s ease
+        &:hover
+            color: white
+    span
+        color: rgba(255, 255, 255, 0.3)
+
+.copyright
+    display: flex
+    align-items: center
+    gap: 16px
+    p
+        color: rgba(121, 134, 130, 1)
+        font-size: 14px
+        margin: 0
+    img
+        width: 24px
+        height: 24px
+        transition: opacity 0.3s ease
+        &:hover
+            opacity: 1

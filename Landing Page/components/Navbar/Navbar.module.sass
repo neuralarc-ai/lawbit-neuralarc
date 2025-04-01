@@ -18,6 +18,29 @@
     @media (max-width: 768px)
         padding: 0 24px
 
+.placeholder
+    width: 72px
+    height: 72px
+
+.backButton
+    grid-column: 1
+    justify-self: start
+    cursor: pointer
+    transition: opacity 0.2s
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 72px
+    height: 72px
+    padding: 0
+    background: none
+    border: none
+    position: relative
+    &:hover
+        opacity: 0.8
+    svg
+        color: white
+
 .logoLink
     grid-column: 2
     display: flex
@@ -46,6 +69,8 @@
     background: none
     border: none
     position: relative
+    backdrop-filter: blur(30px)
+    box-shadow: 0 15px 16px rgba(0, 0, 0, 0.1)
     &:hover
         opacity: 0.8
 
@@ -100,7 +125,7 @@
 
 .dialogWrapper
     position: relative
-    top: 42%
+    top:50%
     z-index: 999
     padding: 2px
     border-radius: 32px

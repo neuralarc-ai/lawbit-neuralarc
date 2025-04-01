@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import cn from 'classnames'
+import { motion } from 'framer-motion'
 import styles from './LandingNavbar.module.sass'
 
 const LandingNavbar = () => {
@@ -23,7 +24,15 @@ const LandingNavbar = () => {
     }
 
     return (
-        <nav className={styles.navbar}>
+        <motion.nav 
+            className={styles.navbar}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+                duration: 0.5,
+                ease: [0.04, 0.62, 0.23, 0.98]
+            }}
+        >
             <div className={styles.container}>
                 <Link href="/" className={styles.logo}>
                     <Image 
@@ -56,7 +65,7 @@ const LandingNavbar = () => {
                     </button>
                 </div>
             </div>
-        </nav>
+        </motion.nav>
     )
 }
 

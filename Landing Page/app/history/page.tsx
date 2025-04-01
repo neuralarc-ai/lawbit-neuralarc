@@ -8,6 +8,7 @@ import Image from 'next/image';
 import StarField from '@/components/StarField';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const mockGeneratedData = [
     {
@@ -239,6 +240,7 @@ const HistoryPage = () => {
                     </motion.div>
                 </AnimatePresence>
             </div>
+            <Footer />
         </div>
     );
 };

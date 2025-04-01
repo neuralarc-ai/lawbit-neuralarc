@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import styles from './auth.module.sass'
 import { motion } from 'framer-motion'
 import StarField from '@/components/StarField'
+import Footer from '@/components/Footer'
 
 export default function AuthLayout({
     children,
@@ -78,6 +79,7 @@ export default function AuthLayout({
                 </div>
             </div>
             <div className={styles.container}>{children}</div>
+            <Footer />
         </div>
     )
 } 
