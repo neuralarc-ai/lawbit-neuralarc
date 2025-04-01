@@ -4,7 +4,6 @@ import React from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import cn from 'classnames'
 import styles from './page.module.sass'
 import LandingNavbar from '@/components/LandingNavbar'
 import Button from '@/components/Button'
@@ -12,40 +11,40 @@ import StarField from '@/components/StarField'
 
 const features = [
     {
-        icon: '/icons/document.svg',
+        icon: '/icons/feature-1.svg',
         title: 'Document Creation',
-        description: 'Generate complex legal documents instantly, from NDAs to legal agreements, with speed and precision.'
+        description: 'Generate compliant legal documents in minutes with our AI-powered templates and customization tools.'
     },
     {
-        icon: '/icons/risk.svg',
+        icon: '/icons/feature-2.svg',
         title: 'Risk Analysis',
-        description: 'Identify potential risks in your legal documents before signing with our advanced AI analysis.'
+        description: 'Identify potential issues in contracts before signing with our advanced AI risk assessment technology.'
     },
     {
-        icon: '/icons/legal.svg',
+        icon: '/icons/feature-3.svg',
         title: 'Legal Assistance',
-        description: 'Get advanced legal guidance on legal matters with our intelligent assistant.'
+        description: 'Get AI-powered guidance on legal matters with our intelligent assistant that understands legal context.'
     }
 ]
 
 const benefits = [
     {
-        icon: '/icons/save.svg',
+        icon: '/icons/choose-1.svg',
         title: 'Save thousands on legal fees',
         description: 'Reduce your legal expenses by automating repetitive tasks and process documents.'
     },
     {
-        icon: '/icons/fast.svg',
+        icon: '/icons/choose-2.svg',
         title: 'Create documents 10x faster',
         description: 'Generate legal documents in minutes instead of hours with AI assistance.'
     },
     {
-        icon: '/icons/accuracy.svg',
+        icon: '/icons/choose-3.svg',
         title: 'Identify risks with 95% accuracy',
         description: 'Our AI has been trained on millions of legal documents to identify potential risks.'
     },
     {
-        icon: '/icons/compliance.svg',
+        icon: '/icons/choose-4.svg',
         title: 'Stay compliant with current regulations',
         description: 'Our system keeps in sync with the latest legal requirements to ensure compliance.'
     }
@@ -86,27 +85,24 @@ const pricing = [
     },
     {
         title: 'Startup',
-        price: '$99',
-        period: '/month',
+        price: '$8.99',
         description: 'Ideal for small businesses and startups',
         features: [
-            'Unlimited documents',
+            'Unlimited document generations',
             'Advanced risk analysis',
             'Priority support',
             'Custom templates',
-            'Document editing & versioning'
+            'Document history & versioning'
         ],
         buttonText: 'Get Started',
         popular: true
     },
     {
         title: 'Enterprise',
-        price: '$299',
-        period: '/month',
+        price: '$14.99',    
         description: 'For organizations with complex legal needs',
         features: [
             'Everything in Startup',
-            'API access',
             'Custom AI training',
             'Dedicated support',
             'Multiple team access'
@@ -182,19 +178,27 @@ export default function Home() {
                         {features.map((feature, index) => (
                             <motion.div 
                                 key={feature.title}
-                                className={styles.featureCard}
+                                className={styles.featureCardWrapper}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
                             >
-                                <Image 
-                                    src={feature.icon}
-                                    alt={feature.title}
-                                    width={48}
-                                    height={48}
-                                />
-                                <h3>{feature.title}</h3>
-                                <p>{feature.description}</p>
+                                <div className={styles.featureCard}>
+                                    <div className={styles.iconWrapper}>
+                                        <div className={styles.iconSquare}>
+                                            <div className={styles.iconCircle}>
+                                                <Image 
+                                                    src={feature.icon}
+                                                    alt={feature.title}
+                                                    width={24}
+                                                    height={24}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h3>{feature.title}</h3>
+                                    <p>{feature.description}</p>
+                                </div>
                             </motion.div>
                         ))}
                     </div>
@@ -232,8 +236,8 @@ export default function Home() {
                                 <Image 
                                     src={benefit.icon}
                                     alt={benefit.title}
-                                    width={48}
-                                    height={48}
+                                    width={72}
+                                    height={72}
                                 />
                                 <h3>{benefit.title}</h3>
                                 <p>{benefit.description}</p>
@@ -263,7 +267,7 @@ export default function Home() {
                         See how LawBit is transforming legal workflows for businesses
                     </motion.p>
                     <div className={styles.testimonialGrid}>
-                        {testimonials.map((testimonial, index) => (
+                        {/* {testimonials.map((testimonial, index) => (
                             <motion.div 
                                 key={testimonial.author}
                                 className={styles.testimonialCard}
@@ -277,7 +281,7 @@ export default function Home() {
                                     <p>{testimonial.position}</p>
                                 </div>
                             </motion.div>
-                        ))}
+                        ))} */}
                     </div>
                 </div>
             </section>
