@@ -4,6 +4,7 @@ import styles from './AnalyzeContract.module.sass';
 import { AnalysisResponse, ClauseAnalysis, SuggestedAlternative } from '@/services/analysisService';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const AnalyzeContract = () => {
     const [file, setFile] = useState<File | null>(null);
@@ -15,7 +16,7 @@ const AnalyzeContract = () => {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [analysisData, setAnalysisData] = useState<AnalysisResponse | null>(null);
-    const [expandedAlternative, setExpandedAlternative] = useState<{[key: string]: number | null}>({});
+    const [expandedAlternative, setExpandedAlternative] = useState<{ [key: string]: number | null }>({});
 
     const clauseTitles = [
         "Termination Clause",
@@ -113,6 +114,39 @@ const AnalyzeContract = () => {
             }
 
             const analysisResponse: AnalysisResponse = await response.json();
+
+            // Validate response structure
+            if (!analysisResponse.documentInfo) {
+                throw new Error('Invalid analysis response: Missing document information');
+            }
+
+            if (!analysisResponse.clauses || !Array.isArray(analysisResponse.clauses) || analysisResponse.clauses.length === 0) {
+                throw new Error('Invalid analysis response: No clauses identified');
+            }
+
+            // Ensure all required fields exist
+            if (!analysisResponse.documentInfo.keyStatistics) {
+                analysisResponse.documentInfo.keyStatistics = {
+                    highRiskItems: handleRiskCounts(analysisResponse.clauses).high,
+                    clausesIdentified: analysisResponse.clauses.length,
+                    riskScore: calculateRiskScore(analysisResponse.clauses)
+                };
+            }
+
+            // Set missing values with calculated ones if they don't exist
+            if (!analysisResponse.documentInfo.keyStatistics.riskScore) {
+                analysisResponse.documentInfo.keyStatistics.riskScore = calculateRiskScore(analysisResponse.clauses);
+            }
+
+            if (!analysisResponse.documentInfo.keyStatistics.highRiskItems) {
+                analysisResponse.documentInfo.keyStatistics.highRiskItems = handleRiskCounts(analysisResponse.clauses).high;
+            }
+
+            if (!analysisResponse.documentInfo.keyStatistics.clausesIdentified) {
+                analysisResponse.documentInfo.keyStatistics.clausesIdentified = analysisResponse.clauses.length;
+            }
+
+            // Set analysis data and show analysis view
             setAnalysisData(analysisResponse);
             setShowAnalysis(true);
         } catch (err) {
@@ -122,6 +156,26 @@ const AnalyzeContract = () => {
         } finally {
             setIsAnalyzing(false);
         }
+    };
+
+    // Calculate risk score based on clause risk levels
+    const calculateRiskScore = (clauses: ClauseAnalysis[]): number => {
+        if (!clauses.length) return 50; // Default value if no clauses
+
+        const riskWeights = {
+            'High Risk': 100,
+            'Medium Risk': 60,
+            'Low Risk': 20
+        };
+
+        let totalRiskScore = 0;
+        clauses.forEach(clause => {
+            totalRiskScore += riskWeights[clause.riskLevel] || 60;
+        });
+
+        // Calculate average and invert (higher risk = lower score)
+        const averageRisk = Math.round(totalRiskScore / clauses.length);
+        return Math.max(1, Math.min(100, averageRisk)); // Ensure between 1-100
     };
 
     // Get risk badge color class based on risk level
@@ -184,7 +238,7 @@ const AnalyzeContract = () => {
             
             // Document Info
             addText('Document Information', margin, 18, true);
-            addText(`Document Name: ${analysisData.documentInfo.title}`, margin + 20, 12);
+            addText(`Document Name: ${analysisData.documentInfo.title || "Untitled Document"}`, margin + 20, 12);
             addText(`Date and Time: ${new Date(analysisData.documentInfo.dateTime).toLocaleString()}`, margin + 20, 12);
             
             // Risk Assessment
@@ -202,88 +256,303 @@ const AnalyzeContract = () => {
             
             // Key Statistics
             addText('Key Statistics', margin, 18, true);
-            addText(`High Risk Items: ${analysisData.documentInfo.keyStatistics.highRiskItems}`, margin + 20, 12);
-            addText(`Clauses Identified: ${analysisData.documentInfo.keyStatistics.clausesIdentified || analysisData.clauses.length}`, margin + 20, 12);
+
+            // Get risk counts from actual data
+            const riskCounts = handleRiskCounts(analysisData.clauses);
+
+            addText(`High Risk Items: ${riskCounts.high}`, margin + 20, 12);
+            addText(`Medium Risk Items: ${riskCounts.medium}`, margin + 20, 12);
+            addText(`Low Risk Items: ${riskCounts.low}`, margin + 20, 12);
+            addText(`Total Clauses Identified: ${analysisData.documentInfo.keyStatistics.clausesIdentified || analysisData.clauses.length}`, margin + 20, 12);
+
+            if (analysisData.documentInfo.jurisdiction) {
             addText(`Jurisdiction: ${analysisData.documentInfo.jurisdiction}`, margin + 20, 12);
-            y -= lineHeight;
-            
-            // Add content for risk scores and other stats
-            // Add risk items count
-            addText(`Risk Score: ${analysisData.documentInfo.keyStatistics.riskScore || 57}/100`, margin + 20, 12);
-            addText(`High Risk Items: ${handleRiskCounts(analysisData.clauses).high}`, margin + 20, 12);
-            addText(`Medium Risk Items: ${handleRiskCounts(analysisData.clauses).medium}`, margin + 20, 12);
-            addText(`Low Risk Items: ${handleRiskCounts(analysisData.clauses).low}`, margin + 20, 12);
+            }
+
+            addText(`Risk Score: ${analysisData.documentInfo.keyStatistics.riskScore}/100`, margin + 20, 12);
             y -= lineHeight;
             
             // Clauses
-            for (let i = 0; i < analysisData.clauses.length; i++) {
-                const clause = analysisData.clauses[i];
-                
-                // Add new page if needed
-                if (y < 300) {
-                    page.drawText(`- ${i+1} -`, {
-                        x: width / 2 - 15,
-                        y: 30,
-                        size: 10,
-                        font: timesRomanFont,
-                    });
-                    
-                    page = pdfDoc.addPage([595.28, 841.89]);
-                    const pageSize = page.getSize();
-                    width = pageSize.width;
-                    height = pageSize.height;
-                    y = height - 50;
-                }
-                
-                // Determine color for risk level
-                const clauseRiskColor = clause.riskLevel === 'High Risk' 
-                    ? rgb(0.9, 0.2, 0.2) 
-                    : clause.riskLevel === 'Medium Risk'
-                        ? rgb(0.9, 0.5, 0.1)
-                        : rgb(0.9, 0.8, 0.2);
-                
-                // Add clause title and risk level
-                addText(clauseTitles[i] || clause.title, margin, 18, true);
-                addText(`Risk Level: `, margin + 20, 12);
-                y += lineHeight; // Move back up for same line
-                addText(clause.riskLevel, margin + 100, 12, true, clauseRiskColor);
-                y -= lineHeight;
-                
-                // Add extracted text
-                addText('Extracted Text:', margin + 20, 12, true);
-                const extractedTextLines = clause.extractedText.split('\n');
-                extractedTextLines.forEach(line => {
-                    if (line.trim()) {
-                        addText(line.trim(), margin + 30, 12);
-                    }
-                });
-                y -= lineHeight;
-                
-                // Add suggested alternatives
-                addText('Suggested Alternatives:', margin + 20, 12, true);
-                clause.suggestedAlternatives.forEach((alt, index) => {
-                    addText(`${index+1}. ${alt.text}`, margin + 30, 12);
-                    
-                    // Add description if available
-                    if (alt.description) {
-                        const descLines = alt.description.split('\n');
-                        descLines.forEach(line => {
-                            if (line.trim()) {
-                                addText(line.trim(), margin + 40, 10, false, rgb(0.4, 0.4, 0.4));
-                            }
-                        });
-                    }
-                    y -= lineHeight / 2;
-                });
-                
-                y -= lineHeight * 1.5;
+            {/* Sort and group clauses by risk level: high first, then medium, then low */ }
+            {/* High Risk Clauses */ }
+            {
+                analysisData.clauses
+                    .filter(clause => clause.riskLevel === 'High Risk')
+                    .map((clause, clauseIndex) => {
+                        // Use predefined titles if available, otherwise use from clause
+                        const title = clause.title || clauseTitles[clauseIndex] || `Clause ${clauseIndex + 1}`;
+
+                        return (
+                            <div
+                                key={`high-${clauseIndex}`}
+                                className={cn(
+                                    styles.clauseSection,
+                                    styles.highRisk
+                                )}
+                            >
+                                <div className={styles.clauseHeader}>
+                                    <h3 className={styles.heading3}>{title}</h3>
+                                    <div
+                                        className={cn(
+                                            styles.riskBadge,
+                                            styles.highRisk
+                                        )}
+                                    >
+                                        High Risk
+                                    </div>
+                                </div>
+
+                                {clause.text && <p className={styles.clauseText}>{clause.text}</p>}
+
+                                {/* Extracted Text */}
+                                <div className={styles.extractedText}>
+                                    <h4 className={styles.heading4}>Extracted Text</h4>
+                                    <div className={styles.textBox}>
+                                        <p className={styles.textContent}>{clause.extractedText}</p>
+                                        <button
+                                            className={styles.copyButton}
+                                            onClick={() => copyToClipboard(clause.extractedText)}
+                                        >
+                                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
+                                                <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Suggested Alternatives */}
+                                {clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0 && (
+                                    <div className={styles.suggestedSection}>
+                                        <h4 className={styles.heading4}>Suggested alternatives</h4>
+                                        <div className={styles.alternativesList}>
+                                            {clause.suggestedAlternatives.slice(0, 2).map((alt) => (
+                                                <div key={alt.id} className={styles.alternativeItem}>
+                                                    <div
+                                                        className={styles.alternativeHeader}
+                                                        onClick={() => toggleExpandAlternative(clauseIndex, alt.id)}
+                                                    >
+                                                        <span className={styles.alternativeNumber}>{alt.id}</span>
+                                                        <p className={styles.alternativeText}>{alt.text}</p>
+                                                        <div className={styles.alternativeActions}>
+                                                            <button
+                                                                className={styles.copyButton}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    copyToClipboard(alt.text);
+                                                                }}
+                                                            >
+                                                                Copy
+                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
+                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                </svg>
+
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div className={cn(
+                                                        styles.alternativeDescription,
+                                                        { [styles.expanded]: expandedAlternative[`clause-${clauseIndex}`] === alt.id }
+                                                    )}>
+                                                        <p className={styles.descriptionText}>
+                                                            {alt.description || "This alternative provides clearer language and better protects your interests. It uses more precise terms and addresses potential loopholes in the original clause."}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })
+            }
+
+            {/* Medium Risk Clauses */ }
+            {
+                analysisData.clauses
+                    .filter(clause => clause.riskLevel === 'Medium Risk')
+                    .map((clause, clauseIndex) => {
+                        // Use predefined titles if available, otherwise use from clause
+                        const title = clause.title || clauseTitles[clauseIndex] || `Clause ${clauseIndex + 1}`;
+
+                        return (
+                            <div
+                                key={`medium-${clauseIndex}`}
+                                className={cn(
+                                    styles.clauseSection,
+                                    styles.mediumRisk
+                                )}
+                            >
+                                <div className={styles.clauseHeader}>
+                                    <h3 className={styles.heading3}>{title}</h3>
+                                    <div
+                                        className={cn(
+                                            styles.riskBadge,
+                                            styles.mediumRisk
+                                        )}
+                                    >
+                                        Medium Risk
+                                    </div>
+                                </div>
+
+                                {clause.text && <p className={styles.clauseText}>{clause.text}</p>}
+
+                                {/* Extracted Text */}
+                                <div className={styles.extractedText}>
+                                    <h4 className={styles.heading4}>Extracted Text</h4>
+                                    <div className={styles.textBox}>
+                                        <p className={styles.textContent}>{clause.extractedText}</p>
+                                        
+                                    </div>
+                                </div>
+
+                                {/* Suggested Alternatives */}
+                                {clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0 && (
+                                    <div className={styles.suggestedSection}>
+                                        <h4 className={styles.heading4}>Suggested alternatives</h4>
+                                        <div className={styles.alternativesList}>
+                                            {clause.suggestedAlternatives.slice(0, 2).map((alt) => (
+                                                <div key={alt.id} className={styles.alternativeItem}>
+                                                    <div
+                                                        className={styles.alternativeHeader}
+                                                        onClick={() => toggleExpandAlternative(clauseIndex, alt.id)}
+                                                    >
+                                                        <span className={styles.alternativeNumber}>{alt.id}</span>
+                                                        <p className={styles.alternativeText}>{alt.text}</p>
+                                                        <div className={styles.alternativeActions}>
+                                                            <button
+                                                                className={styles.copyButton}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    copyToClipboard(alt.text);
+                                                                }}
+                                                            >
+                                                                Copy
+                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
+                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                </svg>
+
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div className={cn(
+                                                        styles.alternativeDescription,
+                                                        { [styles.expanded]: expandedAlternative[`clause-${clauseIndex}`] === alt.id }
+                                                    )}>
+                                                        <p className={styles.descriptionText}>
+                                                            {alt.description || "This alternative provides clearer language and better protects your interests. It uses more precise terms and addresses potential loopholes in the original clause."}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })
+            }
+
+            {/* Low Risk Clauses */ }
+            {
+                analysisData.clauses
+                    .filter(clause => clause.riskLevel === 'Low Risk')
+                    .map((clause, clauseIndex) => {
+                        // Use predefined titles if available, otherwise use from clause
+                        const title = clause.title || clauseTitles[clauseIndex] || `Clause ${clauseIndex + 1}`;
+
+                        return (
+                            <div
+                                key={`low-${clauseIndex}`}
+                                className={cn(
+                                    styles.clauseSection,
+                                    styles.lowRisk
+                                )}
+                            >
+                                <div className={styles.clauseHeader}>
+                                    <h3 className={styles.heading3}>{title}</h3>
+                                    <div
+                                        className={cn(
+                                            styles.riskBadge,
+                                            styles.lowRisk
+                                        )}
+                                    >
+                                        Low Risk
+                                    </div>
+                                </div>
+
+                                {clause.text && <p className={styles.clauseText}>{clause.text}</p>}
+
+                                {/* Extracted Text */}
+                                <div className={styles.extractedText}>
+                                    <h4 className={styles.heading4}>Extracted Text</h4>
+                                    <div className={styles.textBox}>
+                                        <p className={styles.textContent}>{clause.extractedText}</p>
+                                        
+                                    </div>
+                                </div>
+
+                                {/* Suggested Alternatives */}
+                                {clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0 && (
+                                    <div className={styles.suggestedSection}>
+                                        <h4 className={styles.heading4}>Suggested alternatives</h4>
+                                        <div className={styles.alternativesList}>
+                                            {clause.suggestedAlternatives.slice(0, 2).map((alt) => (
+                                                <div key={alt.id} className={styles.alternativeItem}>
+                                                    <div
+                                                        className={styles.alternativeHeader}
+                                                        onClick={() => toggleExpandAlternative(clauseIndex, alt.id)}
+                                                    >
+                                                        <span className={styles.alternativeNumber}>{alt.id}</span>
+                                                        <p className={styles.alternativeText}>{alt.text}</p>
+                                                        <div className={styles.alternativeActions}>
+                                                            <button
+                                                                className={styles.copyButton}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    copyToClipboard(alt.text);
+                                                                }}
+                                                            >
+                                                                Copy
+                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
+                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                </svg>
+
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div className={cn(
+                                                        styles.alternativeDescription,
+                                                        { [styles.expanded]: expandedAlternative[`clause-${clauseIndex}`] === alt.id }
+                                                    )}>
+                                                        <p className={styles.descriptionText}>
+                                                            {alt.description || "This alternative provides clearer language and better protects your interests. It uses more precise terms and addresses potential loopholes in the original clause."}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })
             }
             
             // Add page numbers
             for (let i = 0; i < pdfDoc.getPageCount(); i++) {
                 const p = pdfDoc.getPage(i);
                 const { width, height } = p.getSize();
-                p.drawText(`Page ${i+1} of ${pdfDoc.getPageCount()}`, {
+                p.drawText(`Page ${i + 1} of ${pdfDoc.getPageCount()}`, {
                     x: width - 150,
                     y: 30,
                     size: 10,
@@ -291,13 +560,13 @@ const AnalyzeContract = () => {
                 });
             }
             
-            // Save the PDF
+            // Save the PDF with a meaningful filename
             const pdfBytes = await pdfDoc.save();
             const blob = new Blob([pdfBytes], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `analysis_report_${new Date().toISOString().split('T')[0]}.pdf`;
+            link.download = `analysis_${analysisData.documentInfo.title || 'document'}_${new Date().toISOString().split('T')[0]}.pdf`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -318,9 +587,31 @@ const AnalyzeContract = () => {
         }, { high: 0, medium: 0, low: 0 });
     };
 
+    // Function to reset analysis state
+    const handleReset = () => {
+        // Add a slight delay before resetting state to allow for animation
+        setTimeout(() => {
+            setShowAnalysis(false);
+            setFile(null);
+            setText('');
+            setError(null);
+            // Optionally reset other states if needed
+            // setAnalysisData(null);
+        }, 300);
+    };
+
     return (
         <div className={styles.container}>
-            <div className={styles.mainContent}>
+            <AnimatePresence mode="wait">
+                {!showAnalysis ? (
+                    <motion.div
+                        className={styles.mainContent}
+                        key="upload-section"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                    >
                 <div className={styles.uploadContainer}>
                     {activeTab === 'upload' ? (
                         <div
@@ -348,7 +639,7 @@ const AnalyzeContract = () => {
                                 className={styles.uploadIcon}
                             />
                             <div className={styles.uploadText}>
-                                <p>
+                                        <p className={styles.uploadTextContent}>
                                     {isUploading ? (
                                         'Uploading...'
                                     ) : file ? (
@@ -412,7 +703,7 @@ const AnalyzeContract = () => {
                         >
                             <span>{isAnalyzing ? 'Analyzing...' : 'Analyze your document now    '}</span>
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </button>
                     </div>
@@ -423,23 +714,49 @@ const AnalyzeContract = () => {
                         </div>
                     )}
                 </div>
-            </div>
-
-            {showAnalysis && (
-                <div className={styles.analysisContent}>
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        className={styles.analysisContent}
+                        key="analysis-section"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                    >
                     {analysisData && (
                         <div className={styles.documentInfo}>
-                            <h3>Document Information</h3>
+                                <div className={styles.headerRow}>
+                                    <h3 className={styles.documentTitle}>Document Information</h3>
+                                    <button
+                                        className={styles.backButton}
+                                        onClick={handleReset}
+                                    >
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                        Back
+                                    </button>
+                                </div>
+
                             <div className={styles.infoHeader}>
                                 <div className={styles.previewSection}>
+                                        <h3 className={styles.sectionHeading}>Document Preview</h3>
                                     <div className={styles.documentPreview}>
                                         <p className={styles.previewText}>
                                             {analysisData.documentInfo.title || (file ? file.name : "Untitled Document")}
-                                            {analysisData.documentInfo.previewText && (
+                                                {analysisData.documentInfo.previewText ? (
                                                 <>
                                                     <br /><br />
                                                     {analysisData.documentInfo.previewText}
                                                 </>
+                                                ) : (
+                                                    analysisData.clauses.length > 0 && (
+                                                        <>
+                                                            <br /><br />
+                                                            {analysisData.clauses[0].extractedText}
+                                                        </>
+                                                    )
                                             )}
                                         </p>
                                         <div className={styles.fileInfo}>
@@ -447,11 +764,22 @@ const AnalyzeContract = () => {
                                                 {activeTab === 'upload' && file ? file.name : (analysisData.documentInfo.title || 'document.pdf')}
                                                 <button 
                                                     className={styles.deleteButton}
-                                                    onClick={() => { /* Just for UI, no functionality needed */ }}
-                                                >
-                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                        onClick={handleReset}
+                                                    >
+                                                        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <rect width="44" height="44" rx="22" fill="#F8F8F8" fill-opacity="0.05" />
+                                                            <g clip-path="url(#clip0_6112_88416)">
+                                                                <path d="M16.5 16H16.61C17.0124 15.9897 17.4024 15.8582 17.7289 15.6227C18.0554 15.3872 18.3033 15.0586 18.44 14.68L18.474 14.577L18.571 14.286C18.654 14.037 18.696 13.913 18.751 13.807C18.8592 13.5994 19.0145 13.42 19.2045 13.2832C19.3944 13.1463 19.6138 13.0559 19.845 13.019C19.962 13 20.093 13 20.355 13H23.645C23.907 13 24.038 13 24.155 13.019C24.3862 13.0559 24.6056 13.1463 24.7955 13.2832C24.9855 13.42 25.1408 13.5994 25.249 13.807C25.304 13.913 25.346 14.037 25.429 14.286L25.526 14.577C25.6527 14.9983 25.9148 15.366 26.2717 15.6233C26.6285 15.8805 27.0603 16.0129 27.5 16" stroke="#989898" stroke-width="1.5" />
+                                                                <path d="M30.5 16H13.5M28.833 18.5L28.373 25.4C28.196 28.054 28.108 29.381 27.243 30.19C26.378 30.999 25.048 31 22.387 31H21.613C18.953 31 17.623 31 16.757 30.19C15.892 29.381 15.804 28.054 15.627 25.4L15.167 18.5" stroke="white" stroke-width="1.5" stroke-linecap="round" />
+                                                                <path d="M19.5 21L20 26M24.5 21L24 26" stroke="#989898" stroke-width="1.5" stroke-linecap="round" />
+                                                            </g>
+                                                            <defs>
+                                                                <clipPath id="clip0_6112_88416">
+                                                                    <rect width="24" height="24" fill="white" transform="translate(10 10)" />
+                                                                </clipPath>
+                                                            </defs>
                                                     </svg>
+
                                                 </button>
                                             </div>
                                         </div>
@@ -460,105 +788,205 @@ const AnalyzeContract = () => {
 
                                 <div className={styles.infoDetails}>
                                     <div className={styles.infoItem}>
-                                        <label>Date and Time</label>
-                                        <p>{new Date(analysisData.documentInfo.dateTime).toLocaleString()}</p>
+                                            <label className={styles.label}>Date and Time</label>
+                                            <p className={styles.value}>{new Date(analysisData.documentInfo.dateTime).toLocaleString()}</p>
                                     </div>
                                     
-                                    {analysisData.documentInfo.jurisdiction && (
                                         <div className={styles.infoItem}>
-                                            <label>Jurisdiction</label>
-                                            <p>{analysisData.documentInfo.jurisdiction}</p>
+                                            <h4 className={styles.heading4}>Key statistics</h4>
+                                            <div className={styles.keyStatsRow}>
+                                                <div className={styles.keyStatItem}>
+                                                    <div className={styles.keyStatIcon}>
+                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M9.33854 1.33203H4.00521C3.65159 1.33203 3.31245 1.47251 3.0624 1.72256C2.81235 1.9726 2.67188 2.31174 2.67188 2.66536V13.332C2.67188 13.6857 2.81235 14.0248 3.0624 14.2748C3.31245 14.5249 3.65159 14.6654 4.00521 14.6654H12.0052C12.3588 14.6654 12.698 14.5249 12.948 14.2748C13.1981 14.0248 13.3385 13.6857 13.3385 13.332V5.33203L9.33854 1.33203Z" stroke="white" stroke-linecap="round" stroke-linejoin="round" />
+                                                            <path d="M9.32812 1.33203V5.33203H13.3281" stroke="white" stroke-linecap="round" stroke-linejoin="round" />
+                                                            <path d="M10.6615 8.66797H5.32812" stroke="white" stroke-linecap="round" stroke-linejoin="round" />
+                                                            <path d="M10.6615 11.332H5.32812" stroke="white" stroke-linecap="round" stroke-linejoin="round" />
+                                                            <path d="M6.66146 6H5.99479H5.32812" stroke="white" stroke-linecap="round" stroke-linejoin="round" />
+                                                        </svg>
+
+                                                    </div>
+                                                    <span>{analysisData.documentInfo.keyStatistics.clausesIdentified || analysisData.clauses.length} clauses identified</span>
+                                                </div>
+
+                                                {analysisData.documentInfo.jurisdiction && (
+                                                    <div className={styles.keyStatItem}>
+                                                        <div className={styles.keyStatIcon}>
+                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <g clip-path="url(#clip0_6118_116528)">
+                                                                    <path d="M7.99479 14.6654C11.6767 14.6654 14.6615 11.6806 14.6615 7.9987C14.6615 4.3168 11.6767 1.33203 7.99479 1.33203C4.31289 1.33203 1.32812 4.3168 1.32812 7.9987C1.32812 11.6806 4.31289 14.6654 7.99479 14.6654Z" stroke="white" stroke-linecap="round" stroke-linejoin="round" />
+                                                                    <path d="M1.32812 8H14.6615" stroke="white" stroke-linecap="round" stroke-linejoin="round" />
+                                                                    <path d="M7.99479 1.33203C9.66231 3.1576 10.61 5.52672 10.6615 7.9987C10.61 10.4707 9.66231 12.8398 7.99479 14.6654C6.32727 12.8398 5.37962 10.4707 5.32812 7.9987C5.37962 5.52672 6.32727 3.1576 7.99479 1.33203Z" stroke="white" stroke-linecap="round" stroke-linejoin="round" />
+                                                                </g>
+                                                                <defs>
+                                                                    <clipPath id="clip0_6118_116528">
+                                                                        <rect width="16" height="16" fill="white" />
+                                                                    </clipPath>
+                                                                </defs>
+                                                            </svg>
+
+                                                        </div>
+                                                        <span>Jurisdiction: {analysisData.documentInfo.jurisdiction}</span>
                                         </div>
                                     )}
+                                            </div>
+                                        </div>
                                     
                                     <div className={styles.infoItem}>
-                                        <label>Risk assessment</label>
+                                            <h4 className={styles.heading4}>Risk assessment</h4>
                                         <div className={styles.riskAssessment}>
-                                            <div 
-                                                className={cn(
-                                                    styles.riskBadge, 
-                                                    getRiskColorClass(analysisData.documentInfo.riskAssessment)
-                                                )}
-                                            >
-                                                {analysisData.documentInfo.riskAssessment}
-                                            </div>
-                                            <div className={styles.riskScore}>{analysisData.documentInfo.keyStatistics.riskScore || 57}/100</div>
+                                                <div className={styles.riskScore}>
+                                                    {analysisData.documentInfo.keyStatistics.riskScore}/100
                                         </div>
                                         <div className={styles.riskProgressBar}>
                                             <div 
-                                                className={styles.riskProgress} 
-                                                style={{ 
-                                                    width: `${analysisData.documentInfo.keyStatistics.riskScore || 57}%`
-                                                }}
-                                            />
+                                                        className={cn(
+                                                            styles.riskProgress,
+                                                            analysisData.documentInfo.keyStatistics.riskScore > 70 ? styles.highRisk :
+                                                                analysisData.documentInfo.keyStatistics.riskScore > 40 ? styles.mediumRisk :
+                                                                    styles.lowRisk
+                                                        )}
+                                                        style={{ width: `${analysisData.documentInfo.keyStatistics.riskScore}%` }}
+                                                    />
+                                                </div>
                                         </div>
                                     </div>
                                     
-                                    <div className={styles.infoItem}>
-                                        <label>Key statistics</label>
                                         <div className={styles.statsList}>
-                                            <div className={cn(styles.statItem, styles.highRiskItem)}>
+                                            <div className={cn(styles.statItem, styles.highRiskStat)}>
                                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                                 </svg>
-                                                <span>{handleRiskCounts(analysisData.clauses).high || 0} High risk item{handleRiskCounts(analysisData.clauses).high !== 1 ? 's' : ''}</span>
+                                                <span>{handleRiskCounts(analysisData.clauses).high} High risk item{handleRiskCounts(analysisData.clauses).high !== 1 ? 's' : ''}</span>
                                             </div>
-                                            <div className={cn(styles.statItem, styles.mediumRiskItem)}>
+                                            <div className={cn(styles.statItem, styles.mediumRiskStat)}>
                                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                                 </svg>
-                                                <span>{handleRiskCounts(analysisData.clauses).medium || 0} Medium risk item{handleRiskCounts(analysisData.clauses).medium !== 1 ? 's' : ''}</span>
+                                                <span>{handleRiskCounts(analysisData.clauses).medium} Medium risk item{handleRiskCounts(analysisData.clauses).medium !== 1 ? 's' : ''}</span>
                                             </div>
-                                            <div className={cn(styles.statItem, styles.lowRiskItem)}>
+                                            <div className={cn(styles.statItem, styles.lowRiskStat)}>
                                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                                 </svg>
-                                                <span>{handleRiskCounts(analysisData.clauses).low || 0} Low risk item{handleRiskCounts(analysisData.clauses).low !== 1 ? 's' : ''}</span>
+                                                <span>{handleRiskCounts(analysisData.clauses).low} Low risk item{handleRiskCounts(analysisData.clauses).low !== 1 ? 's' : ''}</span>
+                                            </div>
+                                        </div>
                                             </div>
                                         </div>
 
-                                        <div className={styles.additionalStats}>
-                                            <div className={styles.statItem}>
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                </svg>
-                                                <span>{analysisData.documentInfo.keyStatistics.clausesIdentified || analysisData.clauses.length} Clauses identified</span>
-                                            </div>
-                                            {analysisData.documentInfo.jurisdiction && (
-                                                <div className={styles.statItem}>
-                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M3 21h18M5 21V7l8-4 8 4v14M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                    </svg>
-                                                    <span>Jurisdiction: {analysisData.documentInfo.jurisdiction}</span>
+                                {/* Clauses Analysis Sections */}
+                                {/* Sort and group clauses by risk level: high first, then medium, then low */}
+                                {/* High Risk Clauses */}
+                                {analysisData.clauses
+                                    .filter(clause => clause.riskLevel === 'High Risk')
+                                    .map((clause, clauseIndex) => {
+                                        // Use predefined titles if available, otherwise use from clause
+                                        const title = clause.title || clauseTitles[clauseIndex] || `Clause ${clauseIndex + 1}`;
+
+                                        return (
+                                            <div
+                                                key={`high-${clauseIndex}`}
+                                                className={cn(
+                                                    styles.clauseSection,
+                                                    styles.highRisk
+                                                )}
+                                            >
+                                                <div className={styles.clauseHeader}>
+                                                    <h3 className={styles.heading3}>{title}</h3>
+                                                    <div
+                                                        className={cn(
+                                                            styles.riskBadge,
+                                                            styles.highRisk
+                                                        )}
+                                                    >
+                                                        High Risk
+                                                    </div>
                                                 </div>
-                                            )}
+
+                                                {clause.text && <p className={styles.clauseText}>{clause.text}</p>}
+
+                                                {/* Extracted Text */}
+                                                <div className={styles.extractedText}>
+                                                    <h4 className={styles.heading4}>Extracted Text</h4>
+                                                    <div className={styles.textBox}>
+                                                        <p className={styles.textContent}>{clause.extractedText}</p>
+                                                        
+                                            </div>
+                                                </div>
+
+                                                {/* Suggested Alternatives */}
+                                                {clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0 && (
+                                                    <div className={styles.suggestedSection}>
+                                                        <h4 className={styles.heading4}>Suggested alternatives</h4>
+                                                        <div className={styles.alternativesList}>
+                                                            {clause.suggestedAlternatives.slice(0, 2).map((alt) => (
+                                                                <div key={alt.id} className={styles.alternativeItem}>
+                                                                    <div
+                                                                        className={styles.alternativeHeader}
+                                                                        onClick={() => toggleExpandAlternative(clauseIndex, alt.id)}
+                                                                    >
+                                                                        <span className={styles.alternativeNumber}>{alt.id}</span>
+                                                                        <p className={styles.alternativeText}>{alt.text}</p>
+                                                                        <div className={styles.alternativeActions}>
+                                                                            <button
+                                                                                className={styles.copyButton}
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    copyToClipboard(alt.text);
+                                                                                }}
+                                                                            >
+                                                                                Copy
+                                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
+                                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+
+                                                                            </button>
+                                                </div>
                                         </div>
+                                                                    <div className={cn(
+                                                                        styles.alternativeDescription,
+                                                                        { [styles.expanded]: expandedAlternative[`clause-${clauseIndex}`] === alt.id }
+                                                                    )}>
+                                                                        <p className={styles.descriptionText}>
+                                                                            {alt.description || "This alternative provides clearer language and better protects your interests. It uses more precise terms and addresses potential loopholes in the original clause."}
+                                                                        </p>
                                     </div>
                                 </div>
+                                                            ))}
                             </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
 
-                            {/* Clauses Analysis Sections */}
-                            {analysisData.clauses.map((clause, clauseIndex) => {
+                                {/* Medium Risk Clauses */}
+                                {analysisData.clauses
+                                    .filter(clause => clause.riskLevel === 'Medium Risk')
+                                    .map((clause, clauseIndex) => {
                                 // Use predefined titles if available, otherwise use from clause
-                                const title = clauseTitles[clauseIndex] || clause.title;
+                                        const title = clause.title || clauseTitles[clauseIndex] || `Clause ${clauseIndex + 1}`;
                                 
                                 return (
                                     <div 
-                                        key={clauseIndex} 
+                                                key={`medium-${clauseIndex}`}
                                         className={cn(
                                             styles.clauseSection,
-                                            getRiskColorClass(clause.riskLevel)
+                                                    styles.mediumRisk
                                         )}
                                     >
                                         <div className={styles.clauseHeader}>
-                                            <h3>{title}</h3>
+                                                    <h3 className={styles.heading3}>{title}</h3>
                                             <div 
                                                 className={cn(
                                                     styles.riskBadge, 
-                                                    getRiskColorClass(clause.riskLevel)
+                                                            styles.mediumRisk
                                                 )}
                                             >
-                                                {clause.riskLevel}
+                                                        Medium Risk
                                             </div>
                                         </div>
                                         
@@ -566,55 +994,129 @@ const AnalyzeContract = () => {
                                         
                                         {/* Extracted Text */}
                                         <div className={styles.extractedText}>
-                                            <h4>Extracted Text</h4>
+                                                    <h4 className={styles.heading4}>Extracted Text</h4>
                                             <div className={styles.textBox}>
-                                                <p>{clause.extractedText}</p>
-                                                <button 
-                                                    className={styles.copyButton}
-                                                    onClick={() => copyToClipboard(clause.extractedText)}
-                                                >
-                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-2M8 5v14h12V5H8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                    </svg>
-                                                </button>
+                                                        <p className={styles.textContent}>{clause.extractedText}</p>
+                                                
                                             </div>
                                         </div>
                                         
                                         {/* Suggested Alternatives */}
+                                                {clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0 && (
                                         <div className={styles.suggestedSection}>
-                                            <h4>Suggested alternatives</h4>
+                                                        <h4 className={styles.heading4}>Suggested alternatives</h4>
                                             <div className={styles.alternativesList}>
-                                                {clause.suggestedAlternatives.map((alt) => (
+                                                            {clause.suggestedAlternatives.slice(0, 2).map((alt) => (
                                                     <div key={alt.id} className={styles.alternativeItem}>
-                                                        <div className={styles.alternativeHeader}>
+                                                                    <div
+                                                                        className={styles.alternativeHeader}
+                                                                        onClick={() => toggleExpandAlternative(clauseIndex, alt.id)}
+                                                                    >
                                                             <span className={styles.alternativeNumber}>{alt.id}</span>
-                                                            <p>{alt.text}</p>
+                                                                        <p className={styles.alternativeText}>{alt.text}</p>
                                                             <div className={styles.alternativeActions}>
                                                                 <button 
                                                                     className={styles.copyButton}
-                                                                    onClick={() => copyToClipboard(alt.text)}
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    copyToClipboard(alt.text);
+                                                                                }}
                                                                 >
                                                                     Copy
-                                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-2M8 5v14h12V5H8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
+                                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                                                     </svg>
+
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        {alt.description && (
-                                                            <div 
-                                                                className={cn(styles.alternativeDescription, {
-                                                                    [styles.expanded]: expandedAlternative[`clause-${clauseIndex}`] === alt.id
-                                                                })}
+                                                                    <div className={cn(
+                                                                        styles.alternativeDescription,
+                                                                        { [styles.expanded]: expandedAlternative[`clause-${clauseIndex}`] === alt.id }
+                                                                    )}>
+                                                                        <p className={styles.descriptionText}>
+                                                                            {alt.description || "This alternative provides clearer language and better protects your interests. It uses more precise terms and addresses potential loopholes in the original clause."}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+
+                                {/* Low Risk Clauses */}
+                                {analysisData.clauses
+                                    .filter(clause => clause.riskLevel === 'Low Risk')
+                                    .map((clause, clauseIndex) => {
+                                        // Use predefined titles if available, otherwise use from clause
+                                        const title = clause.title || clauseTitles[clauseIndex] || `Clause ${clauseIndex + 1}`;
+
+                                        return (
+                                            <div
+                                                key={`low-${clauseIndex}`}
+                                                className={cn(
+                                                    styles.clauseSection,
+                                                    styles.lowRisk
+                                                )}
+                                            >
+                                                <div className={styles.clauseHeader}>
+                                                    <h3 className={styles.heading3}>{title}</h3>
+                                                    <div
+                                                        className={cn(
+                                                            styles.riskBadge,
+                                                            styles.lowRisk
+                                                        )}
+                                                    >
+                                                        Low Risk
+                                                    </div>
+                                                </div>
+
+                                                {clause.text && <p className={styles.clauseText}>{clause.text}</p>}
+
+                                                {/* Extracted Text */}
+                                                <div className={styles.extractedText}>
+                                                    <h4 className={styles.heading4}>Extracted Text</h4>
+                                                    <div className={styles.textBox}>
+                                                        <p className={styles.textContent}>{clause.extractedText}</p>
+                                                        
+                                                    </div>
+                                                </div>
+
+                                                {/* Suggested Alternatives */}
+                                                {clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0 && (
+                                                    <div className={styles.suggestedSection}>
+                                                        <h4 className={styles.heading4}>Suggested alternatives</h4>
+                                                        <div className={styles.alternativesList}>
+                                                            {clause.suggestedAlternatives.slice(0, 2).map((alt) => (
+                                                                <div key={alt.id} className={styles.alternativeItem}>
+                                                                    <div
+                                                                        className={styles.alternativeHeader}
                                                                 onClick={() => toggleExpandAlternative(clauseIndex, alt.id)}
                                                             >
-                                                                <p>{alt.description}</p>
+                                                                        <span className={styles.alternativeNumber}>{alt.id}</span>
+                                                                        <p className={styles.alternativeText}>{alt.text}</p>
+                                                                        <div className={styles.alternativeActions}>
+                                                                            
                                                             </div>
-                                                        )}
+                                                                    </div>
+                                                                    <div className={cn(
+                                                                        styles.alternativeDescription,
+                                                                        { [styles.expanded]: expandedAlternative[`clause-${clauseIndex}`] === alt.id }
+                                                                    )}>
+                                                                        <p className={styles.descriptionText}>
+                                                                            {alt.description || "This alternative provides clearer language and better protects your interests. It uses more precise terms and addresses potential loopholes in the original clause."}
+                                                                        </p>
+                                                                    </div>
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
+                                                )}
                                     </div>
                                 );
                             })}
@@ -627,13 +1129,14 @@ const AnalyzeContract = () => {
                             >
                                 <span>Download Analysis</span>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 3v10m0 0l-4-4m4 4l4-4m-10 7v4h12v-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M12 3v10m0 0l-4-4m4 4l4-4m-10 7v4h12v-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </button>
                         </div>
                     )}
-                </div>
+                    </motion.div>
             )}
+            </AnimatePresence>
         </div>
     );
 };
