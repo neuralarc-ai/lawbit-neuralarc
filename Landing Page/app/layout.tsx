@@ -1,6 +1,6 @@
 import "@/styles/app.sass";
 import type { Metadata } from "next";
-import { Fustat } from "next/font/google";
+import { Fustat, Urbanist } from "next/font/google";
 import { Providers } from "./providers";
 
 const fustat = Fustat({
@@ -8,6 +8,14 @@ const fustat = Fustat({
     subsets: ["latin"],
     display: "block",
     variable: "--font-fustat",
+});
+
+const urbanist = Urbanist({
+    weight: ["300"],
+    style: ["italic"],
+    subsets: ["latin"],
+    display: "swap",
+    variable: "--font-urbanist",
 });
 
 export const metadata: Metadata = {
@@ -21,7 +29,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
+        <html lang="en" className={`${fustat.variable} ${urbanist.variable}`}>
             <head>
                 {/* Description no longer than 155 characters */}
                 <meta name="description" content="AI for Legal Intelligence" />
@@ -38,7 +46,7 @@ export default function RootLayout({
                 <meta name="twitter:creator" content="@ui8" />
                 {/* Twitter Summary card images must be at least 120x120px */}
             </head>
-            <body className={fustat.className}>
+            <body>
                 <Providers>{children}</Providers>
             </body>
         </html>
