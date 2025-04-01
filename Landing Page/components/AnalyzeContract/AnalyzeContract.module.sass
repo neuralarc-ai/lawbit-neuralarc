@@ -500,13 +500,13 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     transition: width 0.6s ease
     
     &.highRisk
-        background: linear-gradient(to right, #FF3B30, #FF675E)
+        background: linear-gradient(to right,rgb(255, 255, 255),rgb(255, 255, 255))
     
     &.mediumRisk
-        background: linear-gradient(to right, #FF9500, #FFC36B)
+        background: linear-gradient(to right,rgb(255, 255, 255),rgb(255, 255, 255))
     
     &.lowRisk
-        background: linear-gradient(to right, #FFCC00, #FFDE6B)
+        background: linear-gradient(to right,rgb(255, 255, 255),rgb(255, 255, 255))
 
 .riskAssessment
     display: flex
@@ -971,7 +971,7 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     margin-top: 8px
     align-items: center
     flex-wrap: nowrap
-    justify-content: space-between
+    justify-content: start
 
 .keyStatItem
     display: flex
@@ -981,6 +981,9 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     color: rgba(255, 255, 255, 0.9)
     font-weight: 300
     font-family: $font-family-fustat
+    border: 1.5px solid rgba(255, 255, 255, 0.1)
+    padding: 12px 20px
+    border-radius: 48px
 
 .keyStatIcon
     display: flex
