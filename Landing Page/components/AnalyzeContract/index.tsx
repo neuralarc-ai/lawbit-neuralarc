@@ -5,6 +5,7 @@ import { AnalysisResponse, ClauseAnalysis, SuggestedAlternative } from '@/servic
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import Toast from '../Toast';
 
 const AnalyzeContract = () => {
     const [file, setFile] = useState<File | null>(null);
@@ -17,6 +18,9 @@ const AnalyzeContract = () => {
     const [error, setError] = useState<string | null>(null);
     const [analysisData, setAnalysisData] = useState<AnalysisResponse | null>(null);
     const [expandedAlternative, setExpandedAlternative] = useState<{ [key: string]: number | null }>({});
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [copiedButtons, setCopiedButtons] = useState<{ [key: string]: boolean }>({});
 
     const clauseTitles = [
         "Termination Clause",
@@ -192,10 +196,25 @@ const AnalyzeContract = () => {
         }
     };
 
-    // Copy text to clipboard
-    const copyToClipboard = (text: string) => {
+    // Update the copyToClipboard function
+    const copyToClipboard = (text: string, buttonId: string) => {
         navigator.clipboard.writeText(text);
-        // Could add a toast notification here
+        setToastMessage('Text copied to clipboard');
+        setShowToast(true);
+        
+        // Set the button as copied
+        setCopiedButtons(prev => ({
+            ...prev,
+            [buttonId]: true
+        }));
+
+        // Reset the button after 2 seconds
+        setTimeout(() => {
+            setCopiedButtons(prev => ({
+                ...prev,
+                [buttonId]: false
+            }));
+        }, 2000);
     };
 
     // Handle download PDF report
@@ -203,26 +222,48 @@ const AnalyzeContract = () => {
         if (!analysisData) return;
 
         try {
-            // Create a new PDF document
             const pdfDoc = await PDFDocument.create();
-            
-            // Embed Times New Roman font (or closest available)
             const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
             const boldFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
             
-            // Add a new page
             let page = pdfDoc.addPage([595.28, 841.89]); // A4 size
             let { width, height } = page.getSize();
-            
-            // Set initial position
             let y = height - 50;
             const margin = 50;
             const lineHeight = 20;
+            const maxWidth = width - (margin * 2); // Maximum width for text content
             
-            // Helper function to add text
+            // Helper function to wrap text
+            const wrapText = (text: string, fontSize: number, maxWidth: number, font: any) => {
+                const words = text.split(' ');
+                const lines: string[] = [];
+                let currentLine = words[0];
+
+                for (let i = 1; i < words.length; i++) {
+                    const width = font.widthOfTextAtSize(currentLine + ' ' + words[i], fontSize);
+                    if (width < maxWidth) {
+                        currentLine += ' ' + words[i];
+                    } else {
+                        lines.push(currentLine);
+                        currentLine = words[i];
+                    }
+                }
+                lines.push(currentLine);
+                return lines;
+            };
+
+            // Helper function to add text with wrapping
             const addText = (text: string, x: number, fontSize: number, isBold: boolean = false, color = rgb(0, 0, 0)) => {
                 const currentFont = isBold ? boldFont : timesRomanFont;
-                page.drawText(text, {
+                const lines = wrapText(text, fontSize, maxWidth - (x - margin), currentFont);
+                
+                lines.forEach(line => {
+                    if (y < 100) {
+                        page = pdfDoc.addPage([595.28, 841.89]);
+                        y = height - 50;
+                    }
+                    
+                    page.drawText(line, {
                     x,
                     y,
                     size: fontSize,
@@ -230,16 +271,26 @@ const AnalyzeContract = () => {
                     color,
                 });
                 y -= lineHeight;
+                });
             };
             
-            // Add title
-            addText('Document Analysis Report', margin, 24, true);
+            // Helper function to add section with proper spacing
+            const addSection = (title: string, content: string, indent: number = 0) => {
+                addText(title, margin + indent, 12, true);
             y -= lineHeight;
+                addText(content, margin + indent + 20, 12);
+                y -= lineHeight * 2;
+            };
+
+            // Document Info Section
+            addText('Document Analysis Report', margin, 24, true);
+            y -= lineHeight * 2;
             
-            // Document Info
+            // Document Information
             addText('Document Information', margin, 18, true);
-            addText(`Document Name: ${analysisData.documentInfo.title || "Untitled Document"}`, margin + 20, 12);
-            addText(`Date and Time: ${new Date(analysisData.documentInfo.dateTime).toLocaleString()}`, margin + 20, 12);
+            y -= lineHeight;
+            addSection('Document Name:', analysisData.documentInfo.title || "Untitled Document");
+            addSection('Date and Time:', new Date(analysisData.documentInfo.dateTime).toLocaleString());
             
             // Risk Assessment
             const riskColor = analysisData.documentInfo.riskAssessment === 'High Risk' 
@@ -248,304 +299,88 @@ const AnalyzeContract = () => {
                     ? rgb(0.9, 0.5, 0.1)
                     : rgb(0.9, 0.8, 0.2);
             
-            addText(`Risk Assessment: `, margin + 20, 12);
-            y += lineHeight; // Move back up to add color text on same line
+            addText('Risk Assessment:', margin + 20, 12, true);
+            y += lineHeight;
             addText(analysisData.documentInfo.riskAssessment, margin + 140, 12, true, riskColor);
-            
-            y -= lineHeight;
+            y -= lineHeight * 2;
             
             // Key Statistics
             addText('Key Statistics', margin, 18, true);
-
-            // Get risk counts from actual data
-            const riskCounts = handleRiskCounts(analysisData.clauses);
-
-            addText(`High Risk Items: ${riskCounts.high}`, margin + 20, 12);
-            addText(`Medium Risk Items: ${riskCounts.medium}`, margin + 20, 12);
-            addText(`Low Risk Items: ${riskCounts.low}`, margin + 20, 12);
-            addText(`Total Clauses Identified: ${analysisData.documentInfo.keyStatistics.clausesIdentified || analysisData.clauses.length}`, margin + 20, 12);
-
-            if (analysisData.documentInfo.jurisdiction) {
-            addText(`Jurisdiction: ${analysisData.documentInfo.jurisdiction}`, margin + 20, 12);
-            }
-
-            addText(`Risk Score: ${analysisData.documentInfo.keyStatistics.riskScore}/100`, margin + 20, 12);
             y -= lineHeight;
-            
-            // Clauses
-            {/* Sort and group clauses by risk level: high first, then medium, then low */ }
-            {/* High Risk Clauses */ }
-            {
-                analysisData.clauses
-                    .filter(clause => clause.riskLevel === 'High Risk')
-                    .map((clause, clauseIndex) => {
-                        // Use predefined titles if available, otherwise use from clause
-                        const title = clause.title || clauseTitles[clauseIndex] || `Clause ${clauseIndex + 1}`;
-
-                        return (
-                            <div
-                                key={`high-${clauseIndex}`}
-                                className={cn(
-                                    styles.clauseSection,
-                                    styles.highRisk
-                                )}
-                            >
-                                <div className={styles.clauseHeader}>
-                                    <h3 className={styles.heading3}>{title}</h3>
-                                    <div
-                                        className={cn(
-                                            styles.riskBadge,
-                                            styles.highRisk
-                                        )}
-                                    >
-                                        High Risk
-                                    </div>
-                                </div>
-
-                                {clause.text && <p className={styles.clauseText}>{clause.text}</p>}
-
-                                {/* Extracted Text */}
-                                <div className={styles.extractedText}>
-                                    <h4 className={styles.heading4}>Extracted Text</h4>
-                                    <div className={styles.textBox}>
-                                        <p className={styles.textContent}>{clause.extractedText}</p>
-                                        <button
-                                            className={styles.copyButton}
-                                            onClick={() => copyToClipboard(clause.extractedText)}
-                                        >
-                                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
-                                                <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Suggested Alternatives */}
-                                {clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0 && (
-                                    <div className={styles.suggestedSection}>
-                                        <h4 className={styles.heading4}>Suggested alternatives</h4>
-                                        <div className={styles.alternativesList}>
-                                            {clause.suggestedAlternatives.slice(0, 2).map((alt) => (
-                                                <div key={alt.id} className={styles.alternativeItem}>
-                                                    <div
-                                                        className={styles.alternativeHeader}
-                                                        onClick={() => toggleExpandAlternative(clauseIndex, alt.id)}
-                                                    >
-                                                        <span className={styles.alternativeNumber}>{alt.id}</span>
-                                                        <p className={styles.alternativeText}>{alt.text}</p>
-                                                        <div className={styles.alternativeActions}>
-                                                            <button
-                                                                className={styles.copyButton}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    copyToClipboard(alt.text);
-                                                                }}
-                                                            >
-                                                                Copy
-                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
-                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                                </svg>
-
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div className={cn(
-                                                        styles.alternativeDescription,
-                                                        { [styles.expanded]: expandedAlternative[`clause-${clauseIndex}`] === alt.id }
-                                                    )}>
-                                                        <p className={styles.descriptionText}>
-                                                            {alt.description || "This alternative provides clearer language and better protects your interests. It uses more precise terms and addresses potential loopholes in the original clause."}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })
+            const riskCounts = handleRiskCounts(analysisData.clauses);
+            addSection('High Risk Items:', riskCounts.high.toString());
+            addSection('Medium Risk Items:', riskCounts.medium.toString());
+            addSection('Low Risk Items:', riskCounts.low.toString());
+            addSection('Total Clauses:', (analysisData.documentInfo.keyStatistics.clausesIdentified || analysisData.clauses.length).toString());
+            if (analysisData.documentInfo.jurisdiction) {
+                addSection('Jurisdiction:', analysisData.documentInfo.jurisdiction);
             }
+            addSection('Risk Score:', `${analysisData.documentInfo.keyStatistics.riskScore}/100`);
+            y -= lineHeight * 2;
 
-            {/* Medium Risk Clauses */ }
-            {
-                analysisData.clauses
-                    .filter(clause => clause.riskLevel === 'Medium Risk')
-                    .map((clause, clauseIndex) => {
-                        // Use predefined titles if available, otherwise use from clause
-                        const title = clause.title || clauseTitles[clauseIndex] || `Clause ${clauseIndex + 1}`;
+            // Document Preview
+            addText('Document Preview', margin, 18, true);
+            y -= lineHeight;
+            const previewText = analysisData.documentInfo.previewText || 
+                (analysisData.clauses.length > 0 ? analysisData.clauses[0].extractedText : '');
+            addText(previewText, margin + 20, 12);
+            y -= lineHeight * 2;
 
-                        return (
-                            <div
-                                key={`medium-${clauseIndex}`}
-                                className={cn(
-                                    styles.clauseSection,
-                                    styles.mediumRisk
-                                )}
-                            >
-                                <div className={styles.clauseHeader}>
-                                    <h3 className={styles.heading3}>{title}</h3>
-                                    <div
-                                        className={cn(
-                                            styles.riskBadge,
-                                            styles.mediumRisk
-                                        )}
-                                    >
-                                        Medium Risk
-                                    </div>
-                                </div>
+            // Clauses Analysis
+            addText('Clauses Analysis', margin, 18, true);
+            y -= lineHeight;
 
-                                {clause.text && <p className={styles.clauseText}>{clause.text}</p>}
+            // Sort clauses by risk level
+            const sortedClauses = [...analysisData.clauses].sort((a, b) => {
+                const riskOrder = { 'High Risk': 0, 'Medium Risk': 1, 'Low Risk': 2 };
+                return riskOrder[a.riskLevel] - riskOrder[b.riskLevel];
+            });
 
-                                {/* Extracted Text */}
-                                <div className={styles.extractedText}>
-                                    <h4 className={styles.heading4}>Extracted Text</h4>
-                                    <div className={styles.textBox}>
-                                        <p className={styles.textContent}>{clause.extractedText}</p>
-                                        
-                                    </div>
-                                </div>
+            // Add each clause
+            for (const clause of sortedClauses) {
+                if (y < 100) {
+                    page = pdfDoc.addPage([595.28, 841.89]);
+                    y = height - 50;
+                }
+                
+                // Clause header
+                addText(clause.title || 'Untitled Clause', margin, 16, true);
+                addText(`Risk Level: ${clause.riskLevel}`, margin + 20, 12);
+                y -= lineHeight * 2;
 
-                                {/* Suggested Alternatives */}
-                                {clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0 && (
-                                    <div className={styles.suggestedSection}>
-                                        <h4 className={styles.heading4}>Suggested alternatives</h4>
-                                        <div className={styles.alternativesList}>
-                                            {clause.suggestedAlternatives.slice(0, 2).map((alt) => (
-                                                <div key={alt.id} className={styles.alternativeItem}>
-                                                    <div
-                                                        className={styles.alternativeHeader}
-                                                        onClick={() => toggleExpandAlternative(clauseIndex, alt.id)}
-                                                    >
-                                                        <span className={styles.alternativeNumber}>{alt.id}</span>
-                                                        <p className={styles.alternativeText}>{alt.text}</p>
-                                                        <div className={styles.alternativeActions}>
-                                                            <button
-                                                                className={styles.copyButton}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    copyToClipboard(alt.text);
-                                                                }}
-                                                            >
-                                                                Copy
-                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
-                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                                </svg>
+                // Original text
+                if (clause.text) {
+                    addText('Original Text:', margin + 20, 12, true);
+                    addText(clause.text, margin + 40, 12);
+                    y -= lineHeight * 2;
+                }
 
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div className={cn(
-                                                        styles.alternativeDescription,
-                                                        { [styles.expanded]: expandedAlternative[`clause-${clauseIndex}`] === alt.id }
-                                                    )}>
-                                                        <p className={styles.descriptionText}>
-                                                            {alt.description || "This alternative provides clearer language and better protects your interests. It uses more precise terms and addresses potential loopholes in the original clause."}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })
-            }
+                // Extracted text
+                addText('Extracted Text:', margin + 20, 12, true);
+                addText(clause.extractedText, margin + 40, 12);
+                y -= lineHeight * 2;
 
-            {/* Low Risk Clauses */ }
-            {
-                analysisData.clauses
-                    .filter(clause => clause.riskLevel === 'Low Risk')
-                    .map((clause, clauseIndex) => {
-                        // Use predefined titles if available, otherwise use from clause
-                        const title = clause.title || clauseTitles[clauseIndex] || `Clause ${clauseIndex + 1}`;
-
-                        return (
-                            <div
-                                key={`low-${clauseIndex}`}
-                                className={cn(
-                                    styles.clauseSection,
-                                    styles.lowRisk
-                                )}
-                            >
-                                <div className={styles.clauseHeader}>
-                                    <h3 className={styles.heading3}>{title}</h3>
-                                    <div
-                                        className={cn(
-                                            styles.riskBadge,
-                                            styles.lowRisk
-                                        )}
-                                    >
-                                        Low Risk
-                                    </div>
-                                </div>
-
-                                {clause.text && <p className={styles.clauseText}>{clause.text}</p>}
-
-                                {/* Extracted Text */}
-                                <div className={styles.extractedText}>
-                                    <h4 className={styles.heading4}>Extracted Text</h4>
-                                    <div className={styles.textBox}>
-                                        <p className={styles.textContent}>{clause.extractedText}</p>
-                                        
-                                    </div>
-                                </div>
-
-                                {/* Suggested Alternatives */}
-                                {clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0 && (
-                                    <div className={styles.suggestedSection}>
-                                        <h4 className={styles.heading4}>Suggested alternatives</h4>
-                                        <div className={styles.alternativesList}>
-                                            {clause.suggestedAlternatives.slice(0, 2).map((alt) => (
-                                                <div key={alt.id} className={styles.alternativeItem}>
-                                                    <div
-                                                        className={styles.alternativeHeader}
-                                                        onClick={() => toggleExpandAlternative(clauseIndex, alt.id)}
-                                                    >
-                                                        <span className={styles.alternativeNumber}>{alt.id}</span>
-                                                        <p className={styles.alternativeText}>{alt.text}</p>
-                                                        <div className={styles.alternativeActions}>
-                                                            <button
-                                                                className={styles.copyButton}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    copyToClipboard(alt.text);
-                                                                }}
-                                                            >
-                                                                Copy
-                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
-                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                                </svg>
-
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div className={cn(
-                                                        styles.alternativeDescription,
-                                                        { [styles.expanded]: expandedAlternative[`clause-${clauseIndex}`] === alt.id }
-                                                    )}>
-                                                        <p className={styles.descriptionText}>
-                                                            {alt.description || "This alternative provides clearer language and better protects your interests. It uses more precise terms and addresses potential loopholes in the original clause."}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })
+                // Suggested alternatives
+                if (clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0) {
+                    addText('Suggested Alternatives:', margin + 20, 12, true);
+                    y -= lineHeight;
+                    
+                    for (const alt of clause.suggestedAlternatives) {
+                        if (y < 100) {
+                            page = pdfDoc.addPage([595.28, 841.89]);
+                            y = height - 50;
+                        }
+                        
+                        addText(`Alternative ${alt.id}:`, margin + 40, 12, true);
+                        addText(alt.text, margin + 60, 12);
+                        if (alt.description) {
+                            addText('Description:', margin + 60, 12, true);
+                            addText(alt.description, margin + 80, 12);
+                        }
+                        y -= lineHeight * 2;
+                    }
+                }
+                y -= lineHeight * 2;
             }
             
             // Add page numbers
@@ -560,7 +395,7 @@ const AnalyzeContract = () => {
                 });
             }
             
-            // Save the PDF with a meaningful filename
+            // Save the PDF
             const pdfBytes = await pdfDoc.save();
             const blob = new Blob([pdfBytes], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
@@ -936,10 +771,10 @@ const AnalyzeContract = () => {
                                                     className={styles.copyButton}
                                                                                 onClick={(e) => {
                                                                                     e.stopPropagation();
-                                                                                    copyToClipboard(alt.text);
+                                                                                    copyToClipboard(alt.text, `alt-${clauseIndex}-${alt.id}`);
                                                                                 }}
                                                                             >
-                                                                                Copy
+                                                                                {copiedButtons[`alt-${clauseIndex}-${alt.id}`] ? 'Copied' : 'Copy'}
                                                                                 <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                     <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
                                                                                     <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -1022,10 +857,10 @@ const AnalyzeContract = () => {
                                                                     className={styles.copyButton}
                                                                                 onClick={(e) => {
                                                                                     e.stopPropagation();
-                                                                                    copyToClipboard(alt.text);
+                                                                                    copyToClipboard(alt.text, `alt-${clauseIndex}-${alt.id}`);
                                                                                 }}
                                                                 >
-                                                                    Copy
+                                                                    {copiedButtons[`alt-${clauseIndex}-${alt.id}`] ? 'Copied' : 'Copy'}
                                                                                 <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                     <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
                                                                                     <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -1140,6 +975,12 @@ const AnalyzeContract = () => {
                     </motion.div>
             )}
             </AnimatePresence>
+            {showToast && (
+                <Toast
+                    message={toastMessage}
+                    onClose={() => setShowToast(false)}
+                />
+            )}
         </div>
     );
 };

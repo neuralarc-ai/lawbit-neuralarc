@@ -7,6 +7,7 @@ import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import Toast from '../Toast';
 
 const contractTypes = [
     'Employment Contract',
@@ -36,6 +37,8 @@ const CreateContract = () => {
     const [generatedContract, setGeneratedContract] = useState<ContractResponse | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -223,6 +226,12 @@ const CreateContract = () => {
         const buffer = await Packer.toBuffer(doc);
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
         saveAs(blob, 'contract.docx');
+    };
+
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text);
+        setToastMessage('Text copied to clipboard');
+        setShowToast(true);
     };
 
     return (
@@ -490,7 +499,7 @@ const CreateContract = () => {
                         </div>
                         <div className={styles.buttonWrapper}>
                             <div className={styles.buttonInner}>
-                                <button type="button" className={styles.iconButton}>
+                                <button type="button" className={styles.iconButton} onClick={() => copyToClipboard(generatedContract?.content || '')}>
                                     <Image src="/icons/copy.svg" alt="Copy" width={24} height={24} />
                                 </button>
                             </div>
@@ -498,6 +507,12 @@ const CreateContract = () => {
                     </div>
                 </div>
             </div>
+            {showToast && (
+                <Toast
+                    message={toastMessage}
+                    onClose={() => setShowToast(false)}
+                />
+            )}
         </div>
     );
 };
