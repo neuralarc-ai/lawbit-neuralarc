@@ -1,6 +1,6 @@
 import "@/styles/app.sass";
 import type { Metadata } from "next";
-import { Fustat, Urbanist } from "next/font/google";
+import { Fustat } from "next/font/google";
 import { Providers } from "./providers";
 
 const fustat = Fustat({
@@ -8,14 +8,6 @@ const fustat = Fustat({
     subsets: ["latin"],
     display: "block",
     variable: "--font-fustat",
-});
-
-const urbanist = Urbanist({
-    weight: ["300"],
-    style: ["italic"],
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-urbanist",
 });
 
 export const metadata: Metadata = {
@@ -29,7 +21,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className={`${fustat.variable} ${urbanist.variable}`}>
+        <html lang="en" className={`${fustat.variable}`}>
             <head>
                 {/* Description no longer than 155 characters */}
                 <meta name="description" content="AI for Legal Intelligence" />

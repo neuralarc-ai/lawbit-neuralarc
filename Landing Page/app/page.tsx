@@ -84,7 +84,7 @@ const pricing = [
         popular: false
     },
     {
-        title: 'Startup',
+        title: 'Plus',
         price: '$8.99',
         description: 'Ideal for small businesses and startups',
         features: [
@@ -98,7 +98,7 @@ const pricing = [
         popular: true
     },
     {
-        title: 'Enterprise',
+        title: 'Ultra',
         price: '$14.99',    
         description: 'For organizations with complex legal needs',
         features: [
@@ -266,6 +266,16 @@ export default function Home() {
                     >
                         See how LawBit is transforming legal workflows for businesses
                     </motion.p>
+                    <div className={styles.testimonialImage}>
+                        <Image 
+                            src="/images/testimonials.png" 
+                            alt="Client Testimonials" 
+                            width={1200} 
+                            height={1200}
+                            quality={80}
+                            priority
+                        />
+                    </div>
                     <div className={styles.testimonialGrid}>
                         {/* {testimonials.map((testimonial, index) => (
                             <motion.div 
@@ -335,6 +345,37 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            {/* Footer */}
+            <footer className={styles.footer}>
+                <div className={styles.footerContainer}>
+                    <div className={styles.footerContent}>
+                        <div className={styles.footerLeft}>
+                            <div className={styles.footerLogo}>
+                                <Image src="/icons/footer-logo.svg" alt="LawBit" width={160} height={55}/>
+                                <span>AI-powered legal intelligence for modern businesses</span>
+                            </div>
+                        </div>
+                        <div className={styles.footerLinks}>
+                            <a href="/terms">Terms of use</a>
+                            <span>•</span>
+                            <a href="/privacy">Privacy Policy</a>
+                        </div>
+                        <div className={styles.footerBottom}>
+                            <p>Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, a product by Neural Paths</p>
+                        </div>
+                    </div>
+                    <div className={styles.footerIllustration}>
+                        <Image 
+                            src="/images/footer-illustration.png" 
+                            alt="Footer Illustration" 
+                            width={400} 
+                            height={200}
+                            className=''
+                        />
+                    </div>
+                </div>
+            </footer>
         </main>
     )
 }
