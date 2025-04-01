@@ -872,44 +872,44 @@ const AnalyzeContract = () => {
                                                 <span>{handleRiskCounts(analysisData.clauses).low} Low risk item{handleRiskCounts(analysisData.clauses).low !== 1 ? 's' : ''}</span>
                                             </div>
                                         </div>
-                                            </div>
-                                        </div>
+                                </div>
+                            </div>
 
-                                {/* Clauses Analysis Sections */}
+                            {/* Clauses Analysis Sections */}
                                 {/* Sort and group clauses by risk level: high first, then medium, then low */}
                                 {/* High Risk Clauses */}
                                 {analysisData.clauses
                                     .filter(clause => clause.riskLevel === 'High Risk')
                                     .map((clause, clauseIndex) => {
-                                        // Use predefined titles if available, otherwise use from clause
+                                // Use predefined titles if available, otherwise use from clause
                                         const title = clause.title || clauseTitles[clauseIndex] || `Clause ${clauseIndex + 1}`;
-
-                                        return (
-                                            <div
+                                
+                                return (
+                                    <div 
                                                 key={`high-${clauseIndex}`}
-                                                className={cn(
-                                                    styles.clauseSection,
+                                        className={cn(
+                                            styles.clauseSection,
                                                     styles.highRisk
+                                        )}
+                                    >
+                                        <div className={styles.clauseHeader}>
+                                                    <h3 className={styles.heading3}>{title}</h3>
+                                            <div 
+                                                className={cn(
+                                                    styles.riskBadge, 
+                                                            styles.highRisk
                                                 )}
                                             >
-                                                <div className={styles.clauseHeader}>
-                                                    <h3 className={styles.heading3}>{title}</h3>
-                                                    <div
-                                                        className={cn(
-                                                            styles.riskBadge,
-                                                            styles.highRisk
-                                                        )}
-                                                    >
                                                         High Risk
-                                                    </div>
-                                                </div>
-
-                                                {clause.text && <p className={styles.clauseText}>{clause.text}</p>}
-
-                                                {/* Extracted Text */}
-                                                <div className={styles.extractedText}>
+                                            </div>
+                                        </div>
+                                        
+                                        {clause.text && <p className={styles.clauseText}>{clause.text}</p>}
+                                        
+                                        {/* Extracted Text */}
+                                        <div className={styles.extractedText}>
                                                     <h4 className={styles.heading4}>Extracted Text</h4>
-                                                    <div className={styles.textBox}>
+                                            <div className={styles.textBox}>
                                                         <p className={styles.textContent}>{clause.extractedText}</p>
                                                         
                                             </div>
@@ -929,8 +929,8 @@ const AnalyzeContract = () => {
                                                                         <span className={styles.alternativeNumber}>{alt.id}</span>
                                                                         <p className={styles.alternativeText}>{alt.text}</p>
                                                                         <div className={styles.alternativeActions}>
-                                                                            <button
-                                                                                className={styles.copyButton}
+                                                <button 
+                                                    className={styles.copyButton}
                                                                                 onClick={(e) => {
                                                                                     e.stopPropagation();
                                                                                     copyToClipboard(alt.text);
@@ -943,7 +943,7 @@ const AnalyzeContract = () => {
                                                                                     <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                                     </svg>
 
-                                                                            </button>
+                                                </button>
                                                 </div>
                                         </div>
                                                                     <div className={cn(
