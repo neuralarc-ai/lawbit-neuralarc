@@ -144,7 +144,7 @@ Email: support@ampvc.co`
                     </div>
 
                     <div className={styles.footer}>
-                        <p>By using Lawbit's website and services, you acknowledge that you have read, understood, and agreed to these Terms of Use.</p>
+                        <p>By using Lawbit&apos;s website and services, you acknowledge that you have read, understood, and agreed to these Terms of Use.</p>
                     </div>
                 </div>
             </motion.div>
