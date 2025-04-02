@@ -2,41 +2,47 @@ import React from 'react';
 import styles from './HistoryCard.module.sass';
 import cn from 'classnames';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export type HistoryCardProps = {
+    id: string;
     title: string;
     date: string;
-    status: 'Completed';
-    riskLevel: 'Low Risk' | 'Medium Risk' | 'High Risk';
-    riskScore: number;
-    clausesCount: number;
-    keyStats: {
-        label: string;
-        type: 'warning' | 'normal';
-    }[];
-    jurisdiction: string;
-    moreCount?: number;
+    content: string;
+    type: string;
+    status: string;
+    details: {
+        contract_type: string;
+        option: string;
+        first_party: string;
+        second_party: string;
+        jurisdiction: string;
+    };
 };
 
 const HistoryCard = ({
+    id,
     title,
     date,
+    content,
+    type,
     status,
-    riskLevel,
-    riskScore,
-    clausesCount,
-    keyStats,
-    jurisdiction,
-    moreCount = 3
+    details
 }: HistoryCardProps) => {
+    const router = useRouter();
+
+    const handleClick = () => {
+        router.push(`/preview/${id}`);
+    };
+
     return (
-        <div className={styles.cardWrapper}>
+        <div className={styles.cardWrapper} onClick={handleClick}>
             <div className={styles.card}>
                 <div className={styles.header}>
                     <div className={styles.icon}>
                         <Image src="/icons/document.svg" alt="icon" width={24} height={24} />
                     </div>
-                    <div className={styles.riskBadge}>{riskLevel}</div>
+                    <div className={styles.typeBadge}>{type}</div>
                 </div>
 
                 <div className={styles.content}>
@@ -45,46 +51,34 @@ const HistoryCard = ({
 
                     <div className={styles.statusRow}>
                         <span className={styles.status}>{status}</span>
-                        <div className={styles.clauseCount}>
+                        <div className={styles.option}>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
-                            {clausesCount} clauses identified
+                            {details.option}
                         </div>
                     </div>
 
-                    <div className={styles.riskScore}>
-                        <div className={styles.scoreLabel}>Risk score</div>
-                        <div className={styles.scoreValue}>{riskScore}%</div>
-                        <div className={styles.scoreBar}>
-                            <div 
-                                className={styles.scoreProgress} 
-                                style={{ width: `${riskScore}%` }}
-                            />
+                    <div className={styles.parties}>
+                        <div className={styles.party}>
+                            <span className={styles.partyLabel}>First Party:</span>
+                            <span className={styles.partyValue}>{details.first_party}</span>
+                        </div>
+                        <div className={styles.party}>
+                            <span className={styles.partyLabel}>Second Party:</span>
+                            <span className={styles.partyValue}>{details.second_party}</span>
                         </div>
                     </div>
 
                     <div className={styles.stats}>
-                        <div className={styles.statsLabel}>Key Statistics</div>
+                        <div className={styles.statsLabel}>Contract Details</div>
                         <div className={styles.statsTags}>
-                            {keyStats.map((stat, index) => (
-                                <span 
-                                    key={index} 
-                                    className={cn(styles.statTag, {
-                                        [styles.warning]: stat.type === 'warning'
-                                    })}
-                                >
-                                    {stat.label}
-                                </span>
-                            ))}
                             <span className={styles.statTag}>
-                                <span className={styles.jurisdictionLabel}>Jurisdiction:</span> {jurisdiction}
+                                <span className={styles.jurisdictionLabel}>Type:</span> {details.contract_type}
                             </span>
-                            {moreCount > 0 && (
-                                <span className={cn(styles.statTag, styles.moreTag)}>
-                                    +{moreCount} more
-                                </span>
-                            )}
+                            <span className={styles.statTag}>
+                                <span className={styles.jurisdictionLabel}>Jurisdiction:</span> {details.jurisdiction}
+                            </span>
                         </div>
                     </div>
                 </div>

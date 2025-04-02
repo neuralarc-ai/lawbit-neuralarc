@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './History.module.sass';
 import HistoryCard from '@/components/HistoryCard';
 import cn from 'classnames';
@@ -9,99 +9,29 @@ import StarField from '@/components/StarField';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-
-const mockGeneratedData = [
-    {
-        title: 'Service Agreement between AA and AAA',
-        date: 'Mar 20, 2025 at 01:23PM',
-        status: 'Completed' as const,
-        riskLevel: 'Medium Risk' as const,
-        riskScore: 57,
-        clausesCount: 10,
-        keyStats: [
-            { label: 'Payment terms', type: 'warning' as const },
-            { label: 'Limitation of liability', type: 'normal' as const }
-        ],
-        jurisdiction: 'United States',
-        moreCount: 3
-    },
-    {
-        title: 'Employment Contract - Senior Developer',
-        date: 'Mar 19, 2025 at 03:45PM',
-        status: 'Completed' as const,
-        riskLevel: 'Low Risk' as const,
-        riskScore: 32,
-        clausesCount: 8,
-        keyStats: [
-            { label: 'Non-compete', type: 'normal' as const },
-            { label: 'Intellectual property', type: 'normal' as const }
-        ],
-        jurisdiction: 'United States',
-        moreCount: 2
-    },
-    {
-        title: 'NDA for Project Phoenix',
-        date: 'Mar 18, 2025 at 11:15AM',
-        status: 'Completed' as const,
-        riskLevel: 'High Risk' as const,
-        riskScore: 82,
-        clausesCount: 6,
-        keyStats: [
-            { label: 'Confidentiality', type: 'warning' as const },
-            { label: 'Term and termination', type: 'warning' as const }
-        ],
-        jurisdiction: 'United States',
-        moreCount: 4
-    }
-];
-
-const mockAnalyzedData = [
-    {
-        title: 'Vendor Agreement Analysis',
-        date: 'Mar 20, 2025 at 02:30PM',
-        status: 'Completed' as const,
-        riskLevel: 'High Risk' as const,
-        riskScore: 75,
-        clausesCount: 12,
-        keyStats: [
-            { label: 'Data protection', type: 'warning' as const },
-            { label: 'Service levels', type: 'warning' as const }
-        ],
-        jurisdiction: 'European Union',
-        moreCount: 5
-    },
-    {
-        title: 'License Agreement Review',
-        date: 'Mar 19, 2025 at 04:20PM',
-        status: 'Completed' as const,
-        riskLevel: 'Medium Risk' as const,
-        riskScore: 45,
-        clausesCount: 15,
-        keyStats: [
-            { label: 'Usage rights', type: 'normal' as const },
-            { label: 'Royalties', type: 'warning' as const }
-        ],
-        jurisdiction: 'United States',
-        moreCount: 3
-    },
-    {
-        title: 'Partnership Agreement Analysis',
-        date: 'Mar 18, 2025 at 10:45AM',
-        status: 'Completed' as const,
-        riskLevel: 'Low Risk' as const,
-        riskScore: 28,
-        clausesCount: 9,
-        keyStats: [
-            { label: 'Profit sharing', type: 'normal' as const },
-            { label: 'Governance', type: 'normal' as const }
-        ],
-        jurisdiction: 'United Kingdom',
-        moreCount: 2
-    }
-];
+import { getContractHistory } from '@/services/contractService';
 
 const HistoryPage = () => {
     const [activeTab, setActiveTab] = useState<'generated' | 'analyzed'>('generated');
+    const [contracts, setContracts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchContracts = async () => {
+            try {
+                const data = await getContractHistory();
+                setContracts(data);
+            } catch (err) {
+                setError('Failed to load contract history');
+                console.error('Error fetching contracts:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchContracts();
+    }, []);
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -148,6 +78,17 @@ const HistoryPage = () => {
         }
     };
 
+    const formatDate = (dateString: string) => {
+        return new Date(dateString).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+    };
+
     return (
         <div className={styles.container}>
             <Navbar />
@@ -179,7 +120,7 @@ const HistoryPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                    Usage History
+                    Contract History
                 </motion.h1>
 
                 <motion.div 
@@ -228,15 +169,27 @@ const HistoryPage = () => {
                         exit={{ opacity: 0, y: 20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        {activeTab === 'generated' ? mockGeneratedData.map((item, index) => (
-                            <motion.div key={index} variants={itemVariants}>
-                                <HistoryCard {...item} />
-                            </motion.div>
-                        )) : mockAnalyzedData.map((item, index) => (
-                            <motion.div key={index} variants={itemVariants}>
-                                <HistoryCard {...item} />
-                            </motion.div>
-                        ))}
+                        {loading ? (
+                            <div className={styles.loading}>Loading contracts...</div>
+                        ) : error ? (
+                            <div className={styles.error}>{error}</div>
+                        ) : activeTab === 'generated' ? (
+                            contracts.map((contract) => (
+                                <motion.div key={contract.id} variants={itemVariants}>
+                                    <HistoryCard
+                                        id={contract.id}
+                                        title={contract.title}
+                                        date={formatDate(contract.created_at)}
+                                        content={contract.content}
+                                        type={contract.type}
+                                        status={contract.status}
+                                        details={contract.contract_history[0]?.details || {}}
+                                    />
+                                </motion.div>
+                            ))
+                        ) : (
+                            <div className={styles.empty}>No analyzed contracts yet</div>
+                        )}
                     </motion.div>
                 </AnimatePresence>
             </div>
