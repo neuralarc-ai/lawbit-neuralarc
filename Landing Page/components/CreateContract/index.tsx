@@ -63,6 +63,15 @@ const CreateContract = () => {
         keyTerms: false
     });
 
+    // Add new state for storing contracts by option
+    const [contractsByOption, setContractsByOption] = useState<{
+        'Option A': ContractResponse | null;
+        'Option B': ContractResponse | null;
+    }>({
+        'Option A': null,
+        'Option B': null
+    });
+
     const toggleOptionalField = (field: keyof typeof enabledOptionalFields) => {
         setEnabledOptionalFields(prev => ({
             ...prev,
@@ -103,6 +112,27 @@ const CreateContract = () => {
         validateField('intensity', intensity);
     };
 
+    // Function to store contract in browser storage
+    const storeContract = (option: 'Option A' | 'Option B', contract: ContractResponse) => {
+        const storageKey = `contract_${contractData.contractType}_${option}`;
+        localStorage.setItem(storageKey, JSON.stringify(contract));
+        setContractsByOption(prev => ({
+            ...prev,
+            [option]: contract
+        }));
+    };
+
+    // Function to retrieve contract from browser storage
+    const getStoredContract = (option: 'Option A' | 'Option B'): ContractResponse | null => {
+        const storageKey = `contract_${contractData.contractType}_${option}`;
+        const stored = localStorage.getItem(storageKey);
+        if (stored) {
+            return JSON.parse(stored);
+        }
+        return null;
+    };
+
+    // Update handlePreferenceChange to use stored contracts
     const handlePreferenceChange = async (preference: ContractData['preference']) => {
         setContractData((prev: ContractData) => ({
             ...prev,
@@ -110,7 +140,14 @@ const CreateContract = () => {
         }));
         validateField('preference', preference);
 
-        // If we have a generated contract, regenerate it with the new preference
+        // Check if we have a stored contract for this option
+        const storedContract = getStoredContract(preference);
+        if (storedContract) {
+            setGeneratedContract(storedContract);
+            return;
+        }
+
+        // If no stored contract, generate a new one
         if (generatedContract) {
             setIsLoading(true);
             setError(null);
@@ -120,6 +157,7 @@ const CreateContract = () => {
                     preference
                 });
                 setGeneratedContract(response);
+                storeContract(preference, response);
             } catch (err) {
                 setError('Failed to regenerate contract. Please try again.');
                 showToast('Failed to regenerate contract. Please try again.');
@@ -129,6 +167,7 @@ const CreateContract = () => {
         }
     };
 
+    // Update handleSubmit to store the initial contract
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
@@ -139,6 +178,8 @@ const CreateContract = () => {
 
             const response = await generateContract(contractData);
             setGeneratedContract(response);
+            // Store the initial contract for the current option
+            storeContract(contractData.preference, response);
             showToast('Contract generated successfully!');
         } catch (err: unknown) {
             if (err instanceof z.ZodError) {
