@@ -1,0 +1,134 @@
+.container
+    width: 100%
+    margin: 0 auto
+    padding-top: 48px
+    min-height: 100vh
+    color: #FFFFFF
+    position: relative
+    display: flex
+    flex-direction: column
+
+.backButton
+    grid-column: 1
+    justify-self: start
+    cursor: pointer
+    transition: opacity 0.2s
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 72px
+    height: 72px
+    padding: 0
+    background: none
+    border: none
+    position: relative
+    &:hover
+        opacity: 0.8
+    svg
+        color: white
+
+.mainContent
+    width: 100%
+    flex: 1
+
+.termsContainer
+    border-radius: 24px
+    max-width: 1440px
+    padding: 48px
+    margin: 0 auto
+
+.headerRow
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-bottom: 2rem
+    padding-bottom: 1rem
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+
+.pageTitle
+    font-size: 2rem
+    font-weight: 600
+    color: #FFFFFF
+    margin: 0
+
+.effectiveDate
+    font-size: 1rem
+    color: #989898
+    margin: 0
+
+.welcomeSection
+    margin-bottom: 2rem
+    padding: 1.5rem
+    border-radius: 12px
+    p
+        font-size: 1.1rem
+        line-height: 1.6
+        color: #FFFFFF
+        margin: 0
+
+.sectionsContainer
+    display: flex
+    flex-direction: column
+    gap: 1rem
+
+.section
+    background: rgba(248, 248, 248, 0.05)
+    backdrop-filter: blur(100px)
+    border-radius: 12px
+    overflow: hidden
+    transition: all 0.3s ease
+    border: 1px solid transparent
+    box-shadow: inset 0 4px 4px 0 rgba(255, 255, 255, 0.05), 0 8px 16px -4px rgba(18, 18, 18, 0.2)
+
+    &.active
+        background: rgba(255, 255, 255, 0.08)
+
+.sectionHeader
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding: 1.5rem
+    cursor: pointer
+    transition: background-color 0.3s ease
+
+    &:hover
+        background: rgba(255, 255, 255, 0.05)
+
+.sectionTitle
+    font-size: 1.25rem
+    font-weight: 500
+    color: #FFFFFF
+    margin: 0
+
+.arrowIcon
+    transition: transform 0.3s ease
+    color: #989898
+
+    &.rotated
+        transform: rotate(180deg)
+
+.sectionContent
+    padding: 0 1.5rem 1.5rem
+    display: none
+    color: #989898
+    line-height: 1.6
+
+    .active &
+        display: block
+
+    p
+        margin: 0 0 1rem
+
+        &:last-child
+            margin-bottom: 0
+
+.footer
+    margin-top: 2rem
+    padding-top: 1rem
+    border-top: 1px solid rgba(255, 255, 255, 0.1)
+    text-align: center
+    color: #989898
+
+    p
+        margin: 0
+        font-size: 0.9rem 

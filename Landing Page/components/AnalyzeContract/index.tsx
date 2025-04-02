@@ -765,11 +765,11 @@ const AnalyzeContract = () => {
                                         
                                         {/* Extracted Text */}
                                         <div className={styles.extractedText}>
-                                            <h4 className={styles.heading4}>Extracted Text</h4>
+                                                    <h4 className={styles.heading4}>Extracted Text</h4>
                                             <div className={styles.textBox}>
-                                                <p className={styles.textContent}>{clause.extractedText}</p>
+                                                        <p className={styles.textContent}>{clause.extractedText}</p>
                                             </div>
-                                        </div>
+                                                </div>
 
                                                 {/* Suggested Alternatives */}
                                                 {clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0 && (
@@ -787,16 +787,16 @@ const AnalyzeContract = () => {
                                                                         <div className={styles.alternativeActions}>
                                                 <button 
                                                     className={styles.copyButton}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        copyToClipboard(alt.text);
-                                                    }}
-                                                >
-                                                    Copy
-                                                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
-                                                        <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                        <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    copyToClipboard(alt.text);
+                                                                                }}
+                                                                            >
+                                                                                Copy
+                                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
+                                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                                     </svg>
 
                                                 </button>
@@ -850,9 +850,9 @@ const AnalyzeContract = () => {
                                         
                                         {/* Extracted Text */}
                                         <div className={styles.extractedText}>
-                                            <h4 className={styles.heading4}>Extracted Text</h4>
+                                                    <h4 className={styles.heading4}>Extracted Text</h4>
                                             <div className={styles.textBox}>
-                                                <p className={styles.textContent}>{clause.extractedText}</p>
+                                                        <p className={styles.textContent}>{clause.extractedText}</p>
                                             </div>
                                         </div>
                                         
@@ -872,16 +872,16 @@ const AnalyzeContract = () => {
                                                             <div className={styles.alternativeActions}>
                                                                 <button 
                                                                     className={styles.copyButton}
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        copyToClipboard(alt.text);
-                                                                    }}
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    copyToClipboard(alt.text);
+                                                                                }}
                                                                 >
                                                                     Copy
-                                                                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
-                                                                        <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                                        <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
+                                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                                                     </svg>
 
                                                                 </button>

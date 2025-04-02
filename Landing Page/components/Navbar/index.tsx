@@ -11,6 +11,8 @@ const Navbar = () => {
     const router = useRouter();
     const pathname = usePathname();
     const isHistoryPage = pathname === '/history';
+    const isTermsPage = pathname === '/terms';
+    const isPrivacyPage = pathname === '/privacy';
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -22,7 +24,11 @@ const Navbar = () => {
     };
 
     const handleBack = () => {
-        router.push('/contracts');
+        if (isHistoryPage) {
+            router.push('/contracts');
+        } else if (isTermsPage || isPrivacyPage) {
+            router.push('/contracts');
+        }
     };
 
     const navbarVariants = {
@@ -110,11 +116,11 @@ const Navbar = () => {
     return (
         <nav className={styles.navbar}>
             <div className={styles.container}>
-                {isHistoryPage ? (
+                {(isHistoryPage || isTermsPage || isPrivacyPage) ? (
                     <button
                         className={styles.backButton}
                         onClick={handleBack}
-                        aria-label="Back to contracts"
+                        aria-label="Back"
                     >
                         <div className={styles.menuSquare}>
                             <div className={styles.menuCircle}>
