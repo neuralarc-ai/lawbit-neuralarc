@@ -48,6 +48,11 @@
                 color: #FF3B30
             &:focus
                 box-shadow: 0 0 0 2px rgba(255, 59, 48, 0.1)
+        &.disabled
+            opacity: 0.5
+            cursor: not-allowed
+            pointer-events: none
+            background: rgba(18, 18, 18, 0.1)
     select
         appearance: none
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
@@ -293,3 +298,57 @@
         background-position: 200% center
     to
         background-position: -100% center 
+
+.optionalField
+    position: relative
+    .labelRow
+        display: flex
+        align-items: center
+        gap: 12px
+        margin-bottom: 8px
+        label
+            margin-bottom: 0
+    .toggleButton
+        position: relative
+        width: 20px
+        height: 20px
+        margin: 0
+        padding: 0
+        cursor: pointer
+        appearance: none
+        border: 1.5px solid rgba(255, 255, 255, 0.3)
+        border-radius: 4px
+        background: transparent
+        transition: all 0.3s ease
+        &:hover
+            border-color: rgba(255, 255, 255, 0.5)
+        &:checked
+            border-color: #6B46C1
+            background: #6B46C1
+            &:hover
+                border-color: #8B6CD1
+                background: #8B6CD1
+        &:checked::after
+            content: ''
+            position: absolute
+            left: 7px
+            top: 4px
+            width: 4px
+            height: 8px
+            border: solid white
+            border-width: 0 2px 2px 0
+            transform: rotate(45deg)
+    .optionalContent
+        max-height: 0
+        overflow: hidden
+        transition: max-height 0.3s ease-out
+        &.visible
+            max-height: 200px
+        textarea
+            margin-top: 8px
+            opacity: 0
+            transform: translateY(-10px)
+            transition: all 0.3s ease
+        &.visible textarea
+            opacity: 1
+            transform: translateY(0) 

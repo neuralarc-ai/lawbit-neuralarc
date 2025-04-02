@@ -288,7 +288,7 @@ const AnalyzeContract = () => {
             addText('Document Information', margin, 18, true);
             y -= lineHeight;
             addSection('Document Name:', analysisData.documentInfo.title || "Untitled Document");
-            addSection('Date and Time:', new Date(analysisData.documentInfo.dateTime).toLocaleString());
+            addSection('Date and Time:', formatDate(new Date(analysisData.documentInfo.dateTime)));
             
             // Risk Assessment
             const riskColor = analysisData.documentInfo.riskAssessment === 'High Risk' 
@@ -435,6 +435,17 @@ const AnalyzeContract = () => {
         }, 300);
     };
 
+    const formatDate = (date: Date) => {
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const localDate = new Date(date.toLocaleString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }));
+        const month = months[localDate.getMonth()];
+        const day = localDate.getDate();
+        const year = localDate.getFullYear();
+        const hours = localDate.getHours().toString().padStart(2, '0');
+        const minutes = localDate.getMinutes().toString().padStart(2, '0');
+        return `${month} ${day}, ${year} at ${hours}:${minutes}`;
+    };
+
     return (
         <div className={styles.container}>
             <AnimatePresence mode="wait">
@@ -458,6 +469,7 @@ const AnalyzeContract = () => {
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
                             onDrop={handleDrop}
+                            onClick={() => document.getElementById('fileInput')?.click()}
                         >
                             <input
                                 type="file"
@@ -474,15 +486,35 @@ const AnalyzeContract = () => {
                                 className={styles.uploadIcon}
                             />
                             <div className={styles.uploadText}>
-                                        <p className={styles.uploadTextContent}>
-                                    {isUploading ? (
+                                <p className={styles.uploadTextContent}>
+                                    {isAnalyzing ? (
+                                        <span className={styles.analyzingText}>Analyzing...</span>
+                                    ) : isUploading ? (
                                         'Uploading...'
                                     ) : file ? (
-                                        `File uploaded: ${file.name}`
+                                        <div className={styles.uploadTextContent}>
+                                            File uploaded: {file.name}
+                                            <button
+                                                type="button"
+                                                className={styles.removeFileButton}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setFile(null);
+                                                }}
+                                            >
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                </svg>
+                                            </button>
+                                        </div>
                                     ) : (
                                         <>
                                             Drag and drop file or{' '}
-                                            <label htmlFor="fileInput" className={styles.chooseFile}>
+                                            <label 
+                                                htmlFor="fileInput" 
+                                                className={styles.chooseFile}
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
                                                 Choose file
                                             </label>
                                         </>
@@ -539,9 +571,9 @@ const AnalyzeContract = () => {
                             onClick={handleAnalyze}
                             disabled={isAnalyzing}
                         >
-                            <span>{isAnalyzing ? 'Analyzing...' : 'Analyze your document now    '}</span>
+                            <span>Analyze your document now    </span>
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </button>
                     </div>
@@ -627,7 +659,7 @@ const AnalyzeContract = () => {
                                 <div className={styles.infoDetails}>
                                     <div className={styles.infoItem}>
                                             <label className={styles.label}>Date and Time</label>
-                                            <p className={styles.value}>{new Date(analysisData.documentInfo.dateTime).toLocaleString()}</p>
+                                            <p className={styles.value}>{formatDate(new Date(analysisData.documentInfo.dateTime))}</p>
                                     </div>
                                     
                                         <div className={styles.infoItem}>
@@ -997,7 +1029,7 @@ const AnalyzeContract = () => {
                             >
                                 <span>Download Analysis</span>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 3v10m0 0l-4-4m4 4l4-4m-10 7v4h12v-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M12 4v13m0 0l-4-4m4 4l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </button>
                         </div>

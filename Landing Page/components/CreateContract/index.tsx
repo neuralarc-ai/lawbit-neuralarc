@@ -53,6 +53,22 @@ const CreateContract = () => {
     const [generatedContract, setGeneratedContract] = useState<ContractResponse | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [enabledOptionalFields, setEnabledOptionalFields] = useState<{
+        firstPartyAddress: boolean;
+        secondPartyAddress: boolean;
+        keyTerms: boolean;
+    }>({
+        firstPartyAddress: false,
+        secondPartyAddress: false,
+        keyTerms: false
+    });
+
+    const toggleOptionalField = (field: keyof typeof enabledOptionalFields) => {
+        setEnabledOptionalFields(prev => ({
+            ...prev,
+            [field]: !prev[field]
+        }));
+    };
 
     const validateField = (name: string, value: string) => {
         try {
@@ -220,17 +236,31 @@ const CreateContract = () => {
                             className={cn({ [styles.error]: errors.firstPartyName })}
                         />
                     </div>
-                    <div className={styles.field}>
-                        <label>First party address (Optional)</label>
-                        <textarea
-                            name="firstPartyAddress"
-                            value={contractData.firstPartyAddress}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            placeholder={errors.firstPartyAddress || "Enter first party address"}
-                            className={cn(styles.addressInput, { [styles.error]: errors.firstPartyAddress })}
-                            rows={3}
-                        />
+                    <div className={cn(styles.field, styles.optionalField)}>
+                        <div className={styles.labelRow}>
+                            <input
+                                type="checkbox"
+                                className={styles.toggleButton}
+                                checked={enabledOptionalFields.firstPartyAddress}
+                                onChange={() => toggleOptionalField('firstPartyAddress')}
+                            />
+                            <label>First party address (Optional)</label>
+                        </div>
+                        <div className={cn(styles.optionalContent, {
+                            [styles.visible]: enabledOptionalFields.firstPartyAddress
+                        })}>
+                            <textarea
+                                name="firstPartyAddress"
+                                value={contractData.firstPartyAddress}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                placeholder={errors.firstPartyAddress || "Enter first party address"}
+                                className={cn(styles.addressInput, { 
+                                    [styles.error]: errors.firstPartyAddress
+                                })}
+                                rows={3}
+                            />
+                        </div>
                     </div>
                     <div className={styles.field}>
                         <label>Second party name</label>
@@ -244,17 +274,31 @@ const CreateContract = () => {
                             className={cn({ [styles.error]: errors.secondPartyName })}
                         />
                     </div>
-                    <div className={styles.field}>
-                        <label>Second party address (Optional)</label>
-                        <textarea
-                            name="secondPartyAddress"
-                            value={contractData.secondPartyAddress}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            placeholder={errors.secondPartyAddress || "Enter second party address"}
-                            className={cn(styles.addressInput, { [styles.error]: errors.secondPartyAddress })}
-                            rows={3}
-                        />
+                    <div className={cn(styles.field, styles.optionalField)}>
+                        <div className={styles.labelRow}>
+                            <input
+                                type="checkbox"
+                                className={styles.toggleButton}
+                                checked={enabledOptionalFields.secondPartyAddress}
+                                onChange={() => toggleOptionalField('secondPartyAddress')}
+                            />
+                            <label>Second party address (Optional)</label>
+                        </div>
+                        <div className={cn(styles.optionalContent, {
+                            [styles.visible]: enabledOptionalFields.secondPartyAddress
+                        })}>
+                            <textarea
+                                name="secondPartyAddress"
+                                value={contractData.secondPartyAddress}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                placeholder={errors.secondPartyAddress || "Enter second party address"}
+                                className={cn(styles.addressInput, { 
+                                    [styles.error]: errors.secondPartyAddress
+                                })}
+                                rows={3}
+                            />
+                        </div>
                     </div>
                     <div className={styles.field}>
                         <label>Jurisdiction</label>
@@ -268,16 +312,30 @@ const CreateContract = () => {
                             className={cn({ [styles.error]: errors.jurisdiction })}
                         />
                     </div>
-                    <div className={styles.field}>
-                        <label>Key Terms (Optional)</label>
-                        <textarea
-                            name="keyTerms"
-                            value={contractData.keyTerms}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            placeholder={errors.keyTerms || "Any key terms you'd like to specify"}
-                            className={cn({ [styles.error]: errors.keyTerms })}
-                        />
+                    <div className={cn(styles.field, styles.optionalField)}>
+                        <div className={styles.labelRow}>
+                            <input
+                                type="checkbox"
+                                className={styles.toggleButton}
+                                checked={enabledOptionalFields.keyTerms}
+                                onChange={() => toggleOptionalField('keyTerms')}
+                            />
+                            <label>Key Terms (Optional)</label>
+                        </div>
+                        <div className={cn(styles.optionalContent, {
+                            [styles.visible]: enabledOptionalFields.keyTerms
+                        })}>
+                            <textarea
+                                name="keyTerms"
+                                value={contractData.keyTerms}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                placeholder={errors.keyTerms || "Any key terms you'd like to specify"}
+                                className={cn({ 
+                                    [styles.error]: errors.keyTerms
+                                })}
+                            />
+                        </div>
                     </div>
                     <div className={styles.field}>
                         <label>Contract Description</label>
