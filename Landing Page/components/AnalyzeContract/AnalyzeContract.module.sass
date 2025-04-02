@@ -9,7 +9,7 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     display: flex
     flex-direction: column
     width: 100%
-    background: rgba(31, 31, 31, 0.9)
+    background: rgba(31, 31, 31, 0.8)
     backdrop-filter: blur(150px)
     padding: 40px
     border-radius: 32px
@@ -411,8 +411,8 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
         border-radius: 3px
 
 .previewText
-    font-size: 17px
-    color: rgba(255, 255, 255, 0.5)
+    font-size: 14px
+    color: rgba(255, 255, 255, 1)
     line-height: 1.5
     margin: 0
     flex: 1
@@ -426,19 +426,31 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
 
 .fileInfo
     margin-top: 16px
-    border-top: 1px solid rgba(255, 255, 255, 0.1)
     padding-top: 16px
 
 .fileName
     display: flex
     align-items: center
     justify-content: space-between
-    padding: 8px 12px
-    background: rgba(255, 255, 255, 0.05)
-    border-radius: 8px
+    padding: 16px 24px
+    background: rgba(248, 248, 248, 0.02)
+    backdrop-filter: blur(50px)
+    border-radius: 20px
     color: white
     font-size: 14px
     font-weight: 500
+    position: relative
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 20px
+        padding: 1px
+        background: linear-gradient(to top right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1))
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: xor
+        mask-composite: exclude
+        pointer-events: none
 
 .deleteButton
     background: transparent
@@ -520,17 +532,18 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
 
 .riskProgressBar
     width: 100%
-    height: 8px
+    height: 4px
     background: rgba(255, 255, 255, 0.1)
-    border-radius: 4px
-    margin-top: 4px
+    border-radius: 2px
     overflow: hidden
     position: relative
+    margin-top: 8px
 
 .riskProgress
     height: 100%
     border-radius: 4px
     transition: width 0.6s ease
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5)
     
     &.highRisk
         background: linear-gradient(to right,rgb(255, 255, 255),rgb(255, 255, 255))
@@ -543,8 +556,11 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
 
 .riskAssessment
     display: flex
-    flex-direction: column
-    gap: 8px
+    flex-direction: row
+    align-items: center
+    justify-content: space-between
+    gap: 10px
+    width: 100%
 
 .riskScore
     display: inline-flex
@@ -557,12 +573,44 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     color: #FF9500
     background-color: rgba(255, 149, 0, 0.1)
     border: 1px solid rgba(255, 149, 0, 0.3)
-    align-self: flex-end
+
+.riskName
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    font-size: 15px
+    font-weight: 300
+    color: white
+    font-family: $font-family-fustat
+
+.highRiskText
+    color:rgb(255, 255, 255)
+    
+.mediumRiskText
+    color:rgb(255, 255, 255)
+    
+.lowRiskText
+    color:rgb(255, 255, 255)
+
+.highRiskScore
+    color: #FB4E4E
+    background-color: rgba(251, 78, 78, 0.1)
+    border: 1px solid rgba(251, 78, 78, 0.3)
+    
+.mediumRiskScore
+    color: #FF9500
+    background-color: rgba(255, 149, 0, 0.1)
+    border: 1px solid rgba(255, 149, 0, 0.3)
+    
+.lowRiskScore
+    color: #4CD964
+    background-color: rgba(76, 217, 100, 0.1)
+    border: 1px solid rgba(76, 217, 100, 0.3)
 
 .statsList
     display: flex
     gap: 12px
-    margin-top: 24px
+    padding-top: 12px
     align-items: center
     justify-content: flex-start
     flex-wrap: nowrap
@@ -624,7 +672,7 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     gap: 24px
     position: relative
     margin-bottom: 24px
-    border-left: 8px solid transparent
+    border-left: 4px solid transparent
     transition: transform 0.2s ease, box-shadow 0.2s ease
     
     &:hover
@@ -733,7 +781,7 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
 .alternativeHeader
     padding: 16px
     display: flex
-    align-items: center
+    align-items: start
     gap: 12px
     position: relative
     cursor: pointer
@@ -828,11 +876,6 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     svg
         position: relative
         z-index: 1
-
-.riskAssessment
-    display: flex
-    flex-direction: column
-    gap: 12px
 
 .riskProgressBar
     width: 100%
@@ -1057,6 +1100,8 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     font-weight: 300
     color: rgba(255, 255, 255, 0.5)
     margin: 0
+    display: inline-flex
+    align-items: center
 
 .sectionHeading
     font-family: $font-family-fustat
@@ -1070,10 +1115,10 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     display: flex
     align-items: center
     justify-content: center
-    width: 24px
-    height: 24px
+    width: 36px
+    height: 36px
     min-width: 24px
-    background: rgba(0, 0, 0, 0.3)
+    background: rgba(255, 255, 255, 0.05)
     border-radius: 50%
     font-size: 13px
     color: rgba(255, 255, 255, 0.9)
@@ -1099,3 +1144,8 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
         &:hover
             background: rgba(0, 0, 0, 0.35)
             color: white 
+
+.riskInfo
+    display: flex
+    align-items: center
+    gap: 8px 

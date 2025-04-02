@@ -5,9 +5,10 @@ import { AnalysisResponse, ClauseAnalysis, SuggestedAlternative } from '@/servic
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import Toast from '../Toast';
+import { useToast } from '../Toast/Toaster';
 
 const AnalyzeContract = () => {
+    const { showToast } = useToast();
     const [file, setFile] = useState<File | null>(null);
     const [text, setText] = useState('');
     const [isDragging, setIsDragging] = useState(false);
@@ -18,9 +19,16 @@ const AnalyzeContract = () => {
     const [error, setError] = useState<string | null>(null);
     const [analysisData, setAnalysisData] = useState<AnalysisResponse | null>(null);
     const [expandedAlternative, setExpandedAlternative] = useState<{ [key: string]: number | null }>({});
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState('');
-    const [copiedButtons, setCopiedButtons] = useState<{ [key: string]: boolean }>({});
+
+    // Add function to count risk levels in clauses
+    const handleRiskCounts = (clauses: ClauseAnalysis[]) => {
+        return clauses.reduce((counts, clause) => {
+            if (clause.riskLevel === 'High Risk') counts.high++;
+            else if (clause.riskLevel === 'Medium Risk') counts.medium++;
+            else if (clause.riskLevel === 'Low Risk') counts.low++;
+            return counts;
+        }, { high: 0, medium: 0, low: 0 });
+    };
 
     const clauseTitles = [
         "Termination Clause",
@@ -197,24 +205,9 @@ const AnalyzeContract = () => {
     };
 
     // Update the copyToClipboard function
-    const copyToClipboard = (text: string, buttonId: string) => {
+    const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
-        setToastMessage('Text copied to clipboard');
-        setShowToast(true);
-        
-        // Set the button as copied
-        setCopiedButtons(prev => ({
-            ...prev,
-            [buttonId]: true
-        }));
-
-        // Reset the button after 2 seconds
-        setTimeout(() => {
-            setCopiedButtons(prev => ({
-                ...prev,
-                [buttonId]: false
-            }));
-        }, 2000);
+        showToast('Text copied to clipboard');
     };
 
     // Handle download PDF report
@@ -223,11 +216,16 @@ const AnalyzeContract = () => {
 
         try {
             const pdfDoc = await PDFDocument.create();
+            
+            // Embed Times New Roman font (or closest available)
             const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
             const boldFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
             
+            // Add a new page
             let page = pdfDoc.addPage([595.28, 841.89]); // A4 size
             let { width, height } = page.getSize();
+            
+            // Set initial position
             let y = height - 50;
             const margin = 50;
             const lineHeight = 20;
@@ -301,8 +299,12 @@ const AnalyzeContract = () => {
             
             addText('Risk Assessment:', margin + 20, 12, true);
             y += lineHeight;
+            
+            addText(`Risk Assessment: `, margin + 20, 12);
+            y += lineHeight; // Move back up to add color text on same line
             addText(analysisData.documentInfo.riskAssessment, margin + 140, 12, true, riskColor);
-            y -= lineHeight * 2;
+            
+            y -= lineHeight;
             
             // Key Statistics
             addText('Key Statistics', margin, 18, true);
@@ -314,12 +316,20 @@ const AnalyzeContract = () => {
             addSection('Total Clauses:', (analysisData.documentInfo.keyStatistics.clausesIdentified || analysisData.clauses.length).toString());
             if (analysisData.documentInfo.jurisdiction) {
                 addSection('Jurisdiction:', analysisData.documentInfo.jurisdiction);
+            addText(`Jurisdiction: ${analysisData.documentInfo.jurisdiction}`, margin + 20, 12);
             }
             addSection('Risk Score:', `${analysisData.documentInfo.keyStatistics.riskScore}/100`);
             y -= lineHeight * 2;
 
-            // Document Preview
-            addText('Document Preview', margin, 18, true);
+            addText(`Risk Score: `, margin + 20, 12);
+            y += lineHeight; // Move back up to add color text on same line
+            const riskScoreColor = analysisData.documentInfo.keyStatistics.riskScore > 70 
+                ? rgb(0.9, 0.2, 0.2)  // High risk - red
+                : analysisData.documentInfo.keyStatistics.riskScore > 40 
+                    ? rgb(0.9, 0.5, 0.1)  // Medium risk - orange
+                    : rgb(0.9, 0.8, 0.2);  // Low risk - yellow
+            addText(analysisData.documentInfo.keyStatistics.riskScore.toString(), margin + 140, 12, true, riskScoreColor);
+
             y -= lineHeight;
             const previewText = analysisData.documentInfo.previewText || 
                 (analysisData.clauses.length > 0 ? analysisData.clauses[0].extractedText : '');
@@ -410,16 +420,6 @@ const AnalyzeContract = () => {
             console.error('Error generating PDF:', error);
             setError('Failed to generate PDF report');
         }
-    };
-
-    // Add function to count risk levels in clauses
-    const handleRiskCounts = (clauses: ClauseAnalysis[]) => {
-        return clauses.reduce((counts, clause) => {
-            if (clause.riskLevel === 'High Risk') counts.high++;
-            else if (clause.riskLevel === 'Medium Risk') counts.medium++;
-            else if (clause.riskLevel === 'Low Risk') counts.low++;
-            return counts;
-        }, { high: 0, medium: 0, low: 0 });
     };
 
     // Function to reset analysis state
@@ -608,8 +608,8 @@ const AnalyzeContract = () => {
                                                             <rect width="44" height="44" rx="22" fill="#F8F8F8" fill-opacity="0.05" />
                                                             <g clip-path="url(#clip0_6112_88416)">
                                                                 <path d="M16.5 16H16.61C17.0124 15.9897 17.4024 15.8582 17.7289 15.6227C18.0554 15.3872 18.3033 15.0586 18.44 14.68L18.474 14.577L18.571 14.286C18.654 14.037 18.696 13.913 18.751 13.807C18.8592 13.5994 19.0145 13.42 19.2045 13.2832C19.3944 13.1463 19.6138 13.0559 19.845 13.019C19.962 13 20.093 13 20.355 13H23.645C23.907 13 24.038 13 24.155 13.019C24.3862 13.0559 24.6056 13.1463 24.7955 13.2832C24.9855 13.42 25.1408 13.5994 25.249 13.807C25.304 13.913 25.346 14.037 25.429 14.286L25.526 14.577C25.6527 14.9983 25.9148 15.366 26.2717 15.6233C26.6285 15.8805 27.0603 16.0129 27.5 16" stroke="#989898" stroke-width="1.5" />
-                                                                <path d="M30.5 16H13.5M28.833 18.5L28.373 25.4C28.196 28.054 28.108 29.381 27.243 30.19C26.378 30.999 25.048 31 22.387 31H21.613C18.953 31 17.623 31 16.757 30.19C15.892 29.381 15.804 28.054 15.627 25.4L15.167 18.5" stroke="white" stroke-width="1.5" stroke-linecap="round" />
-                                                                <path d="M19.5 21L20 26M24.5 21L24 26" stroke="#989898" stroke-width="1.5" stroke-linecap="round" />
+                                                                <path d="M30.5 16H13.5M28.833 18.5L28.373 25.4C28.196 28.054 28.108 29.381 27.243 30.19C26.378 30.999 25.048 31 22.387 31H21.613C18.953 31 17.623 31 16.757 30.19C15.892 29.381 15.804 28.054 15.627 25.4L15.167 18.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                <path d="M19.5 21L20 26M24.5 21L24 26" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                                             </g>
                                                             <defs>
                                                                 <clipPath id="clip0_6112_88416">
@@ -671,10 +671,30 @@ const AnalyzeContract = () => {
                                         </div>
                                     
                                     <div className={styles.infoItem}>
-                                            <h4 className={styles.heading4}>Risk assessment</h4>
                                         <div className={styles.riskAssessment}>
-                                                <div className={styles.riskScore}>
+                                                <h4 className={styles.heading4}>Risk assessment</h4>
+                                                <div className={styles.riskInfo}>
+                                                    <div className={cn(
+                                                        styles.riskName,
+                                                        analysisData.documentInfo.keyStatistics.riskScore > 70 ? styles.highRiskText :
+                                                            analysisData.documentInfo.keyStatistics.riskScore > 40 ? styles.mediumRiskText :
+                                                                styles.lowRiskText
+                                                    )}>
+                                                        {analysisData.documentInfo.keyStatistics.riskScore > 70 
+                                                            ? "High Risk" 
+                                                            : analysisData.documentInfo.keyStatistics.riskScore > 40 
+                                                                ? "Medium Risk" 
+                                                                : "Low Risk"}
+                                                    </div>
+                                                    <div className={cn(
+                                                        styles.riskScore,
+                                                        analysisData.documentInfo.keyStatistics.riskScore > 70 ? styles.highRiskScore :
+                                                            analysisData.documentInfo.keyStatistics.riskScore > 40 ? styles.mediumRiskScore :
+                                                                styles.lowRiskScore
+                                                    )}>
                                                     {analysisData.documentInfo.keyStatistics.riskScore}/100
+                                                    </div>
+                                                </div>
                                         </div>
                                         <div className={styles.riskProgressBar}>
                                             <div 
@@ -686,7 +706,6 @@ const AnalyzeContract = () => {
                                                         )}
                                                         style={{ width: `${analysisData.documentInfo.keyStatistics.riskScore}%` }}
                                                     />
-                                                </div>
                                         </div>
                                     </div>
                                     
@@ -746,12 +765,11 @@ const AnalyzeContract = () => {
                                         
                                         {/* Extracted Text */}
                                         <div className={styles.extractedText}>
-                                                    <h4 className={styles.heading4}>Extracted Text</h4>
+                                            <h4 className={styles.heading4}>Extracted Text</h4>
                                             <div className={styles.textBox}>
-                                                        <p className={styles.textContent}>{clause.extractedText}</p>
-                                                        
+                                                <p className={styles.textContent}>{clause.extractedText}</p>
                                             </div>
-                                                </div>
+                                        </div>
 
                                                 {/* Suggested Alternatives */}
                                                 {clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0 && (
@@ -769,16 +787,16 @@ const AnalyzeContract = () => {
                                                                         <div className={styles.alternativeActions}>
                                                 <button 
                                                     className={styles.copyButton}
-                                                                                onClick={(e) => {
-                                                                                    e.stopPropagation();
-                                                                                    copyToClipboard(alt.text, `alt-${clauseIndex}-${alt.id}`);
-                                                                                }}
-                                                                            >
-                                                                                {copiedButtons[`alt-${clauseIndex}-${alt.id}`] ? 'Copied' : 'Copy'}
-                                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
-                                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        copyToClipboard(alt.text);
+                                                    }}
+                                                >
+                                                    Copy
+                                                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
+                                                        <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                        <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                                     </svg>
 
                                                 </button>
@@ -832,10 +850,9 @@ const AnalyzeContract = () => {
                                         
                                         {/* Extracted Text */}
                                         <div className={styles.extractedText}>
-                                                    <h4 className={styles.heading4}>Extracted Text</h4>
+                                            <h4 className={styles.heading4}>Extracted Text</h4>
                                             <div className={styles.textBox}>
-                                                        <p className={styles.textContent}>{clause.extractedText}</p>
-                                                
+                                                <p className={styles.textContent}>{clause.extractedText}</p>
                                             </div>
                                         </div>
                                         
@@ -855,16 +872,16 @@ const AnalyzeContract = () => {
                                                             <div className={styles.alternativeActions}>
                                                                 <button 
                                                                     className={styles.copyButton}
-                                                                                onClick={(e) => {
-                                                                                    e.stopPropagation();
-                                                                                    copyToClipboard(alt.text, `alt-${clauseIndex}-${alt.id}`);
-                                                                                }}
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        copyToClipboard(alt.text);
+                                                                    }}
                                                                 >
-                                                                    {copiedButtons[`alt-${clauseIndex}-${alt.id}`] ? 'Copied' : 'Copy'}
-                                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
-                                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                    Copy
+                                                                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
+                                                                        <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                        <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                                                     </svg>
 
                                                                 </button>
@@ -921,7 +938,6 @@ const AnalyzeContract = () => {
                                                     <h4 className={styles.heading4}>Extracted Text</h4>
                                                     <div className={styles.textBox}>
                                                         <p className={styles.textContent}>{clause.extractedText}</p>
-                                                        
                                                     </div>
                                                 </div>
 
@@ -939,7 +955,21 @@ const AnalyzeContract = () => {
                                                                         <span className={styles.alternativeNumber}>{alt.id}</span>
                                                                         <p className={styles.alternativeText}>{alt.text}</p>
                                                                         <div className={styles.alternativeActions}>
-                                                                            
+                                                                            <button
+                                                                                className={styles.copyButton}
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    copyToClipboard(alt.text);
+                                                                                }}
+                                                                            >
+                                                                                Copy
+                                                                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                    <rect width="36" height="36" rx="18" fill="#F8F8F8" fill-opacity="0.05" />
+                                                                                    <path d="M23.4411 16.6641H17.9026C17.2229 16.6641 16.6719 17.2151 16.6719 17.8948V23.4333C16.6719 24.113 17.2229 24.6641 17.9026 24.6641H23.4411C24.1208 24.6641 24.6719 24.113 24.6719 23.4333V17.8948C24.6719 17.2151 24.1208 16.6641 23.4411 16.6641Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                    <path d="M13.8462 20H13.2308C12.9043 20 12.5913 19.8703 12.3605 19.6395C12.1297 19.4087 12 19.0957 12 18.7692V13.2308C12 12.9043 12.1297 12.5913 12.3605 12.3605C12.5913 12.1297 12.9043 12 13.2308 12H18.7692C19.0957 12 19.4087 12.1297 19.6395 12.3605C19.8703 12.5913 20 12.9043 20 13.2308V13.8462" stroke="#989898" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+
+                                                                            </button>
                                                             </div>
                                                                     </div>
                                                                     <div className={cn(
@@ -975,12 +1005,6 @@ const AnalyzeContract = () => {
                     </motion.div>
             )}
             </AnimatePresence>
-            {showToast && (
-                <Toast
-                    message={toastMessage}
-                    onClose={() => setShowToast(false)}
-                />
-            )}
         </div>
     );
 };
