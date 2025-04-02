@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import cn from 'classnames';
 import styles from './CreateContract.module.sass';
-import { generateContract, ContractData, ContractResponse } from '@/services/contractService';
+import { generateContract, ContractData, ContractResponse, saveContractToDatabase } from '@/services/contractService';
 import { jsPDF } from 'jspdf';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
@@ -132,7 +132,7 @@ const CreateContract = () => {
         return null;
     };
 
-    // Update handlePreferenceChange to use stored contracts
+    // Update handlePreferenceChange to handle both options properly
     const handlePreferenceChange = async (preference: ContractData['preference']) => {
         setContractData((prev: ContractData) => ({
             ...prev,
@@ -148,26 +148,28 @@ const CreateContract = () => {
         }
 
         // If no stored contract, generate a new one
-        if (generatedContract) {
-            setIsLoading(true);
-            setError(null);
-            try {
-                const response = await generateContract({
-                    ...contractData,
-                    preference
-                });
-                setGeneratedContract(response);
-                storeContract(preference, response);
-            } catch (err) {
-                setError('Failed to regenerate contract. Please try again.');
-                showToast('Failed to regenerate contract. Please try again.');
-            } finally {
-                setIsLoading(false);
-            }
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await generateContract({
+                ...contractData,
+                preference
+            });
+            setGeneratedContract(response);
+            storeContract(preference, response);
+            
+            // Save to database
+            await saveContractToDatabase(contractData, response.content, preference);
+            showToast(`Contract generated successfully for ${preference}!`);
+        } catch (err) {
+            setError('Failed to generate contract. Please try again.');
+            showToast('Failed to generate contract. Please try again.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    // Update handleSubmit to store the initial contract
+    // Update handleSubmit to generate both options
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
@@ -176,11 +178,24 @@ const CreateContract = () => {
             setIsLoading(true);
             setError(null);
 
+            // Generate contract for current option
             const response = await generateContract(contractData);
             setGeneratedContract(response);
-            // Store the initial contract for the current option
             storeContract(contractData.preference, response);
-            showToast('Contract generated successfully!');
+            
+            // Save current option to database
+            await saveContractToDatabase(contractData, response.content, contractData.preference);
+
+            // Generate and save the other option
+            const otherOption = contractData.preference === 'Option A' ? 'Option B' : 'Option A';
+            const otherResponse = await generateContract({
+                ...contractData,
+                preference: otherOption
+            });
+            storeContract(otherOption, otherResponse);
+            await saveContractToDatabase(contractData, otherResponse.content, otherOption);
+            
+            showToast('Contracts generated successfully for both options!');
         } catch (err: unknown) {
             if (err instanceof z.ZodError) {
                 const newErrors: { [key: string]: string } = {};
