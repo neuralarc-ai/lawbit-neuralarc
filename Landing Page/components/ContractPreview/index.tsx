@@ -31,24 +31,40 @@ const ContractPreview = ({ content, onClose, isLoading, error }: ContractPreview
         const paragraphs = text.split('\n\n');
         
         return paragraphs.map(paragraph => {
+            // Trim whitespace
+            const trimmedParagraph = paragraph.trim();
+            
+            // Skip empty paragraphs
+            if (!trimmedParagraph) {
+                return { type: 'paragraph', text: '' };
+            }
+            
             // Check if this is a heading (starts with # or ##)
-            if (paragraph.startsWith('# ')) {
-                return { type: 'heading1', text: paragraph.substring(2) };
-            } else if (paragraph.startsWith('## ')) {
-                return { type: 'heading2', text: paragraph.substring(3) };
+            if (trimmedParagraph.startsWith('# ')) {
+                return { type: 'heading1', text: trimmedParagraph.substring(2) };
+            } else if (trimmedParagraph.startsWith('## ')) {
+                return { type: 'heading2', text: trimmedParagraph.substring(3) };
             } 
             // Check if this is a list item
-            else if (paragraph.startsWith('- ') || paragraph.startsWith('* ')) {
-                return { type: 'listItem', text: paragraph.substring(2) };
+            else if (trimmedParagraph.startsWith('- ') || trimmedParagraph.startsWith('* ')) {
+                return { type: 'listItem', text: trimmedParagraph.substring(2) };
             }
             // Check if this is a key-value pair (e.g., "Key: Value")
-            else if (paragraph.includes(': ')) {
-                const [key, value] = paragraph.split(': ');
+            else if (trimmedParagraph.includes(': ')) {
+                const [key, value] = trimmedParagraph.split(': ');
                 return { type: 'keyValue', key, value };
+            }
+            // Check for numbered list items (e.g., "1. ", "2. ", etc.)
+            else if (/^\d+\.\s/.test(trimmedParagraph)) {
+                return { type: 'listItem', text: trimmedParagraph.replace(/^\d+\.\s/, '') };
+            }
+            // Check for section headers (all caps)
+            else if (/^[A-Z\s]+$/.test(trimmedParagraph) && trimmedParagraph.length > 3) {
+                return { type: 'heading1', text: trimmedParagraph };
             }
             // Regular paragraph
             else {
-                return { type: 'paragraph', text: paragraph };
+                return { type: 'paragraph', text: trimmedParagraph };
             }
         });
     };
@@ -65,7 +81,7 @@ const ContractPreview = ({ content, onClose, isLoading, error }: ContractPreview
         // Add title
         doc.setFontSize(16);
         doc.setFont('helvetica', 'bold');
-        doc.text('Generated Contract', margin, margin);
+        doc.text('Generated Contract', pageWidth / 2, margin, { align: 'center' });
         
         // Process content for formatting
         const formattedContent = processContent(content);
@@ -168,8 +184,14 @@ const ContractPreview = ({ content, onClose, isLoading, error }: ContractPreview
                         switch (item.type) {
                             case 'heading1':
                                 return new Paragraph({
-                                    text: item.text || '',
-                                    heading: HeadingLevel.HEADING_1,
+                                    children: [
+                                        new TextRun({
+                                            text: item.text || '',
+                                            bold: true,
+                                            size: 32, // 16pt
+                                            color: "000000" // Black color
+                                        })
+                                    ],
                                     spacing: {
                                         before: 240,
                                         after: 120
@@ -178,8 +200,14 @@ const ContractPreview = ({ content, onClose, isLoading, error }: ContractPreview
                                 
                             case 'heading2':
                                 return new Paragraph({
-                                    text: item.text || '',
-                                    heading: HeadingLevel.HEADING_2,
+                                    children: [
+                                        new TextRun({
+                                            text: item.text || '',
+                                            bold: true,
+                                            size: 28, // 14pt
+                                            color: "000000" // Black color
+                                        })
+                                    ],
                                     spacing: {
                                         before: 240,
                                         after: 120
@@ -191,10 +219,12 @@ const ContractPreview = ({ content, onClose, isLoading, error }: ContractPreview
                                     children: [
                                         new TextRun({
                                             text: "• ",
-                                            bold: true
+                                            bold: true,
+                                            color: "000000" // Black color
                                         }),
                                         new TextRun({
-                                            text: item.text || ''
+                                            text: item.text || '',
+                                            color: "000000" // Black color
                                         })
                                     ],
                                     indent: {
@@ -211,10 +241,12 @@ const ContractPreview = ({ content, onClose, isLoading, error }: ContractPreview
                                     children: [
                                         new TextRun({
                                             text: (item.key || '') + ": ",
-                                            bold: true
+                                            bold: true,
+                                            color: "000000" // Black color
                                         }),
                                         new TextRun({
-                                            text: item.value || ''
+                                            text: item.value || '',
+                                            color: "000000" // Black color
                                         })
                                     ],
                                     spacing: {
@@ -229,7 +261,8 @@ const ContractPreview = ({ content, onClose, isLoading, error }: ContractPreview
                                     children: [
                                         new TextRun({
                                             text: item.text || '',
-                                            size: 24 // 12pt
+                                            size: 24, // 12pt
+                                            color: "000000" // Black color
                                         })
                                     ],
                                     spacing: {
@@ -243,7 +276,6 @@ const ContractPreview = ({ content, onClose, isLoading, error }: ContractPreview
                 ],
             }],
         });
-
 
         const buffer = await Packer.toBuffer(doc);
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
@@ -313,24 +345,43 @@ const ContractPreview = ({ content, onClose, isLoading, error }: ContractPreview
                             ) : (
                                 <div className={styles.contractPreview}>
                                     <div className={styles.contractContent}>
-                                        <pre style={{
-                                            whiteSpace: 'pre-wrap',
-                                            fontFamily: 'inherit',
-                                            fontSize: '14px',
-                                            lineHeight: '1.8',
-                                            padding: '20px',
-                                            margin: '0',
-                                            backgroundColor: '#1A1A1A',
-                                            color: '#FFFFFF',
-                                            letterSpacing: '0.2px',
-                                            textAlign: 'left',
-                                            height: '80vh',
-                                            width: '100%',
-                                            overflowY: 'auto',
-                                            boxSizing: 'border-box'
-                                        }}>
-                                            {content}
-                                        </pre>
+                                        {processContent(content).map((item, index) => {
+                                            switch (item.type) {
+                                                case 'heading1':
+                                                    return (
+                                                        <h1 key={index} className={styles.heading1}>
+                                                            {item.text}
+                                                        </h1>
+                                                    );
+                                                case 'heading2':
+                                                    return (
+                                                        <h2 key={index} className={styles.heading2}>
+                                                            {item.text}
+                                                        </h2>
+                                                    );
+                                                case 'listItem':
+                                                    return (
+                                                        <div key={index} className={styles.listItem}>
+                                                            <span className={styles.bullet}>•</span>
+                                                            <span>{item.text}</span>
+                                                        </div>
+                                                    );
+                                                case 'keyValue':
+                                                    return (
+                                                        <div key={index} className={styles.keyValue}>
+                                                            <span className={styles.key}>{item.key}:</span>
+                                                            <span className={styles.value}>{item.value}</span>
+                                                        </div>
+                                                    );
+                                                case 'paragraph':
+                                                default:
+                                                    return (
+                                                        <p key={index} className={styles.paragraph}>
+                                                            {item.text}
+                                                        </p>
+                                                    );
+                                            }
+                                        })}
                                     </div>
                                 </div>
                             )}
