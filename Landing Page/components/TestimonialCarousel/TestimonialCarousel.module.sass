@@ -1,0 +1,92 @@
+.container
+    width: 100%
+    max-width: 1400px
+    margin: 0 auto
+    padding: 80px 20px
+    position: relative
+    overflow: hidden
+
+.title
+    text-align: center
+    color: rgba(255, 255, 255, 0.9)
+    font-size: 48px
+    font-weight: 600
+    margin-bottom: 16px
+
+.subtitle
+    text-align: center
+    color: rgba(255, 255, 255, 0.6)
+    font-size: 18px
+    margin-bottom: 60px
+
+.carouselContainer
+    position: relative
+    height: 400px
+    display: flex
+    align-items: center
+    justify-content: center
+
+.card
+    position: absolute
+    width: 400px
+    background: rgba(0, 0, 0, 0.2   )
+    backdrop-filter: blur(100px) // Increased blur to 100px
+    border-radius: 24px
+    padding: 32px
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    cursor: pointer
+
+    // Drop shadow
+    box-shadow: 0 5px 1.5px -4px rgba(5, 5, 5, 0.25), 0 6px 4px -4px rgba(5, 5, 5, 0.1),0 6px 13px 0px rgba(5, 5, 5, 0.1), 0 24px 24px -16px rgba(5, 5, 5, 0.09)
+
+    // Inner shadow
+    &::before
+        content: ""
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+        border-radius: inherit
+        box-shadow: inset 2px 4px 16px 0 rgba(248, 248, 248, 0.06)
+        pointer-events: none
+
+    &.active
+        transform: scale(1.1)
+        z-index: 2
+        background: url('/images/testimonials-bg.jpg') no-repeat center center / cover
+
+.testimonialText
+    color: rgba(255, 255, 255, 0.9)
+    font-size: 16px
+    line-height: 1.6
+    margin-bottom: 24px
+
+.author
+    color: rgba(255, 255, 255, 0.9)
+    font-size: 18px
+    font-weight: 600
+    margin-bottom: 4px
+
+.position
+    color: rgba(255, 255, 255, 0.6)
+    font-size: 14px
+
+.navigationDots
+    display: flex
+    justify-content: center
+    gap: 8px
+    margin-top: 40px
+
+.dot
+    width: 8px
+    height: 8px
+    border-radius: 50%
+    background: rgba(255, 255, 255, 0.2)
+    cursor: pointer
+    transition: all 0.3s ease
+
+    &.active
+        background: rgba(138, 48, 255, 0.8)
+        width: 24px
+        border-radius: 4px 

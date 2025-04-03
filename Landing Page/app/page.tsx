@@ -8,6 +8,7 @@ import styles from './page.module.sass'
 import LandingNavbar from '@/components/LandingNavbar'
 import Button from '@/components/Button'
 import StarField from '@/components/StarField'
+import TestimonialCarousel from '../components/TestimonialCarousel'
 
 const features = [
     {
@@ -141,11 +142,12 @@ export default function Home() {
                         }}
                     >
                         <Image
-                            src="/images/contract.svg"
+                            src="/images/contract.png"
                             alt="LawBit Hero"
                             width={1200}
-                            height={600}
+                            height={1200}
                             priority
+                            quality={100}
                         />
                     </motion.div>
                     <motion.p 
@@ -154,7 +156,7 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
-                        Streamline your legal workflow with AI-powered document analysis, risk assessment, and intelligent insights
+                        LawBit helps startups and individuals create legal documents and analyze agreements to identify risks instantly
                     </motion.p>
                     <motion.div 
                         className={styles.buttons}
@@ -255,52 +257,8 @@ export default function Home() {
             </section>
 
             {/* Testimonials Section */}
-            <section id="testimonials" className={styles.testimonials}>
-                <div className={styles.container}>
-                    <motion.h2 
-                        className={styles.sectionTitle}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        What Our <span>Clients Say</span>
-                    </motion.h2>
-                    <motion.p 
-                        className={styles.sectionSubtitle}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.1 }}
-                    >
-                        See how LawBit is transforming legal workflows for businesses
-                    </motion.p>
-                    <div className={styles.testimonialImage}>
-                        <Image 
-                            src="/images/testimonials.png" 
-                            alt="Client Testimonials" 
-                            width={1200} 
-                            height={1200}
-                            quality={80}
-                            priority
-                        />
-                    </div>
-                    <div className={styles.testimonialGrid}>
-                        {/* {testimonials.map((testimonial, index) => (
-                            <motion.div 
-                                key={testimonial.author}
-                                className={styles.testimonialCard}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                            >
-                                <p>{testimonial.text}</p>
-                                <div className={styles.author}>
-                                    <h4>{testimonial.author}</h4>
-                                    <p>{testimonial.position}</p>
-                                </div>
-                            </motion.div>
-                        ))} */}
-                    </div>
-                </div>
+            <section className={styles.testimonials}>
+                <TestimonialCarousel />
             </section>
 
             {/* Pricing Section */}
