@@ -446,7 +446,7 @@ const CreateContract = () => {
                     
                 case 'paragraph':
                 default:
-                    doc.setFontSize(12);
+        doc.setFontSize(12);
                     doc.setFont('times', 'normal');
                     const lines = doc.splitTextToSize(item.text || '', contentWidth);
                     lines.forEach((line: string) => {
@@ -832,77 +832,119 @@ const CreateContract = () => {
             <div className={styles.rightSection}>
                 <div className={styles.previewSection}>
                     <div className={styles.previewContent}>
-                        {generatedContract ? (
-                            <div className={styles.contractPreview}>
-                                <div className={styles.contractContent}>
-                                    <h1 className={styles.heading1}>{generateContractTitle()}</h1>
-                                    {processContent(generatedContract.content).map((item, index) => {
-                                        switch (item.type) {
-                                            case 'heading1':
-                                                return (
-                                                    <h1 key={index} className={styles.heading1}>
-                                                        {item.text}
-                                                    </h1>
-                                                );
-                                            case 'heading2':
-                                                return (
-                                                    <h2 key={index} className={styles.heading2}>
-                                                        {item.text}
-                                                    </h2>
-                                                );
-                                            case 'listItem':
-                                                return (
-                                                    <div key={index} className={styles.listItem}>
-                                                        <span className={styles.bullet}>•</span>
-                                                        <span>{item.text}</span>
-                                                    </div>
-                                                );
-                                            case 'numberedSection':
-                                                return (
-                                                    <div 
-                                                        key={index} 
-                                                        className={styles.numberedSection}
-                                                        style={{ 
-                                                            marginLeft: `${(item.level || 1) * 20}px`,
-                                                            paddingLeft: '10px'
-                                                        }}
-                                                    >
-                                                        <span className={styles.number}>{item.number}.</span>
-                                                        <span>{item.text}</span>
-                                                    </div>
-                                                );
-                                            case 'keyValue':
-                                                return (
-                                                    <div key={index} className={styles.keyValue}>
-                                                        <span className={styles.key}>{item.key}:</span>
-                                                        <span className={styles.value}>{item.value}</span>
-                                                    </div>
-                                                );
-                                            case 'paragraph':
-                                            default:
-                                                return (
-                                                    <p key={index} className={styles.paragraph}>
-                                                        {item.text}
-                                                    </p>
-                                                );
-                                        }
-                                    })}
-                                </div>
-                            </div>
-                        ) : (
-                            <div className={styles.previewPlaceholder}>
-                                <Image 
-                                    src="/icons/lawbit-preview.svg" 
-                                    alt="Contract Preview" 
-                                    width={120} 
-                                    height={120}
-                                    className={styles.previewIcon}
-                                />
-                                <p className={styles.placeholderText}>
-                                    Your generated contract will appear here
-                                </p>
-                            </div>
-                        )}
+                        <AnimatePresence mode="wait">
+                            {isLoading ? (
+                                <motion.div 
+                                    className={styles.loading}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.3, ease: "easeOut" }}
+                                >
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.2, duration: 0.3 }}
+                                    >
+                                        <Image 
+                                            src="/icons/lawbit-preview.svg" 
+                                            alt="LawBit Logo" 
+                                            width={120} 
+                                            height={120} 
+                                            className={styles.logo}
+                                        />
+                                    </motion.div>
+                                    <motion.div 
+                                        className={styles.loadingText}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.4, duration: 0.3 }}
+                                    >
+                                        Generating...
+                                    </motion.div>
+                                </motion.div>
+                            ) : generatedContract ? (
+                                <motion.div 
+                                    className={styles.contractPreview}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <div className={styles.contractContent}>
+                                        <h1 className={styles.heading1}>{generateContractTitle()}</h1>
+                                        {processContent(generatedContract.content).map((item, index) => {
+                                            switch (item.type) {
+                                                case 'heading1':
+                                                    return (
+                                                        <h1 key={index} className={styles.heading1}>
+                                                            {item.text}
+                                                        </h1>
+                                                    );
+                                                case 'heading2':
+                                                    return (
+                                                        <h2 key={index} className={styles.heading2}>
+                                                            {item.text}
+                                                        </h2>
+                                                    );
+                                                case 'listItem':
+                                                    return (
+                                                        <div key={index} className={styles.listItem}>
+                                                            <span className={styles.bullet}>•</span>
+                                                            <span>{item.text}</span>
+                                                        </div>
+                                                    );
+                                                case 'numberedSection':
+                                                    return (
+                                                        <div 
+                                                            key={index} 
+                                                            className={styles.numberedSection}
+                                                            style={{ 
+                                                                marginLeft: `${(item.level || 1) * 20}px`,
+                                                                paddingLeft: '10px'
+                                                            }}
+                                                        >
+                                                            <span className={styles.number}>{item.number}.</span>
+                                                            <span>{item.text}</span>
+                                                        </div>
+                                                    );
+                                                case 'keyValue':
+                                                    return (
+                                                        <div key={index} className={styles.keyValue}>
+                                                            <span className={styles.key}>{item.key}:</span>
+                                                            <span className={styles.value}>{item.value}</span>
+                                                        </div>
+                                                    );
+                                                case 'paragraph':
+                                                default:
+                                                    return (
+                                                        <p key={index} className={styles.paragraph}>
+                                                            {item.text}
+                                                        </p>
+                                                    );
+                                            }
+                                        })}
+                                    </div>
+                                </motion.div>
+                            ) : (
+                                <motion.div 
+                                    className={styles.previewPlaceholder}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <Image 
+                                        src="/icons/lawbit-preview.svg" 
+                                        alt="Contract Preview" 
+                                        width={120} 
+                                        height={120}
+                                        className={styles.previewIcon}
+                                    />
+                                    <p className={styles.placeholderText}>
+                                        Your generated contract will appear here
+                                    </p>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
                 <div className={styles.actionsSection}>
