@@ -7,12 +7,17 @@
     background: rgba(31, 31, 31, 0.8)
     backdrop-filter: blur(150px)
     padding: 48px
+    @media (max-width: 768px)
+        padding: 24px
+        display: grid
     border-radius: 32px
     box-shadow: 0 5px 1.5px -4px rgba(5, 5, 5, 0.25), 0 6px 4px -4px rgba(5, 5, 5, 0.1), 0 6px 13px 0 rgba(5, 5, 5, 0.1), 0 24px 24px -16px rgba(5, 5, 5, 0.1), inset 2px 4px 16px 0 rgba(248, 248, 248, 0.06)
 
 .formSection
     flex: 1
     max-width: 500px
+    @media (max-width: 768px)
+        max-width: 100%
 
 .field
     margin-bottom: 24px
