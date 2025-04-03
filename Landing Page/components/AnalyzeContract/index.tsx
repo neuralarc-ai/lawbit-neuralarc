@@ -6,9 +6,13 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '../Toast/Toaster';
+import { useSupabase } from '@/components/Providers/SupabaseProvider';
+import { useRouter } from 'next/navigation';
 
 const AnalyzeContract = () => {
     const { showToast } = useToast();
+    const { user } = useSupabase();
+    const router = useRouter();
     const [file, setFile] = useState<File | null>(null);
     const [text, setText] = useState('');
     const [isDragging, setIsDragging] = useState(false);
@@ -89,6 +93,12 @@ const AnalyzeContract = () => {
     };
 
     const handleAnalyze = async () => {
+        if (!user) {
+            showToast('Please sign in to analyze a contract');
+            router.push('/auth/signin');
+            return;
+        }
+
         try {
             setIsAnalyzing(true);
             setError(null);

@@ -218,12 +218,20 @@ const Navbar = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <a href="/history" className={styles.menuItem}>
-                                    History
-                                </a>
-                                <button onClick={handleLogout} className={styles.menuItem}>
-                                    Logout
-                                </button>
+                                {user ? (
+                                    <>
+                                        <a href="/history" className={styles.menuItem}>
+                                            History
+                                        </a>
+                                        <button onClick={handleLogout} className={styles.menuItem}>
+                                            Logout
+                                        </button>
+                                    </>
+                                ) : (
+                                    <Link href="/auth/signin" className={styles.menuItem}>
+                                        Sign In
+                                    </Link>
+                                )}
                             </div>
                         </motion.div>
                     </>

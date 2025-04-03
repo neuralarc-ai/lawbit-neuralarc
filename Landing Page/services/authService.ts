@@ -107,29 +107,10 @@ export const resetPassword = async (email: string) => {
     }
 }
 
-export const updatePassword = async (newPassword: string) => {
+export const updatePassword = async (password: string) => {
     const supabase = createClient()
-    try {
-        console.log('Attempting password update')
-        
-        const { data, error } = await supabase.auth.updateUser({
-            password: newPassword,
-        })
-
-        if (error) {
-            console.error('Password update error:', error)
-            throw error
-        }
-
-        console.log('Password update successful:', data)
-        return { data, error: null }
-    } catch (error: any) {
-        console.error('Password update caught error:', error)
-        return { 
-            data: null, 
-            error: {
-                message: error.message || 'An unexpected error occurred during password update'
-            }
-        }
-    }
+    const { error } = await supabase.auth.updateUser({
+        password: password
+    })
+    return { error }
 } 

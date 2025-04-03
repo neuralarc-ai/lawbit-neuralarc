@@ -31,7 +31,7 @@ const HistoryPage = () => {
                 const data = await getContractHistory();
                 setContracts(data);
             } catch (err) {
-                setError('Failed to load contract history');
+                setError('Please sign in to view your contract history');
                 console.error('Error fetching contracts:', err);
             } finally {
                 setLoading(false);
