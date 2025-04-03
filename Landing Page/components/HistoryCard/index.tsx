@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './HistoryCard.module.sass';
 import cn from 'classnames';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 
 export type HistoryCardProps = {
     id: string;
@@ -18,6 +18,7 @@ export type HistoryCardProps = {
         second_party: string;
         jurisdiction: string;
     };
+    onPreview?: (id: string) => void;
 };
 
 const HistoryCard = ({
@@ -27,16 +28,22 @@ const HistoryCard = ({
     content,
     type,
     status,
-    details
+    details,
+    onPreview
 }: HistoryCardProps) => {
-    const router = useRouter();
-
     const handleClick = () => {
-        router.push(`/preview/${id}`);
+        if (onPreview) {
+            onPreview(id);
+        }
     };
 
     return (
-        <div className={styles.cardWrapper} onClick={handleClick}>
+        <motion.div 
+            className={styles.cardWrapper} 
+            onClick={handleClick}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+        >
             <div className={styles.card}>
                 <div className={styles.header}>
                     <div className={styles.icon}>
@@ -83,7 +90,7 @@ const HistoryCard = ({
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

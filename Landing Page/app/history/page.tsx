@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './History.module.sass';
 import HistoryCard from '@/components/HistoryCard';
+import AnalyzedContractCard from '@/components/AnalyzedContractCard';
+import ContractPreview from '@/components/ContractPreview';
 import cn from 'classnames';
 import Image from 'next/image';
 import StarField from '@/components/StarField';
@@ -10,12 +12,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { getContractHistory } from '@/services/contractService';
+import { RiskLevel } from '@/components/AnalyzedContractCard';
 
 const HistoryPage = () => {
     const [activeTab, setActiveTab] = useState<'generated' | 'analyzed'>('generated');
     const [contracts, setContracts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [selectedContract, setSelectedContract] = useState<any | null>(null);
+    const [showPreview, setShowPreview] = useState(false);
+    const [previewContent, setPreviewContent] = useState('');
+    const [previewLoading, setPreviewLoading] = useState(false);
+    const [previewError, setPreviewError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchContracts = async () => {
@@ -88,6 +96,54 @@ const HistoryPage = () => {
             hour12: true
         });
     };
+
+    const handlePreviewContract = (id: string) => {
+        const contract = contracts.find(c => c.id === id);
+        if (contract) {
+            setSelectedContract(contract);
+            setPreviewContent(contract.content);
+            setShowPreview(true);
+        }
+    };
+
+    const handleClosePreview = () => {
+        setShowPreview(false);
+        setSelectedContract(null);
+    };
+
+    // Mock data for analyzed contracts (for demonstration purposes)
+    const analyzedContracts = [
+        {
+            id: 'analyzed-1',
+            title: 'Employment Contract Analysis',
+            date: new Date().toISOString(),
+            content: 'This is a detailed analysis of the employment contract. It includes risk assessment, clause analysis, and recommendations for improvement.\n\nKey Findings:\n- The termination clause has high risk factors\n- The non-compete clause is overly restrictive\n- The intellectual property clause needs clarification\n\nRecommendations:\n- Revise the termination clause to include clear conditions\n- Limit the scope of the non-compete clause\n- Add specific definitions for intellectual property',
+            riskScore: 75,
+            riskLevel: 'High Risk' as RiskLevel,
+            clausesIdentified: 12,
+            highRiskItems: 3
+        },
+        {
+            id: 'analyzed-2',
+            title: 'NDA Agreement Analysis',
+            date: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+            content: 'Analysis of the Non-Disclosure Agreement reveals several areas of concern.\n\nKey Findings:\n- The definition of confidential information is too broad\n- The duration of the agreement is excessive\n- The jurisdiction clause is missing\n\nRecommendations:\n- Narrow the definition of confidential information\n- Limit the duration to a reasonable timeframe\n- Add a jurisdiction clause specifying applicable law',
+            riskScore: 45,
+            riskLevel: 'Medium Risk' as RiskLevel,
+            clausesIdentified: 8,
+            highRiskItems: 1
+        },
+        {
+            id: 'analyzed-3',
+            title: 'Service Agreement Analysis',
+            date: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+            content: 'The service agreement has been analyzed for potential risks and compliance issues.\n\nKey Findings:\n- The payment terms are clear and reasonable\n- The service level agreement lacks specific metrics\n- The liability limitations are appropriate\n\nRecommendations:\n- Add specific performance metrics to the SLA\n- Include a dispute resolution process\n- Clarify the scope of services',
+            riskScore: 25,
+            riskLevel: 'Low Risk' as RiskLevel,
+            clausesIdentified: 10,
+            highRiskItems: 0
+        }
+    ];
 
     return (
         <div className={styles.container}>
@@ -184,25 +240,55 @@ const HistoryPage = () => {
                                         type={contract.type}
                                         status={contract.status}
                                         details={contract.contract_history[0]?.details || {}}
+                                        onPreview={handlePreviewContract}
                                     />
                                 </motion.div>
                             ))
                         ) : (
-                            <motion.div className={styles.empty} variants={itemVariants}>
-                                <Image 
-                                    src="/icons/analyzed.svg" 
-                                    alt="Analysis History" 
-                                    width={48} 
-                                    height={48}
-                                    className={styles.emptyIcon}
-                                />
-                                <p className={styles.emptyText}>Analysis History will be available soon</p>
-                            </motion.div>
+                            analyzedContracts.length > 0 ? (
+                                analyzedContracts.map((contract) => (
+                                    <motion.div key={contract.id} variants={itemVariants}>
+                                        <AnalyzedContractCard
+                                            id={contract.id}
+                                            title={contract.title}
+                                            date={formatDate(contract.date)}
+                                            content={contract.content}
+                                            riskScore={contract.riskScore}
+                                            riskLevel={contract.riskLevel}
+                                            clausesIdentified={contract.clausesIdentified}
+                                            highRiskItems={contract.highRiskItems}
+                                            onPreview={handlePreviewContract}
+                                        />
+                                    </motion.div>
+                                ))
+                            ) : (
+                                <motion.div className={styles.empty} variants={itemVariants}>
+                                    <Image 
+                                        src="/icons/analyzed.svg" 
+                                        alt="Analysis History" 
+                                        width={48} 
+                                        height={48}
+                                        className={styles.emptyIcon}
+                                    />
+                                    <p className={styles.emptyText}>Analysis History will be available soon</p>
+                                </motion.div>
+                            )
                         )}
                     </motion.div>
                 </AnimatePresence>
             </div>
             <Footer />
+
+            <AnimatePresence>
+                {showPreview && (
+                    <ContractPreview
+                        content={previewContent}
+                        onClose={handleClosePreview}
+                        isLoading={previewLoading}
+                        error={previewError}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 };
