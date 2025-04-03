@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase';
-import { ContractData, ContractResponse } from './types';
 
 const supabase = createClient();
 

@@ -206,12 +206,12 @@ const Navbar = () => {
                                         />
                                     ) : (
                                         <div className={styles.profilePlaceholder}>
-                                            {user?.email?.[0]?.toUpperCase() || 'U'}
+                                            {user?.email?.[0]?.toUpperCase() || 'N/A'}
                                         </div>
                                     )}
                                     <div className={styles.profileInfo}>
                                         <div className={styles.profileName}>
-                                            {user?.user_metadata?.full_name || user?.email || 'User'}
+                                            {user?.user_metadata?.full_name || user?.email || 'Please Sign In'}
                                         </div>
                                         <div className={styles.profileEmail}>
                                             {user?.email}
