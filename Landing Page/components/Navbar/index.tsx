@@ -1,25 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import styles from './Navbar.module.sass';
 import { motion, AnimatePresence } from 'framer-motion';
 import cn from 'classnames';
+import { createClient } from '@/lib/supabase';
+import { User } from '@supabase/supabase-js';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
     const pathname = usePathname();
     const isHistoryPage = pathname === '/history';
     const isTermsPage = pathname === '/terms';
     const isPrivacyPage = pathname === '/privacy';
+    const supabase = createClient();
+
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        };
+
+        getUser();
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
 
-    const handleLogout = () => {
-        // Add logout logic here
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        router.push('/auth/signin');
         setIsOpen(false);
     };
 
@@ -175,6 +195,29 @@ const Navbar = () => {
                             transition={{ duration: 0.2 }}
                         >
                             <div className={styles.menuItems}>
+                                <div className={styles.profileSection}>
+                                    {user?.user_metadata?.avatar_url ? (
+                                        <Image
+                                            src={user.user_metadata.avatar_url}
+                                            alt="Profile"
+                                            width={40}
+                                            height={40}
+                                            className={styles.profileImage}
+                                        />
+                                    ) : (
+                                        <div className={styles.profilePlaceholder}>
+                                            {user?.email?.[0]?.toUpperCase() || 'U'}
+                                        </div>
+                                    )}
+                                    <div className={styles.profileInfo}>
+                                        <div className={styles.profileName}>
+                                            {user?.user_metadata?.full_name || user?.email || 'User'}
+                                        </div>
+                                        <div className={styles.profileEmail}>
+                                            {user?.email}
+                                        </div>
+                                    </div>
+                                </div>
                                 <a href="/history" className={styles.menuItem}>
                                     History
                                 </a>

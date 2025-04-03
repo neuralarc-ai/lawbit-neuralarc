@@ -1,18 +1,39 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import styles from '../auth.module.sass'
+import { signIn } from '@/services/authService'
+import { useToast } from '@/components/Toast/Toaster'
 
 export default function SignIn() {
+    const router = useRouter()
+    const { showToast } = useToast()
+    const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
-        username: '',
+        email: '',
         password: ''
     })
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        // Handle sign in logic here
+        setLoading(true)
+
+        try {
+            const { error } = await signIn(formData.email, formData.password)
+            
+            if (error) {
+                showToast(error.message)
+                return
+            }
+
+            router.push('/contracts')
+        } catch (error: any) {
+            showToast(error.message)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -20,11 +41,12 @@ export default function SignIn() {
             <div className={styles.field}>
                 <label className={styles.label}>Email</label>
                 <input
-                    type="text"
+                    type="email"
                     className={styles.input}
-                    placeholder="example@email.com"
-                    value={formData.username}
-                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                    placeholder="example@gmail.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    required
                 />
             </div>
 
@@ -33,20 +55,23 @@ export default function SignIn() {
                 <input
                     type="password"
                     className={styles.input}
-                    placeholder="••••••••"
+                    placeholder="••••••"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    required
                 />
             </div>
 
-            <div style={{ width: '100%', textAlign: 'right' }}>
-                <Link href="/auth/forgot-password" className={styles.forgotPassword}>
-                    Forgot password?
-                </Link>
+            <div className={styles.forgotPassword}>
+                <Link href="/auth/forgot-password">Forgot Password?</Link>
             </div>
 
-            <button type="submit" className={styles.button}>
-                <span>Log In</span>
+            <button 
+                type="submit" 
+                className={`${styles.button} ${loading ? styles.analyzing : ''}`}
+                disabled={loading}
+            >
+                <span>{loading ? 'Signing in...' : 'Sign In'}</span>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>

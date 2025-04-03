@@ -1,7 +1,7 @@
 import "@/styles/app.sass";
 import type { Metadata } from "next";
 import { Fustat } from "next/font/google";
-import { Providers } from "./providers";
+import Providers from "./providers";
 
 const fustat = Fustat({
     weight: ["200", "300", "400", "500", "600", "700", "800"],

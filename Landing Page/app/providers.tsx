@@ -1,14 +1,17 @@
 "use client";
 
 import { ParallaxProvider } from "react-scroll-parallax";
+import SupabaseProvider from '@/components/Providers/SupabaseProvider'
 import { ToastProvider } from "@/components/Toast/Toaster";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({ children }: { children: React.ReactNode }) {
     return (
-        <ParallaxProvider>
-            <ToastProvider>
-                {children}
-            </ToastProvider>
-        </ParallaxProvider>
+        <SupabaseProvider>
+            <ParallaxProvider>
+                <ToastProvider>
+                    {children}
+                </ToastProvider>
+            </ParallaxProvider>
+        </SupabaseProvider>
     );
 }

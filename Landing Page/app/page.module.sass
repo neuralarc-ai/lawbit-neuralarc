@@ -5,6 +5,7 @@
     background: #202020
     color: white
     overflow-x: hidden
+    position: relative
 
 .container
     max-width: 1440px
@@ -23,6 +24,26 @@
         flex-direction: column
         align-items: center
         text-align: center
+
+.starfieldWrapper
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    height: 5%
+    overflow: hidden
+    z-index: 1
+
+.ellipse
+    position: absolute
+    top: -50%
+    width: 100%
+    height: 100%
+    z-index: 1
+    img
+        width: 100%
+        height: 100%
+        object-fit: contain
 
 .title
     font-size: 64px
@@ -237,7 +258,7 @@
 
 // Benefits Section
 .benefits
-    padding: 120px 0
+    padding: 60px 0
     scroll-margin-top: 80px
 
 .sectionTitle
@@ -279,7 +300,6 @@
 // Testimonials Section
 .testimonials
     width: 100%
-    padding: 120px 0
     position: relative
     overflow: hidden
 
@@ -341,9 +361,11 @@
         content: "Invite Only Access"
         position: absolute
         inset: 0
+        top: -10px
         background: rgba(255, 255, 255, 0.01)
         backdrop-filter: blur(10px)
         z-index: 1
+        height: 110%
         display: flex
         align-items: center
         justify-content: center

@@ -1,9 +1,15 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import styles from '../auth.module.sass'
+import { signUp } from '@/services/authService'
+import { useToast } from '@/components/Toast/Toaster'
 
 export default function SignUp() {
+    const router = useRouter()
+    const { showToast } = useToast()
+    const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -11,9 +17,34 @@ export default function SignUp() {
         mobile: ''
     })
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        // Handle sign up logic here
+        setLoading(true)
+
+        try {
+            console.log('Submitting signup form:', formData)
+            const { data, error } = await signUp(formData.email, formData.password, formData.fullName)
+            
+            if (error) {
+                console.error('Signup error:', error)
+                showToast(error.message || 'Failed to sign up. Please try again.')
+                return
+            }
+
+            if (data?.user) {
+                console.log('Signup successful:', data)
+                showToast('Check your email to confirm your account')
+                router.push('/auth/signin')
+            } else {
+                console.error('No user data returned')
+                showToast('Signup failed. Please try again.')
+            }
+        } catch (error: any) {
+            console.error('Signup caught error:', error)
+            showToast(error.message || 'An unexpected error occurred. Please try again.')
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -26,6 +57,7 @@ export default function SignUp() {
                     placeholder="John Doe"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    required
                 />
             </div>
 
@@ -37,6 +69,7 @@ export default function SignUp() {
                     placeholder="example@gmail.com"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    required
                 />
             </div>
 
@@ -48,6 +81,8 @@ export default function SignUp() {
                     placeholder="••••••"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    required
+                    minLength={6}
                 />
             </div>
 
@@ -62,8 +97,12 @@ export default function SignUp() {
                 />
             </div>
 
-            <button type="submit" className={styles.button}>
-                <span>Sign Up</span>
+            <button 
+                type="submit" 
+                className={`${styles.button} ${loading ? styles.analyzing : ''}`}
+                disabled={loading}
+            >
+                <span>{loading ? 'Signing up...' : 'Sign Up'}</span>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>

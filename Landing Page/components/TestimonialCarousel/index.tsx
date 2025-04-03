@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import cn from 'classnames'
 import styles from './TestimonialCarousel.module.sass'
+import StarField from '../StarField'
 
 const testimonials = [
     {
@@ -72,6 +73,9 @@ const TestimonialCarousel = () => {
 
     return (
         <div className={styles.container}>
+            <div className={styles.starfieldWrapper}>
+                <StarField />
+            </div>
             <h2 className={styles.title}>What Our Clients Say</h2>
             <p className={styles.subtitle}>See how LawBit is transforming legal workflows for businesses</p>
             

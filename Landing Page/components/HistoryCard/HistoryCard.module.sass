@@ -4,6 +4,7 @@
     border-radius: 48px
     position: relative
     transition: all 0.3s ease
+    cursor: pointer
     &:before
         content: ''
         position: absolute
@@ -28,18 +29,6 @@
     &:hover
         transform: translateY(-2px)
         box-shadow: 0 24px 24px -16px rgba(5, 5, 5, 0.9), inset 0 0 32px rgba(255, 255, 255, 0.08)
-    &:before
-        content: ''
-        position: absolute
-        inset: 0
-        border-radius: 32px
-        padding: 1px
-        background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0))
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
-        -webkit-mask-composite: destination-out
-        mask-composite: exclude
-        opacity: 0
-        transition: opacity 0.3s ease
 
 .header
     display: flex
@@ -57,7 +46,7 @@
     justify-content: center
     color: rgba(255, 255, 255, 0.7)
 
-.riskBadge
+.typeBadge
     padding: 8px 20px
     border-radius: 50px
     font-size: 14px
@@ -93,7 +82,7 @@
     font-size: 12px
     font-weight: 500
 
-.clauseCount
+.option
     display: flex
     align-items: center
     border: 1.5px solid rgba(255, 255, 255, 0.1)
@@ -105,43 +94,23 @@
     svg
         color: rgba(255, 255, 255, 0.4)
 
-.riskScore
+.parties
     margin-bottom: 20px
+    display: flex
+    flex-direction: column
+    gap: 8px
 
-.scoreLabel
+.party
+    display: flex
+    align-items: center
+    gap: 8px
     font-size: 14px
+
+.partyLabel
     color: rgba(255, 255, 255, 0.5)
-    margin-bottom: 4px
 
-.scoreValue
-    font-size: 16px
-    font-weight: 600
-    color: white
-    margin-bottom: 8px
-
-.scoreBar
-    width: 100%
-    height: 4px
-    background: rgba(255, 255, 255, 0.1)
-    border-radius: 2px
-    overflow: hidden
-
-.scoreProgress
-    height: 100%
-    background: rgba(255, 255, 255, 0.9)
-    border-radius: 2px
-    position: relative
-    transition: width 0.3s ease
-    &:after
-        content: ''
-        position: absolute
-        top: 0
-        left: 0
-        right: 0
-        bottom: 0
-        background: inherit
-        filter: blur(4px)
-        opacity: 0.6
+.partyValue
+    color: rgba(255, 255, 255, 0.8)
 
 .stats
     margin-bottom: 20px
