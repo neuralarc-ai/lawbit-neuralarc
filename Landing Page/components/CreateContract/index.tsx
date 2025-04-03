@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import cn from 'classnames';
 import styles from './CreateContract.module.sass';
 import { generateContract, ContractData, ContractResponse, saveContractToDatabase } from '@/services/contractService';
@@ -12,6 +12,8 @@ import { z } from 'zod';
 import { useSupabase } from '@/components/Providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
+import AddressAutocomplete from '../AddressAutocomplete';
+import Script from 'next/script';
 
 const contractSchema = z.object({
     contractType: z.string().min(1, 'Contract type is required'),
@@ -724,6 +726,10 @@ const CreateContract = () => {
 
     return (
         <div className={styles.container}>
+            <Script
+                src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+                strategy="beforeInteractive"
+            />
             <div className={styles.formSection}>
                 <form onSubmit={handleSubmit}>
                     <div className={styles.field}>
@@ -768,16 +774,12 @@ const CreateContract = () => {
                         <div className={cn(styles.optionalContent, {
                             [styles.visible]: enabledOptionalFields.firstPartyAddress
                         })}>
-                            <textarea
-                                name="firstPartyAddress"
-                                value={contractData.firstPartyAddress}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                            <AddressAutocomplete
+                                value={contractData.firstPartyAddress || ''}
+                                onChange={(value) => handleChange({ target: { name: 'firstPartyAddress', value } } as any)}
+                                onBlur={() => handleBlur({ target: { name: 'firstPartyAddress', value: contractData.firstPartyAddress || '' } } as any)}
                                 placeholder={errors.firstPartyAddress || "Enter first party address"}
-                                className={cn(styles.addressInput, { 
-                                    [styles.error]: errors.firstPartyAddress
-                                })}
-                                rows={3}
+                                error={errors.firstPartyAddress}
                             />
                         </div>
                     </div>
@@ -806,29 +808,42 @@ const CreateContract = () => {
                         <div className={cn(styles.optionalContent, {
                             [styles.visible]: enabledOptionalFields.secondPartyAddress
                         })}>
-                            <textarea
-                                name="secondPartyAddress"
-                                value={contractData.secondPartyAddress}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
+                            <AddressAutocomplete
+                                value={contractData.secondPartyAddress || ''}
+                                onChange={(value) => handleChange({ target: { name: 'secondPartyAddress', value } } as any)}
+                                onBlur={() => handleBlur({ target: { name: 'secondPartyAddress', value: contractData.secondPartyAddress || '' } } as any)}
                                 placeholder={errors.secondPartyAddress || "Enter second party address"}
-                                className={cn(styles.addressInput, { 
-                                    [styles.error]: errors.secondPartyAddress
-                                })}
-                                rows={3}
+                                error={errors.secondPartyAddress}
                             />
                         </div>
                     </div>
                     <div className={styles.field}>
                         <label>Jurisdiction</label>
-                        <input
-                            type="text"
-                            name="jurisdiction"
+                        <AddressAutocomplete
                             value={contractData.jurisdiction}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            placeholder={errors.jurisdiction || "Select contract type"}
-                            className={cn({ [styles.error]: errors.jurisdiction })}
+                            onChange={(value) => {
+                                // Extract city, state, and country from the address
+                                const place = window.google?.maps?.places?.Autocomplete?.getPlace();
+                                if (place?.address_components) {
+                                    const city = place.address_components.find(
+                                        (component: any) => component.types.includes('locality')
+                                    )?.long_name;
+                                    const state = place.address_components.find(
+                                        (component: any) => component.types.includes('administrative_area_level_1')
+                                    )?.long_name;
+                                    const country = place.address_components.find(
+                                        (component: any) => component.types.includes('country')
+                                    )?.long_name;
+                                    
+                                    const jurisdiction = [city, state, country].filter(Boolean).join(', ');
+                                    handleChange({ target: { name: 'jurisdiction', value: jurisdiction } } as any);
+                                } else {
+                                    handleChange({ target: { name: 'jurisdiction', value } } as any);
+                                }
+                            }}
+                            onBlur={() => handleBlur({ target: { name: 'jurisdiction', value: contractData.jurisdiction } } as any)}
+                            placeholder={errors.jurisdiction || "Enter jurisdiction"}
+                            error={errors.jurisdiction}
                         />
                     </div>
                     <div className={cn(styles.field, styles.optionalField)}>

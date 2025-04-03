@@ -34,7 +34,7 @@ const Navbar = () => {
         });
 
         return () => subscription.unsubscribe();
-    }, []);
+    }, [supabase.auth]);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -173,6 +173,7 @@ const Navbar = () => {
                         height={78}
                         className={styles.logo}
                         priority
+                        quality={100}
                     />
                 </Link>
                 <button

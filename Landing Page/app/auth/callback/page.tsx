@@ -13,25 +13,27 @@ export default function AuthCallback() {
     useEffect(() => {
         const handleCallback = async () => {
             try {
-                const { error } = await supabase.auth.exchangeCodeForSession(window.location.hash)
+                const { data: { session }, error } = await supabase.auth.getSession();
+                
                 if (error) {
-                    console.error('Auth callback error:', error)
-                    showToast('Failed to verify email. Please try again.')
-                    router.push('/auth/signin')
-                    return
+                    console.error('Error getting session:', error);
+                    router.push('/auth/signin');
+                    return;
                 }
 
-                showToast('Email verified successfully!')
-                router.push('/contracts')
-            } catch (error: any) {
-                console.error('Auth callback error:', error)
-                showToast('An unexpected error occurred. Please try again.')
-                router.push('/auth/signin')
+                if (session) {
+                    router.push('/contracts');
+                } else {
+                    router.push('/auth/signin');
+                }
+            } catch (error) {
+                console.error('Error handling callback:', error);
+                router.push('/auth/signin');
             }
-        }
+        };
 
-        handleCallback()
-    }, [router, showToast])
+        handleCallback();
+    }, [router, supabase.auth]);
 
     return (
         <div className="flex items-center justify-center min-h-screen">

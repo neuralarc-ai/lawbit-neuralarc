@@ -102,7 +102,7 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
         supabase.removeChannel(channel);
       }
     };
-  }, []);
+  }, [fetchTokenUsage, supabase]);
 
   // Refresh token usage data every 5 seconds as a fallback
   useEffect(() => {
@@ -112,7 +112,7 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchTokenUsage]);
 
   if (loading) {
     return (

@@ -256,13 +256,13 @@ const HistoryPage = () => {
                                         <Image 
                                             src="/icons/document.svg" 
                                             alt="Document Icon" 
-                                            width={32} 
-                                            height={32}
+                                            width={48} 
+                                            height={48}
                                             className={styles.documentIcon}
                                         />
                                     </div>
                                     <h2>Coming Soon!</h2>
-                                    <p>We're working on something exciting. Stay tuned for updates!</p>
+                                    <p>We&apos;re working on something exciting. Stay tuned for updates!</p>
                                 </div>
                             </motion.div>
                         )}

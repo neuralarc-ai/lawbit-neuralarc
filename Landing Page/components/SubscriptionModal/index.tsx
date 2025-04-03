@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from './SubscriptionModal.module.sass';
 import { createClient } from '@/lib/supabase';
 import { loadStripe } from '@stripe/stripe-js';
@@ -126,24 +126,9 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
     const [newBalance, setNewBalance] = useState<number | null>(null);
     const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
     const [clientSecret, setClientSecret] = useState<string | null>(null);
+    const [sessionId, setSessionId] = useState<string | null>(null);
 
-    // Check for session_id in URL when component mounts
-    useEffect(() => {
-        if (isOpen) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const sessionId = urlParams.get('session_id');
-            
-            if (sessionId) {
-                handlePaymentSuccess(sessionId);
-                
-                // Clean up URL without refreshing the page
-                const newUrl = window.location.pathname;
-                window.history.pushState({}, '', newUrl);
-            }
-        }
-    }, [isOpen]);
-
-    const handlePaymentSuccess = async (sessionId: string) => {
+    const handlePaymentSuccess = useCallback(async (sessionId: string) => {
         try {
             setIsLoading(true);
             setError(null);
@@ -160,52 +145,6 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
             const data = await response.json();
             
             if (data.error) {
-                // If payment is still processing, retry after a delay
-                if (data.error.includes('still processing')) {
-                    // Wait for 3 seconds
-                    await new Promise(resolve => setTimeout(resolve, 3000));
-                    
-                    // Retry the request
-                    const retryResponse = await fetch('/api/add-tokens', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ sessionId }),
-                    });
-                    
-                    const retryData = await retryResponse.json();
-                    
-                    if (retryData.error) {
-                        throw new Error(retryData.error);
-                    }
-                    
-                    // If we get here, the retry was successful
-                    setPaymentSuccess(true);
-                    setTokensAdded(retryData.tokensAdded);
-                    setNewBalance(retryData.newBalance);
-                    
-                    // Close modal after 3 seconds
-                    setTimeout(() => {
-                        onClose();
-                        setPaymentSuccess(false);
-                        setTokensAdded(null);
-                        setNewBalance(null);
-                        setSelectedPlan(null);
-                        setClientSecret(null);
-                    }, 3000);
-                    
-                    return;
-                }
-                
-                // If payment requires a payment method, we need to go back to the payment form
-                if (data.error.includes('requires_payment_method')) {
-                    setError('Your payment method was declined. Please try another payment method.');
-                    setSelectedPlan(null);
-                    setClientSecret(null);
-                    return;
-                }
-                
                 throw new Error(data.error);
             }
             
@@ -229,7 +168,29 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [onClose]);
+
+    // Check for session_id in URL when component mounts
+    useEffect(() => {
+        if (isOpen) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('session_id');
+            
+            if (sessionId) {
+                handlePaymentSuccess(sessionId);
+                
+                // Clean up URL without refreshing the page
+                const newUrl = window.location.pathname;
+                window.history.pushState({}, '', newUrl);
+            }
+        }
+    }, [isOpen, handlePaymentSuccess]);
+
+    useEffect(() => {
+        if (paymentSuccess && tokensAdded && newBalance && sessionId) {
+            handlePaymentSuccess(sessionId);
+        }
+    }, [paymentSuccess, tokensAdded, newBalance, handlePaymentSuccess, sessionId]);
 
     const handlePlanSelect = async (priceId: string) => {
         setSelectedPlan(priceId);
