@@ -1,17 +1,21 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { User } from '@supabase/supabase-js'
+import { User, SupabaseClient } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase'
 
 type SupabaseContextType = {
   user: User | null
   loading: boolean
+  supabase: SupabaseClient
 }
+
+const supabase = createClient()
 
 const SupabaseContext = createContext<SupabaseContextType>({
   user: null,
   loading: true,
+  supabase,
 })
 
 export const useSupabase = () => {
@@ -27,8 +31,6 @@ export default function SupabaseProvider({
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const supabase = createClient()
-
     // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
@@ -45,7 +47,7 @@ export default function SupabaseProvider({
   }, [])
 
   return (
-    <SupabaseContext.Provider value={{ user, loading }}>
+    <SupabaseContext.Provider value={{ user, loading, supabase }}>
       {children}
     </SupabaseContext.Provider>
   )

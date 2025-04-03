@@ -11,6 +11,7 @@ import { useToast } from '../Toast/Toaster';
 import { z } from 'zod';
 import { useSupabase } from '@/components/Providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase';
 
 const contractSchema = z.object({
     contractType: z.string().min(1, 'Contract type is required'),
@@ -186,6 +187,29 @@ const CreateContract = () => {
         setIsLoading(true);
         setError(null);
         try {
+            const supabase = createClient();
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            if (!user) {
+                throw new Error('User not authenticated');
+            }
+            
+            const { data: userData, error: userError } = await supabase
+                .from('users')
+                .select('token_usage')
+                .eq('id', user.id)
+                .single();
+            
+            if (userError) {
+                throw userError;
+            }
+            
+            const tokenUsage = userData.token_usage as { total: number; limit: number; remaining: number };
+            
+            if (tokenUsage.remaining < 20000) {
+                throw new Error('Insufficient tokens. Please upgrade your plan to continue.');
+            }
+            
             const response = await generateContract({
                 ...contractData,
                 preference
@@ -195,10 +219,24 @@ const CreateContract = () => {
             
             // Save to database
             await saveContractToDatabase(contractData, response.content, preference);
+            
+            // Update token usage
+            const { error: updateError } = await supabase.rpc('update_token_usage', {
+                p_user_id: user.id,
+                p_action: 'generate_contract',
+                p_tokens: 20000
+            });
+            
+            if (updateError) {
+                console.error('Failed to update token usage:', updateError);
+                showToast('Contract generated but failed to update token usage');
+            }
+            
             showToast(`Contract generated successfully for ${preference}!`);
         } catch (err) {
-            setError('Failed to generate contract. Please try again.');
-            showToast('Failed to generate contract. Please try again.');
+            console.error('Error generating contract:', err);
+            setError(err instanceof Error ? err.message : 'Failed to generate contract');
+            showToast(err instanceof Error ? err.message : 'Failed to generate contract');
         } finally {
             setIsLoading(false);
         }
@@ -219,6 +257,24 @@ const CreateContract = () => {
             setIsLoading(true);
             setError(null);
 
+            // Check token usage before generating contracts
+            const supabase = createClient();
+            const { data: userData, error: userError } = await supabase
+                .from('users')
+                .select('token_usage')
+                .eq('id', user.id)
+                .single();
+            
+            if (userError) {
+                throw userError;
+            }
+            
+            const tokenUsage = userData.token_usage as { total: number; limit: number; remaining: number };
+            
+            if (tokenUsage.remaining < 20000) {
+                throw new Error('Insufficient tokens. Please upgrade your plan to continue.');
+            }
+
             // Generate contract for current option
             const response = await generateContract(contractData);
             setGeneratedContract(response);
@@ -235,6 +291,18 @@ const CreateContract = () => {
             });
             storeContract(otherOption, otherResponse);
             await saveContractToDatabase(contractData, otherResponse.content, otherOption);
+            
+            // Update token usage after successful generation
+            const { error: updateError } = await supabase.rpc('update_token_usage', {
+                p_user_id: user.id,
+                p_action: 'generate_contract',
+                p_tokens: 20000
+            });
+            
+            if (updateError) {
+                console.error('Failed to update token usage:', updateError);
+                showToast('Contracts generated but failed to update token usage');
+            }
             
             showToast('Contracts generated successfully for both options!');
         } catch (err: unknown) {

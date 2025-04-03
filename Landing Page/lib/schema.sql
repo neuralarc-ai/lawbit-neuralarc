@@ -10,6 +10,7 @@ CREATE TABLE public.users (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
     subscription_tier TEXT DEFAULT 'free' CHECK (subscription_tier IN ('free', 'plus', 'ultra')),
+    token_usage JSONB,
     PRIMARY KEY (id)
 );
 
@@ -112,4 +113,31 @@ CREATE TRIGGER update_users_updated_at
 CREATE TRIGGER update_contracts_updated_at
     BEFORE UPDATE ON public.contracts
     FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at_column(); 
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Create function to update token usage
+CREATE OR REPLACE FUNCTION public.update_token_usage(
+    p_user_id UUID,
+    p_action TEXT,
+    p_tokens INTEGER
+)
+RETURNS void AS $$
+BEGIN
+    UPDATE public.users
+    SET token_usage = CASE 
+        WHEN token_usage IS NULL THEN jsonb_build_object(
+            'total', p_tokens,
+            'limit', 50000,
+            'remaining', 50000 - p_tokens,
+            'last_reset', NULL
+        )
+        ELSE jsonb_build_object(
+            'total', COALESCE((token_usage->>'total')::integer, 0) + p_tokens,
+            'limit', COALESCE((token_usage->>'limit')::integer, 50000),
+            'remaining', COALESCE((token_usage->>'remaining')::integer, 50000) - p_tokens,
+            'last_reset', COALESCE(token_usage->>'last_reset', NULL)
+        )
+    END
+    WHERE id = p_user_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER; 

@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 
 const AnalyzeContract = () => {
     const { showToast } = useToast();
-    const { user } = useSupabase();
+    const { user, supabase } = useSupabase();
     const router = useRouter();
     const [file, setFile] = useState<File | null>(null);
     const [text, setText] = useState('');
@@ -103,6 +103,25 @@ const AnalyzeContract = () => {
             setIsAnalyzing(true);
             setError(null);
 
+            // Check token usage before proceeding
+            const { data: userData, error: userError } = await supabase
+                .from('users')
+                .select('token_usage')
+                .eq('id', user.id)
+                .single();
+
+            if (userError) {
+                console.error('Error fetching user data:', userError);
+                throw new Error('Failed to check token usage');
+            }
+
+            console.log('Current token usage:', userData.token_usage);
+
+            const tokenUsage = userData.token_usage || { total: 0, limit: 50000, remaining: 50000 };
+            if (tokenUsage.remaining < 20000) {
+                throw new Error('Insufficient tokens. Please upgrade your plan to continue.');
+            }
+
             let response;
             if (activeTab === 'upload') {
                 if (!file) {
@@ -144,6 +163,28 @@ const AnalyzeContract = () => {
 
             if (!analysisResponse.clauses || !Array.isArray(analysisResponse.clauses) || analysisResponse.clauses.length === 0) {
                 throw new Error('Invalid analysis response: No clauses identified');
+            }
+
+            // Update token usage after successful analysis
+            console.log('Updating token usage for user:', user.id);
+            try {
+                const { data, error: updateError } = await supabase.rpc('update_token_usage', {
+                    p_user_id: user.id,
+                    p_action: 'analyze',
+                    p_tokens: 20000
+                });
+                
+                console.log('Token update response:', { data, error: updateError });
+                
+                if (updateError) {
+                    console.error('Failed to update token usage:', updateError);
+                    showToast('Contract analyzed but failed to update token usage. Please contact support.');
+                } else {
+                    showToast('Contract analyzed successfully!');
+                }
+            } catch (updateErr) {
+                console.error('Exception during token update:', updateErr);
+                showToast('Contract analyzed but failed to update token usage. Please contact support.');
             }
 
             // Ensure all required fields exist

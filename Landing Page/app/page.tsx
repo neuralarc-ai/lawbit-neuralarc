@@ -84,28 +84,26 @@ const pricing = [
     },
     {
         title: 'Plus',
-        price: '$8.99',
+        price: '$14.99',
         description: 'Ideal for small businesses and startups',
         features: [
-            'Unlimited document generations',
-            'Advanced risk analysis',
-            'Priority support',
-            'Document history & versioning'
+            '250,000 tokens',
+            'Usage History',
+            'Advanced contract analysis',
         ],
         buttonText: 'Get Started',
         popular: true
     },
     {
         title: 'Ultra',
-        price: '$14.99',    
+        price: '$24.99',    
         description: 'For organizations with complex legal needs',
         features: [
-            'Everything in Startup',
-            'Custom AI training',
-            'Dedicated support',
-            'Multiple team access'
+            '600,000 tokens',
+            'Usage History',
+            'Advanced contract analysis',
         ],
-        buttonText: 'Contact Sales',
+        buttonText: 'Get Started',
         popular: false
     }
 ]

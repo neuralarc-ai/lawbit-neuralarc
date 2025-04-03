@@ -7,9 +7,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import cn from 'classnames';
 import { createClient } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
+import TokenUsage from '../TokenUsage';
+import SubscriptionModal from '../SubscriptionModal';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
     const pathname = usePathname();
@@ -49,6 +52,15 @@ const Navbar = () => {
         } else if (isTermsPage || isPrivacyPage) {
             router.push('/contracts');
         }
+    };
+
+    const openSubscriptionModal = () => {
+        setIsOpen(false); // Close the menu
+        setIsSubscriptionModalOpen(true);
+    };
+
+    const closeSubscriptionModal = () => {
+        setIsSubscriptionModalOpen(false);
     };
 
     const navbarVariants = {
@@ -218,11 +230,24 @@ const Navbar = () => {
                                         </div>
                                     </div>
                                 </div>
+                                
+                                {user && (
+                                    <div className={styles.menuSection}>
+                                        <TokenUsage />
+                                    </div>
+                                )}
+                                
                                 {user ? (
                                     <>
                                         <a href="/history" className={styles.menuItem}>
                                             History
                                         </a>
+                                        <button onClick={openSubscriptionModal} className={styles.menuItem}>
+                                            <span>Upgrade Plan</span>
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
+                                        </button>
                                         <button onClick={handleLogout} className={styles.menuItem}>
                                             Logout
                                         </button>
@@ -237,6 +262,12 @@ const Navbar = () => {
                     </>
                 )}
             </AnimatePresence>
+
+            {/* Subscription Modal */}
+            <SubscriptionModal 
+                isOpen={isSubscriptionModalOpen} 
+                onClose={closeSubscriptionModal} 
+            />
         </nav>
     );
 };

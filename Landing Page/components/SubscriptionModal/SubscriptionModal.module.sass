@@ -1,0 +1,285 @@
+.modalOverlay
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background-color: rgba(0, 0, 0, 0.75)
+    backdrop-filter: blur(8px)
+    display: flex
+    align-items: center
+    justify-content: center
+    z-index: 1000
+    padding: 1rem
+
+.modalContent
+    background-color: #1a1a1a
+    border-radius: 1rem
+    padding: 2rem
+    max-width: 900px
+    width: 100%
+    max-height: 90vh
+    overflow-y: auto
+    position: relative
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)
+
+.modalHeader
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-bottom: 2rem
+
+.modalTitle
+    font-size: 1.5rem
+    font-weight: 600
+    color: #ffffff
+    margin: 0
+
+.closeButton
+    background: none
+    border: none
+    color: #ffffff
+    cursor: pointer
+    padding: 0.5rem
+    border-radius: 0.5rem
+    transition: background-color 0.2s
+
+    &:hover
+        background-color: rgba(255, 255, 255, 0.1)
+
+.subscriptionCards
+    display: grid
+    grid-template-columns: repeat(2, 1fr)
+    gap: 2rem
+
+    @media (max-width: 768px)
+        grid-template-columns: 1fr
+
+.subscriptionCard
+    background-color: #2a2a2a
+    border-radius: 1rem
+    padding: 2rem
+    display: flex
+    flex-direction: column
+    gap: 1.5rem
+    transition: transform 0.2s
+
+    &:hover
+        transform: translateY(-4px)
+
+.cardHeader
+    text-align: center
+
+.planName
+    font-size: 1.5rem
+    font-weight: 600
+    color: #ffffff
+    margin: 0 0 1rem 0
+
+.priceContainer
+    display: flex
+    align-items: baseline
+    justify-content: center
+    gap: 0.25rem
+
+.price
+    font-size: 2.5rem
+    font-weight: 700
+    color: #ffffff
+
+.period
+    font-size: 1rem
+    color: #a0a0a0
+
+.featuresList
+    list-style: none
+    padding: 0
+    margin: 0
+    display: flex
+    flex-direction: column
+    gap: 1rem
+
+.featureItem
+    display: flex
+    align-items: center
+    gap: 0.75rem
+    color: #ffffff
+
+    svg
+        color: #10b981
+        flex-shrink: 0
+
+.subscribeButton
+    width: 100%
+    padding: 16px
+    border: none
+    border-radius: 12px
+    background: radial-gradient(circle at center, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 60%, rgba(248, 91, 66, 1) 100%)
+    color: white
+    font-size: 16px
+    font-weight: 600
+    cursor: pointer
+    transition: all 0.3s ease
+    position: relative
+    overflow: hidden
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 8px
+    box-shadow: 0 8px 16px -4px rgba(18, 18, 18, 0.2), 0 8px 20px 3px rgba(254, 83, 185, 0.25), inset 0 4px 4px rgba(255, 255, 255, 0.05)
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        background: radial-gradient(circle at center, rgba(138, 48, 255, 0.8) 0%, rgba(248, 66, 178, 0.8) 60%, rgba(248, 91, 66, 0.8) 100%)
+        opacity: 0
+        transition: opacity 0.3s ease
+    &:after
+        content: ''
+        position: absolute
+        inset: 0px
+        border-radius: 10px
+        border: 2px solid transparent
+        background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
+        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: destination-out
+        mask-composite: exclude
+    &:hover:before
+        opacity: 1
+    span
+        position: relative
+        z-index: 1
+    svg
+        position: relative
+        z-index: 1
+        transition: transform 0.3s ease
+    &:hover svg
+        transform: translateX(4px)
+
+.errorMessage
+    background-color: rgba(220, 38, 38, 0.1)
+    border: 1px solid rgba(220, 38, 38, 0.2)
+    color: #ef4444
+    padding: 1rem
+    border-radius: 0.5rem
+    margin-bottom: 1.5rem
+    font-size: 0.875rem
+
+.successMessage
+    display: flex
+    flex-direction: column
+    align-items: center
+    text-align: center
+    padding: 2rem
+    background-color: rgba(16, 185, 129, 0.1)
+    border-radius: 0.5rem
+    border: 1px solid rgba(16, 185, 129, 0.2)
+
+.successIcon
+    width: 64px
+    height: 64px
+    background-color: rgba(16, 185, 129, 0.2)
+    border-radius: 50%
+    display: flex
+    align-items: center
+    justify-content: center
+    margin-bottom: 1.5rem
+    color: #10b981
+    position: relative
+    
+    &:before
+        content: ''
+        position: absolute
+        inset: -4px
+        border-radius: 50%
+        background: radial-gradient(circle at center, rgba(16, 185, 129, 0.4), transparent 70%)
+        animation: pulse 2s infinite
+
+@keyframes pulse
+    0%
+        transform: scale(1)
+        opacity: 0.8
+    50%
+        transform: scale(1.1)
+        opacity: 0.4
+    100%
+        transform: scale(1)
+        opacity: 0.8
+
+.successTitle
+    font-size: 1.5rem
+    font-weight: 600
+    color: #10b981
+    margin: 0 0 1rem 0
+
+.successText
+    color: #ffffff
+    margin: 0 0 0.5rem 0
+    font-size: 1rem
+
+.successBalance
+    color: #a0a0a0
+    margin: 0
+    font-size: 0.875rem
+
+// Payment Form Styles
+.paymentForm
+    background-color: #2a2a2a
+    border-radius: 1rem
+    padding: 2rem
+    display: flex
+    flex-direction: column
+    gap: 1.5rem
+
+.paymentButtons
+    display: flex
+    gap: 1rem
+    margin-top: 1rem
+
+.cancelButton
+    flex: 1
+    padding: 12px
+    border: 1px solid rgba(255, 255, 255, 0.2)
+    border-radius: 8px
+    background-color: transparent
+    color: #ffffff
+    font-size: 16px
+    font-weight: 500
+    cursor: pointer
+    transition: all 0.2s ease
+    
+    &:hover
+        background-color: rgba(255, 255, 255, 0.1)
+    
+    &:disabled
+        opacity: 0.5
+        cursor: not-allowed
+
+.payButton
+    flex: 2
+    padding: 12px
+    border: none
+    border-radius: 8px
+    background: radial-gradient(circle at center, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 60%, rgba(248, 91, 66, 1) 100%)
+    color: white
+    font-size: 16px
+    font-weight: 600
+    cursor: pointer
+    transition: all 0.3s ease
+    position: relative
+    overflow: hidden
+    
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        background: radial-gradient(circle at center, rgba(138, 48, 255, 0.8) 0%, rgba(248, 66, 178, 0.8) 60%, rgba(248, 91, 66, 0.8) 100%)
+        opacity: 0
+        transition: opacity 0.3s ease
+    
+    &:hover:before
+        opacity: 1
+    
+    &:disabled
+        opacity: 0.7
+        cursor: not-allowed
