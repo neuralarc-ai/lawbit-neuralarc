@@ -9,6 +9,8 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '../Toast/Toaster';
 import { z } from 'zod';
+import { useSupabase } from '@/components/Providers/SupabaseProvider';
+import { useRouter } from 'next/navigation';
 
 const contractSchema = z.object({
     contractType: z.string().min(1, 'Contract type is required'),
@@ -67,6 +69,8 @@ interface FormattedContentItem {
 
 const CreateContract = () => {
     const { showToast } = useToast();
+    const { user } = useSupabase();
+    const router = useRouter();
     const [contractData, setContractData] = useState<ContractData>({
         contractType: '',
         firstPartyName: '',
@@ -203,6 +207,12 @@ const CreateContract = () => {
     // Update handleSubmit to generate both options
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (!user) {
+            showToast('Please sign in to create a contract');
+            router.push('/auth/signin');
+            return;
+        }
         
         try {
             contractSchema.parse(contractData);
