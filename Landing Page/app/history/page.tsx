@@ -245,34 +245,26 @@ const HistoryPage = () => {
                                 </motion.div>
                             ))
                         ) : (
-                            analyzedContracts.length > 0 ? (
-                                analyzedContracts.map((contract) => (
-                                    <motion.div key={contract.id} variants={itemVariants}>
-                                        <AnalyzedContractCard
-                                            id={contract.id}
-                                            title={contract.title}
-                                            date={formatDate(contract.date)}
-                                            content={contract.content}
-                                            riskScore={contract.riskScore}
-                                            riskLevel={contract.riskLevel}
-                                            clausesIdentified={contract.clausesIdentified}
-                                            highRiskItems={contract.highRiskItems}
-                                            onPreview={handlePreviewContract}
+                            <motion.div 
+                                className={styles.dashboard}
+                                variants={itemVariants}
+                                initial="hidden"
+                                animate="visible"
+                            >
+                                <div className={styles.dashboardContent}>
+                                    <div className={styles.iconWrapper}>
+                                        <Image 
+                                            src="/icons/document.svg" 
+                                            alt="Document Icon" 
+                                            width={32} 
+                                            height={32}
+                                            className={styles.documentIcon}
                                         />
-                                    </motion.div>
-                                ))
-                            ) : (
-                                <motion.div className={styles.empty} variants={itemVariants}>
-                                    <Image 
-                                        src="/icons/analyzed.svg" 
-                                        alt="Analysis History" 
-                                        width={48} 
-                                        height={48}
-                                        className={styles.emptyIcon}
-                                    />
-                                    <p className={styles.emptyText}>Analysis History will be available soon</p>
-                                </motion.div>
-                            )
+                                    </div>
+                                    <h2>Coming Soon!</h2>
+                                    <p>We're working on something exciting. Stay tuned for updates!</p>
+                                </div>
+                            </motion.div>
                         )}
                     </motion.div>
                 </AnimatePresence>

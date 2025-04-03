@@ -131,10 +131,6 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
     <div className={`${styles.container} ${className || ''}`}>
       <div className={styles.header}>
         <h3 className={styles.title}>Token Usage</h3>
-        <div className={styles.stats}>
-          <span className={styles.remaining}>{tokenUsage.remaining.toLocaleString()} remaining</span>
-          <span className={styles.total}>of {tokenUsage.limit.toLocaleString()}</span>
-        </div>
       </div>
       
       <div className={styles.progressContainer}>
@@ -146,6 +142,14 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
         >
           <div className={styles.progressFill}></div>
         </motion.div>
+      </div>
+      
+      <div className={styles.usageInfo}>
+        <div className={styles.usageStats}>
+          <span className={styles.used}>{tokenUsage.total.toLocaleString()} used</span>
+          <span className={styles.separator}></span>
+          <span className={styles.total}>{tokenUsage.limit.toLocaleString()} total</span>
+        </div>
       </div>
     </div>
   );
