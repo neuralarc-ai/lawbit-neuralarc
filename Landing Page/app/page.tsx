@@ -76,10 +76,8 @@ const pricing = [
         period: '',
         description: 'Perfect for exploring LawBit\'s capabilities',
         features: [
-            'Document generation',
-            'Basic risk analysis',
-            'Library',
-            'Up-to-date library'
+            '1 Document generation',
+            '1 Basic risk analysis',
         ],
         buttonText: 'Start Free Trial',
         popular: false
@@ -92,7 +90,6 @@ const pricing = [
             'Unlimited document generations',
             'Advanced risk analysis',
             'Priority support',
-            'Custom templates',
             'Document history & versioning'
         ],
         buttonText: 'Get Started',
@@ -177,7 +174,7 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                       <span>Simplify Your Legal Workflow with AI Precision</span>
+                       <span>Simplify Your Legal Drafting with AI Precision</span>
                     </motion.h1>
                     <motion.div 
                         className={styles.heroImage}

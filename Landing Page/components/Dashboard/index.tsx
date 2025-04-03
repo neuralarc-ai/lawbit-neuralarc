@@ -80,7 +80,7 @@ const Dashboard = () => {
                                 height={28}
                                 className={styles.tabIcon}
                             />
-                            Create Legal Draft
+                            Generate Legal Draft
                         </button>
                         <button 
                             className={cn(styles.tab, { [styles.active]: activeTab === 'analyze' })}
@@ -93,7 +93,7 @@ const Dashboard = () => {
                                 height={28}
                                 className={styles.tabIcon}
                             />
-                            Analyze Legal Agreement
+                            Analyze Legal Draft
                         </button>
                     </div>
                 </motion.div>

@@ -11,7 +11,6 @@
     top: 0
     left: 0
     width: 1440px
-    
     height: 100%
     z-index: 0
     opacity: 1
@@ -39,7 +38,7 @@
 .card
     position: absolute
     width: 420px
-    background: rgba(0, 0, 0, 0.2   )
+    background: rgba(0, 0, 0, 0.2)
     backdrop-filter: blur(100px) // Increased blur to 100px
     border-radius: 32px
     padding: 32px
@@ -64,6 +63,21 @@
     &.active
         transform: scale(1.1)
         z-index: 2
+        background: rgba(40, 40, 40, 0.7)
+        position: relative
+        &::after
+            content: ""
+            position: absolute
+            top: -20px
+            left: -20px
+            right: -20px
+            bottom: -20px
+            object-fit: cover
+            background-image: url('/images/testimonials-bg.png')
+            background-position: center
+            background-repeat: no-repeat
+            z-index: -10
+            border-radius: inherit
 
 .testimonialText
     color: rgba(255, 255, 255, 0.9)

@@ -24,8 +24,50 @@ const testimonials = [
         text: "The efficiency at which we can now generate and analyze legal documents is incredible. What used to take days now takes minutes with LawBit's AI assistance.",
         author: "Sarah Williams",
         position: "Legal Manager, Innovate Solutions"
+    },
+    {
+        id: 4,
+        text: "LawBit has revolutionized our document workflow. The AI's ability to understand and adapt to our specific legal needs is truly remarkable.",
+        author: "David Lee",
+        position: "Senior Counsel, Apex Industries"
+    },
+    {
+        id: 5,
+        text: "I was skeptical about using AI for legal documents, but LawBit exceeded my expectations. The accuracy and speed are unmatched.",
+        author: "Emily Rodriguez",
+        position: "Compliance Officer, Global Ventures"
+    },
+    {
+        id: 6,
+        text: "LawBit helped us streamline our contract management process. It's user-friendly and incredibly efficient, saving us valuable time and resources.",
+        author: "Kevin Patel",
+        position: "Project Lead, Quantum Dynamics"
+    },
+    {
+        id: 7,
+        text: "The personalized support and the AI's ability to handle complex legal terminology have made LawBit an indispensable tool for our team.",
+        author: "Aisha Khan",
+        position: "Legal Analyst, Zenith Corporation"
+    },
+    {
+        id: 8,
+        text: "LawBit has simplified our legal document creation and review processes. The AI's suggestions and insights are always spot-on.",
+        author: "Ryan Carter",
+        position: "Business Strategist, Nova Enterprises"
+    },
+    {
+        id: 9,
+        text: "I appreciate how LawBit keeps our legal documents organized and easily accessible. It's a game-changer for our firm.",
+        author: "Sophia Gomez",
+        position: "Partner, Stellar Group"
+    },
+    {
+        id: 10,
+        text: "The AI's ability to identify potential legal risks and suggest necessary revisions has been invaluable for our company.",
+        author: "Ethan Brown",
+        position: "Risk Manager, Vertex Solutions"
     }
-]
+];
 
 type PositionType = 'left' | 'center' | 'right' | 'incoming' | 'outgoing';
 
@@ -42,23 +84,31 @@ const TestimonialCarousel = () => {
         return () => clearInterval(timer)
     }, [])
 
+    const getVisibleIndices = () => {
+        const indices = []
+        const prev = (testimonials.length + currentIndex - 1) % testimonials.length
+        const next = (currentIndex + 1) % testimonials.length
+        indices.push(prev, currentIndex, next)
+        return indices
+    }
+
     const getCardVariants = (index: number) => {
         const positions = {
             left: { x: '-60%', scale: 0.9, zIndex: 0 },
             center: { x: '0%', scale: 1.1, zIndex: 2 },
             right: { x: '60%', scale: 0.9, zIndex: 0 },
-            incoming: { x: '-120%', scale: 0.9, zIndex: 0 },
-            outgoing: { x: '120%', scale: 0.9, zIndex: 0 }
+            incoming: { x: direction === 1 ? '120%' : '-120%', scale: 0.9, zIndex: 0 },
+            outgoing: { x: direction === 1 ? '-120%' : '120%', scale: 0.9, zIndex: 0 }
         }
 
-        const currentPosition = (testimonials.length + index - currentIndex) % testimonials.length
+        const visibleIndices = getVisibleIndices()
+        const indexPosition = visibleIndices.indexOf(index)
         let position: PositionType
 
-        if (currentPosition === 0) position = 'center'
-        else if (currentPosition === 1) position = 'right'
-        else if (currentPosition === testimonials.length - 1) position = 'left'
-        else if (direction === 1 && currentPosition > 1) position = 'outgoing'
-        else position = 'incoming'
+        if (indexPosition === 1) position = 'center'
+        else if (indexPosition === 2) position = 'right'
+        else if (indexPosition === 0) position = 'left'
+        else position = direction === 1 ? 'incoming' : 'outgoing'
 
         return {
             initial: position === 'incoming' ? positions.incoming : positions[position],
@@ -90,6 +140,9 @@ const TestimonialCarousel = () => {
                                 [styles.active]: index === currentIndex
                             })}
                             {...getCardVariants(index)}
+                            style={{
+                                display: getVisibleIndices().includes(index) ? 'block' : 'none'
+                            }}
                         >
                             <p className={styles.testimonialText}>{testimonial.text}</p>
                             <h3 className={styles.author}>{testimonial.author}</h3>

@@ -649,7 +649,7 @@ const CreateContract = () => {
             <div className={styles.formSection}>
                 <form onSubmit={handleSubmit}>
                     <div className={styles.field}>
-                        <label>Contract type</label>
+                        <label>Agreement type</label>
                         <select
                             name="contractType"
                             value={contractData.contractType}
@@ -779,7 +779,7 @@ const CreateContract = () => {
                         </div>
                     </div>
                     <div className={styles.field}>
-                        <label>Contract Description</label>
+                        <label>Agreement Description</label>
                         <textarea
                             name="description"
                             value={contractData.description}
@@ -799,7 +799,7 @@ const CreateContract = () => {
                                 })}
                                 onClick={() => handleIntensityChange('Simple')}
                             >
-                                Simple
+                                Beginner
                             </button>
                             <button
                                 type="button"
@@ -822,7 +822,7 @@ const CreateContract = () => {
                         </div>
                     </div>
                     <button type="submit" className={styles.submitButton}>
-                        <span>Create Legal Draft</span>
+                        <span>Generate Legal Draft</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
@@ -926,9 +926,9 @@ const CreateContract = () => {
                                     </div>
                                 </motion.div>
                             ) : (
-                                <motion.div 
-                                    className={styles.previewPlaceholder}
-                                    initial={{ opacity: 0 }}
+                            <motion.div 
+                                className={styles.previewPlaceholder}
+                                initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ duration: 0.3 }}
                                 >
@@ -937,12 +937,12 @@ const CreateContract = () => {
                                         alt="Contract Preview" 
                                         width={120} 
                                         height={120}
-                                        className={styles.previewIcon}
+                                        className={styles.previewIcon} 
                                     />
                                     <p className={styles.placeholderText}>
                                         Your generated contract will appear here
                                     </p>
-                                </motion.div>
+                            </motion.div>
                             )}
                         </AnimatePresence>
                     </div>
