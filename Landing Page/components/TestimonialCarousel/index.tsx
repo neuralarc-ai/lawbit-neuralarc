@@ -27,6 +27,8 @@ const testimonials = [
     }
 ]
 
+type PositionType = 'left' | 'center' | 'right' | 'incoming' | 'outgoing';
+
 const TestimonialCarousel = () => {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [direction, setDirection] = useState(1) // 1 for right, -1 for left
@@ -50,7 +52,7 @@ const TestimonialCarousel = () => {
         }
 
         const currentPosition = (testimonials.length + index - currentIndex) % testimonials.length
-        let position
+        let position: PositionType
 
         if (currentPosition === 0) position = 'center'
         else if (currentPosition === 1) position = 'right'

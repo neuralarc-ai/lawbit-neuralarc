@@ -188,7 +188,16 @@ const HistoryPage = () => {
                                 </motion.div>
                             ))
                         ) : (
-                            <div className={styles.empty}>No analyzed contracts yet</div>
+                            <motion.div className={styles.empty} variants={itemVariants}>
+                                <Image 
+                                    src="/icons/analyzed.svg" 
+                                    alt="Analysis History" 
+                                    width={48} 
+                                    height={48}
+                                    className={styles.emptyIcon}
+                                />
+                                <p className={styles.emptyText}>Analysis History will be available soon</p>
+                            </motion.div>
                         )}
                     </motion.div>
                 </AnimatePresence>

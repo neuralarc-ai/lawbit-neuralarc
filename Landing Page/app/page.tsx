@@ -141,28 +141,30 @@ export default function Home() {
 
     return (
         <main className={styles.main}>
-            <motion.div 
-                className={styles.starfieldWrapper}
-                variants={starfieldVariants}
-                initial="hidden"
-                animate="visible"
-            >
-                <StarField />
-            </motion.div>
-            <motion.div 
-                className={styles.ellipse}
-                variants={ellipseVariants}
-                initial="hidden"
-                animate="visible"
-            >
-                <Image 
-                    src="/images/white-radial.svg"
-                    alt="Radial gradient"
-                    width={1000}
-                    height={1000}
-                    priority
-                />
-            </motion.div>
+            <div className={styles.backgroundElements}>
+                <motion.div 
+                    className={styles.starfieldWrapper}
+                    variants={starfieldVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    <StarField />
+                </motion.div>
+                <motion.div 
+                    className={styles.ellipse}
+                    variants={ellipseVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    <Image 
+                        src="/images/white-radial.svg"
+                        alt="Radial gradient"
+                        width={1000}
+                        height={1000}
+                        priority
+                    />
+                </motion.div>
+            </div>
             
             <LandingNavbar />
             
@@ -175,7 +177,7 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                       <span>AI-powered legal intelligence for modern businesses</span>
+                       <span>Simplify Your Legal Workflow with AI Precision</span>
                     </motion.h1>
                     <motion.div 
                         className={styles.heroImage}
@@ -297,8 +299,8 @@ export default function Home() {
                                     width={72}
                                     height={72}
                                 />
-                                <h3>{benefit.title}</h3>
-                                <p>{benefit.description}</p>
+                                <h3 style={{fontSize: '40px', fontWeight: 'bold'}}>{benefit.title}</h3>
+                                <p style={{fontSize: '20px'}}>{benefit.description}</p>
                             </motion.div>
                         ))}
                     </div>

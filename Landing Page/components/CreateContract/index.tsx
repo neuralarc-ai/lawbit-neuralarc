@@ -31,7 +31,29 @@ const contractTypes = [
     'Sales Contract',
     'Partnership Agreement',
     'Consulting Agreement',
-    'License Agreement'
+    'License Agreement',
+    'Franchise Agreement',
+    'Joint Venture Agreement',
+    'Distribution Agreement',
+    'Supply Agreement',
+    'Confidentiality Agreement',
+    'Settlement Agreement',
+    'Loan Agreement',
+    'Insurance Contract',
+    'Real Estate Purchase Agreement',
+    'Construction Contract',
+    'Software License Agreement',
+    'Trademark License Agreement',
+    'Patent License Agreement',
+    'Merger Agreement',
+    'Acquisition Agreement',
+    'Shareholder Agreement',
+    'Operating Agreement',
+    'Subscription Agreement',
+    'Sponsorship Agreement',
+    'Event Contract',
+    'Photography Contract',
+    'Freelance Agreement'
 ];
 
 const CreateContract = () => {
