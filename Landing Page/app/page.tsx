@@ -31,22 +31,22 @@ const features = [
 const benefits = [
     {
         icon: '/icons/choose-1.svg',
-        title: 'Save thousands on legal fees',
+        title: 'Smart legal solutions, without the hefty price tag',
         description: 'Reduce your legal expenses by automating repetitive tasks and process documents.'
     },
     {
         icon: '/icons/choose-2.svg',
-        title: 'Create documents 10x faster',
+        title: 'Generate documents at lightning speed',
         description: 'Generate legal documents in minutes instead of hours with AI assistance.'
     },
     {
         icon: '/icons/choose-3.svg',
-        title: 'Identify risks with 95% accuracy',
+        title: 'Catch legal risks before they cost you,  with 95% accuracy',
         description: 'Our AI has been trained on millions of legal documents to identify potential risks.'
     },
     {
         icon: '/icons/choose-4.svg',
-        title: 'Stay compliant with current regulations',
+        title: 'Seamless compliance with every legal update',
         description: 'Our system keeps in sync with the latest legal requirements to ensure compliance.'
     }
 ]
@@ -85,25 +85,25 @@ const pricing = [
     {
         title: 'Plus',
         price: '$14.99',
-        description: 'Ideal for small businesses and startups',
+        description: 'When your legal go beyond the basics',
         features: [
             '250,000 tokens',
             'Usage History',
-            'Advanced contract analysis',
+            'Advanced Agreement analysis',
         ],
-        buttonText: 'Get Started',
+        buttonText: 'Dive In',
         popular: true
     },
     {
         title: 'Ultra',
         price: '$24.99',    
-        description: 'For organizations with complex legal needs',
+        description: 'When your legal go beyond the ordinary',
         features: [
             '600,000 tokens',
             'Usage History',
-            'Advanced contract analysis',
+            'Advanced Agreement analysis',
         ],
-        buttonText: 'Get Started',
+        buttonText: 'Discover Now',
         popular: false
     }
 ]
@@ -172,7 +172,7 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                       <span>Simplify Your Legal Drafting with AI Precision</span>
+                       <span>Revolutionize Your Legal Drafting with AI Precision</span>
                     </motion.h1>
                     <motion.div 
                         className={styles.heroImage}
@@ -220,7 +220,7 @@ export default function Home() {
                             className={styles.loginButton}
                             onClick={() => router.push('/auth/signin')}
                         >
-                            Get Started
+                            Explore
                         </button>
                     </motion.div>
                 </div>
@@ -316,7 +316,7 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        Simple, <span>Transparent Pricing </span>
+                        Transparent Pricing, <span>Built for Businesses </span>
                     </motion.h2>
                     <motion.p 
                         className={styles.sectionSubtitle}
@@ -324,7 +324,7 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
                     >
-                        Choose the plan that works best for your needs
+                        Unlock the features you need with the right plan
                     </motion.p>
                     <div className={styles.pricingGrid}>
                         {pricing.map((plan, index) => (
@@ -364,13 +364,15 @@ export default function Home() {
                         <div className={styles.footerLeft}>
                             <div className={styles.footerLogo}>
                                 <Image src="/icons/footer-logo.svg" alt="LawBit" width={160} height={55}/>
-                                <span>AI-powered legal intelligence for modern businesses</span>
+                                <span>The future of legal ops; AI-powered, business-ready</span>
                             </div>
                         </div>
                         <div className={styles.footerLinks}>
                             <a href="/terms">Terms of use</a>
                             <span>•</span>
                             <a href="/privacy">Privacy Policy</a>
+                            <span>•</span>
+                            <a href="/disclaimer">Disclaimer</a>
                         </div>
                         <div className={styles.footerBottom}>
                             <p>Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, a product by Neural Paths</p>

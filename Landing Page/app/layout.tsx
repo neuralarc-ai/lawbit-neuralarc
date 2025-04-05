@@ -2,6 +2,7 @@ import "@/styles/app.sass";
 import type { Metadata } from "next";
 import { Fustat } from "next/font/google";
 import Providers from "./providers";
+import Script from "next/script";
 
 const fustat = Fustat({
     weight: ["200", "300", "400", "500", "600", "700", "800"],
@@ -37,6 +38,10 @@ export default function RootLayout({
                 />
                 <meta name="twitter:creator" content="@ui8" />
                 {/* Twitter Summary card images must be at least 120x120px */}
+                <Script
+                    src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places&v=beta`}
+                    strategy="beforeInteractive"
+                />
             </head>
             <body>
                 <Providers>{children}</Providers>

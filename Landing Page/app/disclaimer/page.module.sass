@@ -1,0 +1,51 @@
+.container
+    min-height: 100vh
+    padding: 120px 24px 80px
+    background: linear-gradient(to bottom, #0A0A0A, #1A1A1A)
+    color: white
+
+.content
+    max-width: 800px
+    margin: 0 auto
+
+.title
+    font-size: 2.5rem
+    font-weight: 600
+    margin-bottom: 2rem
+    background: linear-gradient(to right, #8A30FF, #F842B2)
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+    background-clip: text
+    text-align: center
+
+.sections
+    display: flex
+    flex-direction: column
+    gap: 2rem
+
+.section
+    background: rgba(255, 255, 255, 0.03)
+    border: 1px solid rgba(255, 255, 255, 0.05)
+    border-radius: 1rem
+    padding: 2rem
+    backdrop-filter: blur(10px)
+
+.text
+    font-size: 1.1rem
+    line-height: 1.6
+    color: rgba(255, 255, 255, 0.8)
+    margin: 0
+
+@media (max-width: 768px)
+    .container
+        padding: 100px 20px 60px
+
+    .title
+        font-size: 2rem
+        margin-bottom: 1.5rem
+
+    .section
+        padding: 1.5rem
+
+    .text
+        font-size: 1rem 

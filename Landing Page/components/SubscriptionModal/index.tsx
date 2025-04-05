@@ -11,16 +11,14 @@ interface SubscriptionModalProps {
     onClose: () => void;
 }
 
-// Payment Form Component
-const PaymentForm = ({ priceId, onSuccess, onCancel }: { 
-    priceId: string; 
-    onSuccess: (sessionId: string) => void; 
+const PaymentForm: React.FC<{
+    priceId: string | null;
+    onSuccess: (sessionId: string) => void;
     onCancel: () => void;
-}) => {
+}> = ({ priceId, onSuccess, onCancel }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [isProcessing, setIsProcessing] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,57 +28,23 @@ const PaymentForm = ({ priceId, onSuccess, onCancel }: {
         }
 
         setIsProcessing(true);
-        setError(null);
 
         try {
-            // Get current user
-            const supabase = createClient();
-            const { data: { user } } = await supabase.auth.getUser();
-
-            // Create payment intent
-            const response = await fetch('/api/create-payment-intent', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    priceId,
-                    userId: user?.id,
-                }),
-            });
-
-            const data = await response.json();
-            
-            if (data.error) {
-                throw new Error(data.error);
-            }
-
-            // Confirm payment with the payment method
-            const { error: confirmError, paymentIntent } = await stripe.confirmPayment({
+            const result = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
-                    return_url: window.location.origin + '/payment/success',
+                    return_url: `${window.location.origin}/payment-success`,
                 },
-                redirect: 'if_required',
-            });
+            }) as { error?: { message: string }, paymentIntent?: { id: string } };
 
-            if (confirmError) {
-                throw new Error(confirmError.message);
+            if (result.error) {
+                throw new Error(result.error.message);
             }
 
-            // Check if payment was successful
-            if (paymentIntent && paymentIntent.status === 'succeeded') {
-                // If we get here, payment was successful
-                onSuccess(data.clientSecret);
-            } else if (paymentIntent && paymentIntent.status === 'requires_payment_method') {
-                // Payment failed because the payment method was invalid
-                throw new Error('Your payment method was declined. Please try another payment method.');
-            } else {
-                // Payment is still processing
-                throw new Error('Payment is still processing. Please wait a moment and try again.');
+            if (result.paymentIntent) {
+                onSuccess(result.paymentIntent.id);
             }
         } catch (err: any) {
-            setError(err.message || 'Payment failed. Please try again.');
             console.error('Payment error:', err);
         } finally {
             setIsProcessing(false);
@@ -90,26 +54,19 @@ const PaymentForm = ({ priceId, onSuccess, onCancel }: {
     return (
         <form onSubmit={handleSubmit} className={styles.paymentForm}>
             <PaymentElement />
-            
-            {error && (
-                <div className={styles.errorMessage}>
-                    {error}
-                </div>
-            )}
-            
             <div className={styles.paymentButtons}>
-                <button 
-                    type="button" 
-                    className={styles.cancelButton}
+                <button
+                    type="button"
                     onClick={onCancel}
+                    className={styles.cancelButton}
                     disabled={isProcessing}
                 >
                     Cancel
                 </button>
-                <button 
-                    type="submit" 
-                    className={styles.payButton}
-                    disabled={!stripe || isProcessing}
+                <button
+                    type="submit"
+                    className={styles.subscribeButton}
+                    disabled={isProcessing}
                 >
                     {isProcessing ? 'Processing...' : 'Pay Now'}
                 </button>
@@ -126,14 +83,12 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
     const [newBalance, setNewBalance] = useState<number | null>(null);
     const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
     const [clientSecret, setClientSecret] = useState<string | null>(null);
-    const [sessionId, setSessionId] = useState<string | null>(null);
 
     const handlePaymentSuccess = useCallback(async (sessionId: string) => {
         try {
             setIsLoading(true);
             setError(null);
             
-            // Call our API to add tokens
             const response = await fetch('/api/add-tokens', {
                 method: 'POST',
                 headers: {
@@ -152,7 +107,6 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
             setTokensAdded(data.tokensAdded);
             setNewBalance(data.newBalance);
             
-            // Close modal after 3 seconds
             setTimeout(() => {
                 onClose();
                 setPaymentSuccess(false);
@@ -163,34 +117,11 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
             }, 3000);
             
         } catch (err: any) {
-            console.error('Payment processing error:', err);
-            setError(`Failed to process payment: ${err.message || 'Unknown error'}. Please contact support.`);
+            setError(err.message || 'Failed to process payment. Please try again.');
         } finally {
             setIsLoading(false);
         }
     }, [onClose]);
-
-    // Check for session_id in URL when component mounts
-    useEffect(() => {
-        if (isOpen) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const sessionId = urlParams.get('session_id');
-            
-            if (sessionId) {
-                handlePaymentSuccess(sessionId);
-                
-                // Clean up URL without refreshing the page
-                const newUrl = window.location.pathname;
-                window.history.pushState({}, '', newUrl);
-            }
-        }
-    }, [isOpen, handlePaymentSuccess]);
-
-    useEffect(() => {
-        if (paymentSuccess && tokensAdded && newBalance && sessionId) {
-            handlePaymentSuccess(sessionId);
-        }
-    }, [paymentSuccess, tokensAdded, newBalance, handlePaymentSuccess, sessionId]);
 
     const handlePlanSelect = async (priceId: string) => {
         setSelectedPlan(priceId);
@@ -199,11 +130,9 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
             setIsLoading(true);
             setError(null);
 
-            // Get current user
             const supabase = createClient();
             const { data: { user } } = await supabase.auth.getUser();
 
-            // Create payment intent
             const response = await fetch('/api/create-payment-intent', {
                 method: 'POST',
                 headers: {
@@ -242,9 +171,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
                 <div className={styles.modalHeader}>
-                    <h2 className={styles.modalTitle}>
-                        {selectedPlan ? 'Complete Your Payment' : 'Choose Your Plan'}
-                    </h2>
+                    <h2 className={styles.modalTitle}>Choose Your Plan</h2>
                     <button className={styles.closeButton} onClick={onClose}>×</button>
                 </div>
                 
@@ -274,7 +201,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
                         <PaymentForm 
                             priceId={selectedPlan} 
                             onSuccess={handlePaymentSuccess} 
-                            onCancel={handleCancelPayment} 
+                            onCancel={handleCancelPayment}
                         />
                     </Elements>
                 ) : (
@@ -292,22 +219,22 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span>250,000 tokens</span>
+                                    <span>250,000 Tokens</span>
                                 </li>
                                 <li className={styles.featureItem}>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span>Priority support</span>
+                                    <span>Priority Support</span>
                                 </li>
                                 <li className={styles.featureItem}>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span>Advanced analytics</span>
+                                    <span>Advanced Agreement Analysis</span>
                                 </li>
                             </ul>
-                            <button 
+                            <button
                                 className={styles.subscribeButton}
                                 onClick={() => handlePlanSelect(process.env.NEXT_PUBLIC_LAWBIT_PLUS_PRODUCT_ID!)}
                                 disabled={isLoading}
@@ -329,7 +256,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span>600,000 tokens</span>
+                                    <span>600,000 Tokens</span>
                                 </li>
                                 <li className={styles.featureItem}>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -341,10 +268,10 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
-                                    <span>Advanced contract analysis</span>
+                                    <span>Advanced Agreement analysis</span>
                                 </li>
                             </ul>
-                            <button 
+                            <button
                                 className={styles.subscribeButton}
                                 onClick={() => handlePlanSelect(process.env.NEXT_PUBLIC_LAWBIT_ULTA_PRODUCT_ID!)}
                                 disabled={isLoading}

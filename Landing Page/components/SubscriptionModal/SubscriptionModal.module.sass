@@ -15,37 +15,66 @@
 .modalContent
     background-color: #1a1a1a
     border-radius: 1rem
-    padding: 2rem
+    padding: 2.5rem
     max-width: 900px
     width: 100%
     max-height: 90vh
     overflow-y: auto
     position: relative
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 1rem
+        padding: 1px
+        background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1))
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: destination-out
+        mask-composite: exclude
+        pointer-events: none
 
 .modalHeader
     display: flex
-    justify-content: space-between
+    justify-content: center
     align-items: center
-    margin-bottom: 2rem
+    margin-bottom: 2.5rem
+    position: relative
 
 .modalTitle
-    font-size: 1.5rem
+    font-size: 2rem
     font-weight: 600
     color: #ffffff
     margin: 0
+    text-align: center
+    background: linear-gradient(to right, #8A30FF, #F842B2, #F85B42)
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+    background-clip: text
 
 .closeButton
+    position: absolute
+    right: 0
+    top: 50%
+    transform: translateY(-50%)
     background: none
     border: none
-    color: #ffffff
+    color: rgba(255, 255, 255, 0.6)
     cursor: pointer
-    padding: 0.5rem
-    border-radius: 0.5rem
-    transition: background-color 0.2s
+    padding: 0.75rem
+    border-radius: 50%
+    display: flex
+    align-items: center
+    justify-content: center
+    transition: all 0.2s
+    font-size: 1.5rem
+    width: 2.5rem
+    height: 2.5rem
 
     &:hover
-        background-color: rgba(255, 255, 255, 0.1)
+        background: rgba(255, 255, 255, 0.1)
+        color: white
 
 .subscriptionCards
     display: grid
@@ -63,12 +92,29 @@
     flex-direction: column
     gap: 1.5rem
     transition: transform 0.2s
+    border: 1px solid rgba(255, 255, 255, 0.05)
+    position: relative
+    overflow: hidden
 
     &:hover
         transform: translateY(-4px)
+        border-color: rgba(255, 255, 255, 0.1)
+
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        background: linear-gradient(135deg, rgba(138, 48, 255, 0.1), rgba(248, 66, 178, 0.1))
+        opacity: 0
+        transition: opacity 0.3s ease
+
+    &:hover:before
+        opacity: 1
 
 .cardHeader
     text-align: center
+    position: relative
+    z-index: 1
 
 .planName
     font-size: 1.5rem
@@ -86,6 +132,10 @@
     font-size: 2.5rem
     font-weight: 700
     color: #ffffff
+    background: linear-gradient(to right, #8A30FF, #F842B2)
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+    background-clip: text
 
 .period
     font-size: 1rem
@@ -98,12 +148,15 @@
     display: flex
     flex-direction: column
     gap: 1rem
+    position: relative
+    z-index: 1
 
 .featureItem
     display: flex
     align-items: center
     gap: 0.75rem
     color: #ffffff
+    font-size: 1rem
 
     svg
         color: #10b981
@@ -111,12 +164,12 @@
 
 .subscribeButton
     width: 100%
-    padding: 16px
+    padding: 1rem
     border: none
     border-radius: 12px
     background: radial-gradient(circle at center, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 60%, rgba(248, 91, 66, 1) 100%)
     color: white
-    font-size: 16px
+    font-size: 1rem
     font-weight: 600
     cursor: pointer
     transition: all 0.3s ease
@@ -125,8 +178,12 @@
     display: flex
     align-items: center
     justify-content: center
-    gap: 8px
+    gap: 0.5rem
     box-shadow: 0 8px 16px -4px rgba(18, 18, 18, 0.2), 0 8px 20px 3px rgba(254, 83, 185, 0.25), inset 0 4px 4px rgba(255, 255, 255, 0.05)
+    margin-top: auto
+    position: relative
+    z-index: 1
+
     &:before
         content: ''
         position: absolute
@@ -134,27 +191,17 @@
         background: radial-gradient(circle at center, rgba(138, 48, 255, 0.8) 0%, rgba(248, 66, 178, 0.8) 60%, rgba(248, 91, 66, 0.8) 100%)
         opacity: 0
         transition: opacity 0.3s ease
-    &:after
-        content: ''
-        position: absolute
-        inset: 0px
-        border-radius: 10px
-        border: 2px solid transparent
-        background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
-        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
-        -webkit-mask-composite: destination-out
-        mask-composite: exclude
+
     &:hover:before
         opacity: 1
-    span
-        position: relative
-        z-index: 1
-    svg
-        position: relative
-        z-index: 1
-        transition: transform 0.3s ease
-    &:hover svg
-        transform: translateX(4px)
+
+    &:hover
+        transform: translateY(-2px)
+        box-shadow: 0 10px 20px -4px rgba(18, 18, 18, 0.3), 0 10px 24px 3px rgba(254, 83, 185, 0.35)
+
+    &:disabled
+        opacity: 0.7
+        cursor: not-allowed
 
 .errorMessage
     background-color: rgba(220, 38, 38, 0.1)

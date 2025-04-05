@@ -12,6 +12,8 @@ const Footer = () => {
                         <Link href="/terms">Terms of use</Link>
                         <span>•</span>
                         <Link href="/privacy">Privacy Policy</Link>
+                        <span>•</span>
+                        <Link href="/disclaimer">Disclaimer</Link>
                     </div>
                     <div className={styles.copyright}>
                         <p>Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, a product by Neural Paths</p>

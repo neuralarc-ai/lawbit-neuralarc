@@ -61,6 +61,341 @@ const contractTypes = [
     'Freelance Agreement'
 ];
 
+const contractTypeDescriptions: Record<string, string> = {
+    'Employment Contract': 'This agreement outlines the terms of employment between an employer and employee, including job responsibilities, compensation, benefits, and termination conditions.',
+    'Non-Disclosure Agreement': 'This agreement protects confidential information shared between parties, preventing unauthorized disclosure and use of sensitive business information.',
+    'Service Agreement': 'This contract defines the terms of service provision between a service provider and client, including scope of work, payment terms, and service standards.',
+    'Lease Agreement': 'This document establishes the terms of property rental between a landlord and tenant, including rent amount, duration, and property maintenance responsibilities.',
+    'Sales Contract': 'This agreement formalizes the terms of a sale transaction between a buyer and seller, including product specifications, price, and delivery terms.',
+    'Partnership Agreement': 'This contract outlines the terms of a business partnership, including profit sharing, decision-making processes, and partner responsibilities.',
+    'Consulting Agreement': 'This document defines the terms of consulting services, including scope of work, deliverables, and compensation structure.',
+    'License Agreement': 'This agreement grants permission to use intellectual property or other assets under specified terms and conditions.',
+    'Franchise Agreement': 'This contract establishes the terms of a franchise relationship, including brand usage, operational standards, and franchise fees.',
+    'Joint Venture Agreement': 'This document outlines the terms of a business collaboration between two or more parties for a specific project or purpose.',
+    'Distribution Agreement': 'This agreement defines the terms of product distribution between a manufacturer and distributor.',
+    'Supply Agreement': 'This contract establishes the terms of product or service supply between a supplier and purchaser.',
+    'Confidentiality Agreement': 'This document protects sensitive information shared between parties during business discussions or transactions.',
+    'Settlement Agreement': 'This agreement formalizes the resolution of a dispute between parties, including terms of settlement and release of claims.',
+    'Loan Agreement': 'This contract outlines the terms of a loan, including principal amount, interest rate, repayment schedule, and collateral.',
+    'Insurance Contract': 'This agreement defines the terms of insurance coverage, including premiums, coverage limits, and claim procedures.',
+    'Real Estate Purchase Agreement': 'This document formalizes the terms of a real estate transaction, including purchase price, closing date, and property condition.',
+    'Construction Contract': 'This agreement outlines the terms of a construction project, including scope of work, timeline, and payment schedule.',
+    'Software License Agreement': 'This contract defines the terms of software usage, including licensing rights, restrictions, and maintenance terms.',
+    'Trademark License Agreement': 'This document establishes the terms of trademark usage between a licensor and licensee.',
+    'Patent License Agreement': 'This agreement defines the terms of patent usage and licensing between parties.',
+    'Merger Agreement': 'This contract formalizes the terms of a business merger, including valuation, share exchange, and post-merger operations.',
+    'Acquisition Agreement': 'This document outlines the terms of a business acquisition, including purchase price, assets, and liabilities.',
+    'Shareholder Agreement': 'This agreement defines the rights and responsibilities of company shareholders.',
+    'Operating Agreement': 'This document outlines the management and operation of a limited liability company.',
+    'Subscription Agreement': 'This contract establishes the terms of a subscription service, including duration, fees, and service terms.',
+    'Sponsorship Agreement': 'This agreement defines the terms of a sponsorship arrangement, including benefits, obligations, and payment terms.',
+    'Event Contract': 'This document outlines the terms of event planning and execution, including services, timeline, and payment schedule.',
+    'Photography Contract': 'This agreement defines the terms of photography services, including usage rights, deliverables, and payment terms.',
+    'Freelance Agreement': 'This contract establishes the terms of freelance work, including project scope, payment terms, and intellectual property rights.'
+};
+
+const contractTypeKeyFields: Record<string, string[]> = {
+    'Employment Contract': [
+        'Job Title and Responsibilities',
+        'Compensation and Benefits',
+        'Working Hours and Schedule',
+        'Probation Period',
+        'Termination Conditions',
+        'Non-Compete Clause',
+        'Intellectual Property Rights',
+        'Confidentiality Requirements'
+    ],
+    'Non-Disclosure Agreement': [
+        'Definition of Confidential Information',
+        'Obligations of Receiving Party',
+        'Duration of Confidentiality',
+        'Permitted Disclosures',
+        'Return of Information',
+        'Remedies for Breach',
+        'Governing Law'
+    ],
+    'Service Agreement': [
+        'Scope of Services',
+        'Service Standards',
+        'Payment Terms',
+        'Timeline and Milestones',
+        'Termination Conditions',
+        'Liability Limitations',
+        'Intellectual Property Rights',
+        'Service Level Agreements'
+    ],
+    'Lease Agreement': [
+        'Property Description',
+        'Lease Term',
+        'Rent Amount and Payment Schedule',
+        'Security Deposit',
+        'Maintenance Responsibilities',
+        'Subletting Conditions',
+        'Renewal Terms',
+        'Early Termination Conditions'
+    ],
+    'Sales Contract': [
+        'Product Description',
+        'Price and Payment Terms',
+        'Delivery Terms',
+        'Warranty Information',
+        'Return Policy',
+        'Title Transfer',
+        'Risk of Loss',
+        'Force Majeure'
+    ],
+    'Partnership Agreement': [
+        'Partnership Structure',
+        'Capital Contributions',
+        'Profit/Loss Distribution',
+        'Decision Making Process',
+        'Partner Responsibilities',
+        'Admission of New Partners',
+        'Dissolution Terms',
+        'Dispute Resolution'
+    ],
+    'Consulting Agreement': [
+        'Consulting Scope',
+        'Deliverables',
+        'Timeline',
+        'Payment Structure',
+        'Expense Reimbursement',
+        'Independent Contractor Status',
+        'Confidentiality',
+        'Intellectual Property Rights'
+    ],
+    'License Agreement': [
+        'Licensed Property',
+        'License Scope',
+        'Territory',
+        'Term and Renewal',
+        'Royalties and Payments',
+        'Quality Control',
+        'Termination Rights',
+        'Sub-licensing Terms'
+    ],
+    'Franchise Agreement': [
+        'Franchise Territory',
+        'Franchise Fees',
+        'Training Requirements',
+        'Operating Standards',
+        'Marketing Requirements',
+        'Renewal Terms',
+        'Transfer Conditions',
+        'Termination Rights'
+    ],
+    'Joint Venture Agreement': [
+        'Purpose and Scope',
+        'Contributions',
+        'Management Structure',
+        'Profit Distribution',
+        'Decision Making',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Confidentiality'
+    ],
+    'Distribution Agreement': [
+        'Territory',
+        'Product Lines',
+        'Pricing Structure',
+        'Ordering Process',
+        'Delivery Terms',
+        'Marketing Requirements',
+        'Performance Metrics',
+        'Termination Conditions'
+    ],
+    'Supply Agreement': [
+        'Product Specifications',
+        'Quantity Requirements',
+        'Pricing Terms',
+        'Delivery Schedule',
+        'Quality Standards',
+        'Payment Terms',
+        'Force Majeure',
+        'Termination Rights'
+    ],
+    'Confidentiality Agreement': [
+        'Definition of Confidential Information',
+        'Obligations',
+        'Duration',
+        'Permitted Disclosures',
+        'Return of Information',
+        'Remedies',
+        'Governing Law',
+        'Jurisdiction'
+    ],
+    'Settlement Agreement': [
+        'Dispute Description',
+        'Settlement Terms',
+        'Payment Details',
+        'Release of Claims',
+        'Confidentiality',
+        'No Admission of Liability',
+        'Governing Law',
+        'Enforcement Terms'
+    ],
+    'Loan Agreement': [
+        'Loan Amount',
+        'Interest Rate',
+        'Repayment Schedule',
+        'Collateral',
+        'Default Terms',
+        'Prepayment Conditions',
+        'Late Payment Penalties',
+        'Security Requirements'
+    ],
+    'Insurance Contract': [
+        'Coverage Details',
+        'Premium Amount',
+        'Policy Term',
+        'Deductibles',
+        'Exclusions',
+        'Claims Process',
+        'Cancellation Terms',
+        'Renewal Conditions'
+    ],
+    'Real Estate Purchase Agreement': [
+        'Property Description',
+        'Purchase Price',
+        'Earnest Money',
+        'Closing Date',
+        'Contingencies',
+        'Title Requirements',
+        'Inspection Rights',
+        'Closing Costs'
+    ],
+    'Construction Contract': [
+        'Project Scope',
+        'Timeline',
+        'Payment Schedule',
+        'Change Order Process',
+        'Warranty Terms',
+        'Insurance Requirements',
+        'Lien Waivers',
+        'Dispute Resolution'
+    ],
+    'Software License Agreement': [
+        'License Type',
+        'Usage Rights',
+        'Restrictions',
+        'Maintenance Terms',
+        'Support Services',
+        'Updates and Upgrades',
+        'Termination Rights',
+        'Data Protection'
+    ],
+    'Trademark License Agreement': [
+        'Trademark Details',
+        'License Scope',
+        'Quality Control',
+        'Royalties',
+        'Term and Renewal',
+        'Infringement Protection',
+        'Termination Rights',
+        'Sub-licensing'
+    ],
+    'Patent License Agreement': [
+        'Patent Details',
+        'License Scope',
+        'Territory',
+        'Royalties',
+        'Improvements',
+        'Infringement Protection',
+        'Termination Rights',
+        'Sub-licensing'
+    ],
+    'Merger Agreement': [
+        'Transaction Structure',
+        'Purchase Price',
+        'Closing Conditions',
+        'Representations and Warranties',
+        'Covenants',
+        'Termination Rights',
+        'Indemnification',
+        'Governing Law'
+    ],
+    'Acquisition Agreement': [
+        'Assets/Stock Description',
+        'Purchase Price',
+        'Closing Conditions',
+        'Representations and Warranties',
+        'Covenants',
+        'Termination Rights',
+        'Indemnification',
+        'Governing Law'
+    ],
+    'Shareholder Agreement': [
+        'Share Transfer Restrictions',
+        'Voting Rights',
+        'Dividend Policy',
+        'Board Composition',
+        'Pre-emptive Rights',
+        'Drag-Along Rights',
+        'Tag-Along Rights',
+        'Dispute Resolution'
+    ],
+    'Operating Agreement': [
+        'Management Structure',
+        'Capital Contributions',
+        'Profit Distribution',
+        'Voting Rights',
+        'Transfer Restrictions',
+        'Dissolution Terms',
+        'Dispute Resolution',
+        'Amendments Process'
+    ],
+    'Subscription Agreement': [
+        'Service Description',
+        'Subscription Term',
+        'Fees and Payment',
+        'Usage Limits',
+        'Service Level Agreement',
+        'Termination Rights',
+        'Data Protection',
+        'Service Updates'
+    ],
+    'Sponsorship Agreement': [
+        'Sponsorship Benefits',
+        'Sponsorship Fee',
+        'Duration',
+        'Brand Usage Rights',
+        'Exclusivity Terms',
+        'Performance Requirements',
+        'Termination Rights',
+        'Indemnification'
+    ],
+    'Event Contract': [
+        'Event Description',
+        'Date and Location',
+        'Services Provided',
+        'Payment Schedule',
+        'Cancellation Terms',
+        'Force Majeure',
+        'Insurance Requirements',
+        'Liability Limitations'
+    ],
+    'Photography Contract': [
+        'Shoot Details',
+        'Usage Rights',
+        'Delivery Timeline',
+        'Payment Terms',
+        'Cancellation Policy',
+        'Model Releases',
+        'Copyright Terms',
+        'Editing Rights'
+    ],
+    'Freelance Agreement': [
+        'Project Scope',
+        'Deliverables',
+        'Timeline',
+        'Payment Terms',
+        'Revisions Policy',
+        'Intellectual Property Rights',
+        'Termination Terms',
+        'Independent Contractor Status'
+    ]
+};
+
 interface FormattedContentItem {
     type: 'heading1' | 'heading2' | 'listItem' | 'keyValue' | 'paragraph' | 'numberedSection';
     text?: string;
@@ -148,6 +483,25 @@ const CreateContract = () => {
             intensity
         }));
         validateField('intensity', intensity);
+    };
+
+    const handleContractTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setContractData((prev: ContractData) => ({
+            ...prev,
+            [name]: value,
+            description: contractTypeDescriptions[value] || prev.description,
+            keyTerms: contractTypeKeyFields[value]?.join('\n') || prev.keyTerms
+        }));
+        validateField(name, value);
+        
+        // Enable the key terms field when a contract type is selected
+        if (value) {
+            setEnabledOptionalFields(prev => ({
+                ...prev,
+                keyTerms: true
+            }));
+        }
     };
 
     // Function to store contract in browser storage
@@ -726,10 +1080,6 @@ const CreateContract = () => {
 
     return (
         <div className={styles.container}>
-            <Script
-                src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-                strategy="beforeInteractive"
-            />
             <div className={styles.formSection}>
                 <form onSubmit={handleSubmit}>
                     <div className={styles.field}>
@@ -737,7 +1087,7 @@ const CreateContract = () => {
                         <select
                             name="contractType"
                             value={contractData.contractType}
-                            onChange={handleChange}
+                            onChange={handleContractTypeChange}
                             onBlur={handleBlur}
                             className={cn(styles.select, { [styles.error]: errors.contractType })}
                         >
@@ -780,6 +1130,7 @@ const CreateContract = () => {
                                 onBlur={() => handleBlur({ target: { name: 'firstPartyAddress', value: contractData.firstPartyAddress || '' } } as any)}
                                 placeholder={errors.firstPartyAddress || "Enter first party address"}
                                 error={errors.firstPartyAddress}
+                                type="address"
                             />
                         </div>
                     </div>
@@ -814,6 +1165,7 @@ const CreateContract = () => {
                                 onBlur={() => handleBlur({ target: { name: 'secondPartyAddress', value: contractData.secondPartyAddress || '' } } as any)}
                                 placeholder={errors.secondPartyAddress || "Enter second party address"}
                                 error={errors.secondPartyAddress}
+                                type="address"
                             />
                         </div>
                     </div>
@@ -821,29 +1173,11 @@ const CreateContract = () => {
                         <label>Jurisdiction</label>
                         <AddressAutocomplete
                             value={contractData.jurisdiction}
-                            onChange={(value) => {
-                                // Extract city, state, and country from the address
-                                const place = window.google?.maps?.places?.Autocomplete?.getPlace();
-                                if (place?.address_components) {
-                                    const city = place.address_components.find(
-                                        (component: any) => component.types.includes('locality')
-                                    )?.long_name;
-                                    const state = place.address_components.find(
-                                        (component: any) => component.types.includes('administrative_area_level_1')
-                                    )?.long_name;
-                                    const country = place.address_components.find(
-                                        (component: any) => component.types.includes('country')
-                                    )?.long_name;
-                                    
-                                    const jurisdiction = [city, state, country].filter(Boolean).join(', ');
-                                    handleChange({ target: { name: 'jurisdiction', value: jurisdiction } } as any);
-                                } else {
-                                    handleChange({ target: { name: 'jurisdiction', value } } as any);
-                                }
-                            }}
+                            onChange={(value) => handleChange({ target: { name: 'jurisdiction', value } } as any)}
                             onBlur={() => handleBlur({ target: { name: 'jurisdiction', value: contractData.jurisdiction } } as any)}
                             placeholder={errors.jurisdiction || "Enter jurisdiction"}
                             error={errors.jurisdiction}
+                            type="jurisdiction"
                         />
                     </div>
                     <div className={cn(styles.field, styles.optionalField)}>

@@ -319,6 +319,7 @@
 
 .optionalField
     position: relative
+    margin-bottom: 24px
     .labelRow
         display: flex
         align-items: center
@@ -357,19 +358,16 @@
             border-width: 0 2px 2px 0
             transform: rotate(45deg)
     .optionalContent
-        max-height: 0
+        position: relative
+        transition: all 0.3s ease-out
+        opacity: 0
+        height: 0
         overflow: hidden
-        transition: max-height 0.3s ease-out
         &.visible
-            max-height: 200px
-        textarea
-            margin-top: 8px
-            opacity: 0
-            transform: translateY(-10px)
-            transition: all 0.3s ease
-        &.visible textarea
             opacity: 1
-            transform: translateY(0) 
+            height: auto
+            overflow: visible
+            margin-top: 8px
 
 .contractPreview
     width: 100%
