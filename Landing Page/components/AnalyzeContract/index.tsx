@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import cn from 'classnames';
 import styles from './AnalyzeContract.module.sass';
 import { AnalysisResponse, ClauseAnalysis, SuggestedAlternative } from '@/services/analysisService';
@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '../Toast/Toaster';
 import { useSupabase } from '@/components/Providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
+import Button from 'components/Button';
 
 const AnalyzeContract = () => {
     const { showToast } = useToast();
@@ -23,6 +24,44 @@ const AnalyzeContract = () => {
     const [error, setError] = useState<string | null>(null);
     const [analysisData, setAnalysisData] = useState<AnalysisResponse | null>(null);
     const [expandedAlternative, setExpandedAlternative] = useState<{ [key: string]: number | null }>({});
+    const [analysisStep, setAnalysisStep] = useState(0);
+    const [analysisProgress, setAnalysisProgress] = useState(0);
+
+    // Analysis steps descriptions
+    const analysisSteps = [
+        "Uploading your document...",
+        "Extracting key clauses...",
+        "Analyzing legal language...",
+        "Identifying potential risks...",
+        "Preparing suggestions..."
+    ];
+
+    // Update progress during analysis
+    useEffect(() => {
+        if (isAnalyzing) {
+            const interval = setInterval(() => {
+                setAnalysisProgress(prev => {
+                    if (prev >= 100) {
+                        clearInterval(interval);
+                        return 100;
+                    }
+                    return prev + 1;
+                });
+                
+                // Update step based on progress
+                if (analysisProgress < 20) setAnalysisStep(0);
+                else if (analysisProgress < 40) setAnalysisStep(1);
+                else if (analysisProgress < 60) setAnalysisStep(2);
+                else if (analysisProgress < 80) setAnalysisStep(3);
+                else setAnalysisStep(4);
+            }, 100);
+            
+            return () => clearInterval(interval);
+        } else {
+            setAnalysisProgress(0);
+            setAnalysisStep(0);
+        }
+    }, [isAnalyzing, analysisProgress]);
 
     // Add function to count risk levels in clauses
     const handleRiskCounts = (clauses: ClauseAnalysis[]) => {
@@ -257,8 +296,70 @@ const AnalyzeContract = () => {
 
     // Update the copyToClipboard function
     const copyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text);
-        showToast('Text copied to clipboard');
+        if (!text || text.trim() === '') {
+            showToast('No content to copy');
+            return;
+        }
+
+        // Try the modern Clipboard API first
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Text copied to clipboard');
+            }).catch((err) => {
+                console.error('Failed to copy: ', err);
+                // Fall back to document.execCommand for Safari
+                fallbackCopyToClipboard(text);
+            });
+        } else {
+            // Use fallback for browsers that don't support clipboard API
+            fallbackCopyToClipboard(text);
+        }
+    };
+
+    // Fallback copy method for browsers that don't support clipboard API
+    const fallbackCopyToClipboard = (text: string) => {
+        try {
+            // Create a temporary textarea element
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            
+            // Make it non-editable to avoid focus and move outside the screen
+            textArea.setAttribute('readonly', '');
+            textArea.style.position = 'absolute';
+            textArea.style.left = '-9999px';
+            
+            document.body.appendChild(textArea);
+            
+            // Check if the browser supports selection
+            const selected = document.getSelection()?.rangeCount || 0 > 0 
+                ? document.getSelection()?.getRangeAt(0) 
+                : false;
+            
+            // Select the text in the textarea
+            textArea.select();
+            textArea.setSelectionRange(0, text.length);
+            
+            // Execute copy command
+            const success = document.execCommand('copy');
+            
+            // Clean up
+            document.body.removeChild(textArea);
+            
+            // Restore selection if there was any
+            if (selected && document.getSelection()) {
+                document.getSelection()?.removeAllRanges();
+                document.getSelection()?.addRange(selected);
+            }
+            
+            if (success) {
+                showToast('Text copied to clipboard');
+            } else {
+                showToast('Failed to copy text. Please try selecting and copying manually.');
+            }
+        } catch (err) {
+            console.error('Fallback copy failed: ', err);
+            showToast('Failed to copy text. Please try selecting and copying manually.');
+        }
     };
 
     // Handle download PDF report
@@ -500,6 +601,35 @@ const AnalyzeContract = () => {
     return (
         <div className={styles.container}>
             <AnimatePresence mode="wait">
+                {isAnalyzing && (
+                    <motion.div 
+                        className={styles.analyzingOverlay}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <div className={styles.loadingIcon}>
+                            <div className={styles.spinner}></div>
+                            <Image 
+                                src="/icons/lawbit-preview.svg" 
+                                alt="LawBit Logo" 
+                                width={70} 
+                                height={70} 
+                                className={styles.logo}
+                            />
+                        </div>
+                        <h2 className={styles.loadingText}>Analyzing Your Contract</h2>
+                        <p className={styles.loadingDescription}>{analysisSteps[analysisStep]}</p>
+                        <div className={styles.progressBarContainer}>
+                            <div 
+                                className={styles.progressBar} 
+                                style={{ width: `${analysisProgress}%` }}
+                            ></div>
+                        </div>
+                    </motion.div>
+                )}
+                
                 {!showAnalysis ? (
                     <motion.div
                         className={styles.mainContent}
@@ -597,6 +727,19 @@ const AnalyzeContract = () => {
                         </div>
                     )}
                     
+                    <div className={styles.legalDisclaimer}>
+                        <div className={styles.disclaimerTitle}>Legal Disclaimer</div>
+                        <div className={styles.disclaimerText}>
+                            <p>This website provides tools for creating and analyzing legal documents for informational purposes only. It does not offer legal advice, representation, or services in any jurisdiction.</p>
+                            
+                            <p>No attorney-client relationship is established through the use of this website. The documents, templates, and analyses generated are not a substitute for professional legal advice. Laws and regulations vary across jurisdictions and are subject to change. We do not guarantee the completeness, accuracy, or suitability of any content for your specific legal needs.</p>
+                            
+                            <p>You acknowledge that any reliance on the materials provided is at your own risk. We disclaim all liability for any errors, omissions, or outcomes resulting from the use of this website. For legally binding advice and document validation, always consult a qualified legal professional.</p>
+                            
+                            <p>By using this website, you agree to these terms and accept full responsibility for any decisions made based on the content provided.</p>
+                        </div>
+                    </div>
+                    
                     <div className={styles.actionsRow}>
                         <div 
                             className={styles.tabSelector}
@@ -624,7 +767,7 @@ const AnalyzeContract = () => {
                                     setError(null);
                                 }}
                             >
-                                Paste Text
+                                <span>Paste Text</span>
                             </button>
                         </div>
 
@@ -636,7 +779,7 @@ const AnalyzeContract = () => {
                             onClick={handleAnalyze}
                             disabled={isAnalyzing}
                         >
-                            <span>Analyze Your Draft Now     </span>
+                            <span>{isAnalyzing ? 'Analyzing...' : 'Analyze Your Draft Now'}</span>
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>

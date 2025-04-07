@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -8,6 +8,30 @@ import styles from './LandingNavbar.module.sass'
 
 const LandingNavbar = () => {
     const router = useRouter()
+    const [activeSection, setActiveSection] = useState<string>('')
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const sections = ['features', 'benefits', 'testimonials', 'pricing']
+            const scrollPosition = window.scrollY + 300 // Offset to trigger slightly before reaching the section
+
+            for (const section of sections) {
+                const element = document.getElementById(section)
+                if (element) {
+                    const topPosition = element.offsetTop
+                    const bottomPosition = topPosition + element.offsetHeight
+
+                    if (scrollPosition >= topPosition && scrollPosition < bottomPosition) {
+                        setActiveSection(section)
+                        break
+                    }
+                }
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
 
     const scrollToSection = (sectionId: string) => {
         const element = document.getElementById(sectionId)
@@ -20,6 +44,8 @@ const LandingNavbar = () => {
                 top: offsetPosition,
                 behavior: 'smooth'
             })
+            
+            setActiveSection(sectionId)
         }
     }
 
@@ -44,10 +70,30 @@ const LandingNavbar = () => {
                 </Link>
 
                 <div className={styles.nav}>
-                    <button onClick={() => scrollToSection('features')} className={styles.link}>Features</button>
-                    <button onClick={() => scrollToSection('benefits')} className={styles.link}>Benefits</button>
-                    <button onClick={() => scrollToSection('testimonials')} className={styles.link}>Testimonials</button>
-                    <button onClick={() => scrollToSection('pricing')} className={styles.link}>Pricing</button>
+                    <button 
+                        onClick={() => scrollToSection('features')} 
+                        className={cn(styles.link, { [styles.active]: activeSection === 'features' })}
+                    >
+                        Features
+                    </button>
+                    <button 
+                        onClick={() => scrollToSection('benefits')} 
+                        className={cn(styles.link, { [styles.active]: activeSection === 'benefits' })}
+                    >
+                        Benefits
+                    </button>
+                    <button 
+                        onClick={() => scrollToSection('testimonials')} 
+                        className={cn(styles.link, { [styles.active]: activeSection === 'testimonials' })}
+                    >
+                        Testimonials
+                    </button>
+                    <button 
+                        onClick={() => scrollToSection('pricing')} 
+                        className={cn(styles.link, { [styles.active]: activeSection === 'pricing' })}
+                    >
+                        Pricing
+                    </button>
                 </div>
 
                 <div className={styles.buttons}>

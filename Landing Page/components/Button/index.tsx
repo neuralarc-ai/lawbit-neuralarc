@@ -1,10 +1,10 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import cn from "classnames";
 import styles from "./Button.module.sass";
 
 type ButtonProps = {
     className?: string;
-    title: string;
+    title: ReactNode;
     href?: string;
     onClick?: () => void;
 };
@@ -14,7 +14,7 @@ const Button = ({ className, title, href, onClick, ...props }: ButtonProps) => {
 
     return (
         <CreatedTag
-            className={cn(className, styles.button)}
+            className={cn(styles.button, className)}
             href={href}
             onClick={onClick}
             rel={href ? "noopener noreferrer" : undefined}

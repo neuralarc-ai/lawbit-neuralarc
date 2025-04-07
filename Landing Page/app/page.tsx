@@ -1,14 +1,16 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import styles from './page.module.sass'
 import LandingNavbar from '@/components/LandingNavbar'
 import Button from '@/components/Button'
+import SubscriptionModal from '@/components/SubscriptionModal'
 import StarField from '@/components/StarField'
 import TestimonialCarousel from '../components/TestimonialCarousel'
+import { createClient } from '@/lib/supabase'
 
 const features = [
     {
@@ -111,7 +113,22 @@ const pricing = [
 ]
 
 export default function Home() {
-    const router = useRouter()
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const router = useRouter();
+    
+    const handlePricingButtonClick = async (planTitle: string) => {
+        // Check if user is logged in
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+            // Redirect to login page if not logged in
+            router.push('/auth/signin');
+        } else {
+            // If logged in, open subscription modal
+            setIsModalOpen(true);
+        }
+    };
 
     const starfieldVariants = {
         hidden: { opacity: 0 },
@@ -349,10 +366,39 @@ export default function Home() {
                                         <li key={feature}>{feature}</li>
                                     ))}
                                 </ul>
-                                <Button 
-                                    title={plan.buttonText}
-                                    className={plan.popular ? styles.primary : styles.secondary}
-                                />
+                                {plan.title === 'Free' ? (
+                                    <Button 
+                                        title={
+                                            <div className={styles.btnContent}>
+                                                <span>{plan.buttonText}</span>
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                </svg>
+                                            </div>
+                                        }
+                                        className={`${styles.pricingButton} ${styles.freeButton}`}
+                                        onClick={() => router.push('/auth/signup')}
+                                    />
+                                ) : (
+                                    <Button 
+                                        title={
+                                            <div className={styles.btnContent}>
+                                                <span>Purchase Now</span>
+                                                {plan.popular ? (
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M12 2v20M17 12l-5-5-5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    </svg>
+                                                ) : (
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-3M16 5v6M13 8h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    </svg>
+                                                )}
+                                            </div>
+                                        }
+                                        className={`${styles.pricingButton} ${plan.popular ? styles.popularButton : styles.standardButton}`}
+                                        onClick={() => handlePricingButtonClick(plan.title)}
+                                    />
+                                )}
                             </motion.div>
                         ))}
                     </div>
@@ -391,6 +437,12 @@ export default function Home() {
                     </div>
                 </div>
             </footer>
+            
+            {/* Subscription Modal */}
+            <SubscriptionModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+            />
         </main>
     )
 }

@@ -20,6 +20,7 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
     remaining: 50000
   });
   const [loading, setLoading] = useState(true);
+  const [hasInitialized, setHasInitialized] = useState(false);
   const supabase = createClient();
 
   const fetchTokenUsage = useCallback(async () => {
@@ -28,6 +29,7 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         console.log('No user found');
+        setLoading(false);
         return;
       }
 
@@ -39,13 +41,17 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
 
       if (error) {
         console.error('Error fetching token usage:', error);
-        throw error;
+        setLoading(false);
+        return;
       }
       
       if (data?.token_usage) {
         console.log('Fetched token usage:', data.token_usage);
         setTokenUsage(data.token_usage);
       }
+      
+      setLoading(false);
+      setHasInitialized(true);
     } catch (error) {
       console.error('Error fetching token usage:', error);
       setLoading(false);
@@ -53,12 +59,16 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
   }, [supabase]);
 
   useEffect(() => {
+    // Initial fetch
     fetchTokenUsage();
     
     // Set up real-time subscription for token usage updates
     const setupSubscription = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        setLoading(false);
+        return;
+      }
       
       console.log('Setting up real-time subscription for user:', user.id);
       
@@ -77,6 +87,7 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
             if (payload.new.token_usage) {
               console.log('Updating token usage:', payload.new.token_usage);
               setTokenUsage(payload.new.token_usage);
+              setLoading(false);
             }
           }
         )
@@ -92,6 +103,7 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
       channel = ch;
     }).catch(error => {
       console.error('Error setting up subscription:', error);
+      setLoading(false);
     });
 
     // Cleanup subscription on unmount
@@ -103,19 +115,24 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
     };
   }, [fetchTokenUsage, supabase]);
 
-  // Refresh token usage data every 5 seconds as a fallback
+  // Refresh token usage data every 10 seconds as a fallback
   useEffect(() => {
+    if (!hasInitialized) return;
+    
     const interval = setInterval(() => {
       console.log('Refreshing token usage data');
       fetchTokenUsage();
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(interval);
-  }, [fetchTokenUsage]);
+  }, [fetchTokenUsage, hasInitialized]);
 
   if (loading) {
     return (
       <div className={`${styles.container} ${className || ''}`}>
+        <div className={styles.header}>
+          <h3 className={styles.title}>Token Usage</h3>
+        </div>
         <div className={styles.loading}>
           <div className={styles.skeleton}></div>
         </div>
@@ -149,6 +166,7 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
           <span className={styles.separator}></span>
           <span className={styles.total}>{tokenUsage.limit.toLocaleString()} total</span>
         </div>
+        <div className={styles.remaining}>{tokenUsage.remaining.toLocaleString()} remaining</div>
       </div>
     </div>
   );

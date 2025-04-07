@@ -426,6 +426,8 @@ const CreateContract = () => {
     const [generatedContract, setGeneratedContract] = useState<ContractResponse | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [generationStep, setGenerationStep] = useState(0);
+    const [generationProgress, setGenerationProgress] = useState(0);
     const [enabledOptionalFields, setEnabledOptionalFields] = useState<{
         firstPartyAddress: boolean;
         secondPartyAddress: boolean;
@@ -435,6 +437,42 @@ const CreateContract = () => {
         secondPartyAddress: false,
         keyTerms: false
     });
+
+    // Generation steps descriptions
+    const generationSteps = [
+        "Analyzing contract requirements...",
+        "Identifying legal clauses...",
+        "Structuring the document...",
+        "Drafting comprehensive terms...",
+        "Finalizing your legal document..."
+    ];
+
+    // Update progress during generation
+    useEffect(() => {
+        if (isLoading) {
+            const interval = setInterval(() => {
+                setGenerationProgress(prev => {
+                    if (prev >= 100) {
+                        clearInterval(interval);
+                        return 100;
+                    }
+                    return prev + 1;
+                });
+                
+                // Update step based on progress
+                if (generationProgress < 20) setGenerationStep(0);
+                else if (generationProgress < 40) setGenerationStep(1);
+                else if (generationProgress < 60) setGenerationStep(2);
+                else if (generationProgress < 80) setGenerationStep(3);
+                else setGenerationStep(4);
+            }, 100);
+            
+            return () => clearInterval(interval);
+        } else {
+            setGenerationProgress(0);
+            setGenerationStep(0);
+        }
+    }, [isLoading, generationProgress]);
 
     // Add new state for storing contracts by option
     const [contractsByOption, setContractsByOption] = useState<{
@@ -1081,16 +1119,104 @@ const CreateContract = () => {
             return;
         }
 
-        navigator.clipboard.writeText(text).then(() => {
-            setCopySuccess(true);
-            setTimeout(() => setCopySuccess(false), 2000);
-        }).catch(() => {
-            showToast('Failed to copy text');
-        });
+        // Try the modern Clipboard API first
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                setCopySuccess(true);
+                showToast('Copied to clipboard successfully!');
+                setTimeout(() => setCopySuccess(false), 2000);
+            }).catch((err) => {
+                console.error('Failed to copy: ', err);
+                // Fall back to document.execCommand for Safari
+                fallbackCopyToClipboard(text);
+            });
+        } else {
+            // Use fallback for browsers that don't support clipboard API
+            fallbackCopyToClipboard(text);
+        }
+    };
+
+    // Fallback copy method for browsers that don't support clipboard API
+    const fallbackCopyToClipboard = (text: string) => {
+        try {
+            // Create a temporary textarea element
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            
+            // Make it non-editable to avoid focus and move outside the screen
+            textArea.setAttribute('readonly', '');
+            textArea.style.position = 'absolute';
+            textArea.style.left = '-9999px';
+            
+            document.body.appendChild(textArea);
+            
+            // Check if the browser supports selection
+            const selected = document.getSelection()?.rangeCount || 0 > 0 
+                ? document.getSelection()?.getRangeAt(0) 
+                : false;
+            
+            // Select the text in the textarea
+            textArea.select();
+            textArea.setSelectionRange(0, text.length);
+            
+            // Execute copy command
+            const success = document.execCommand('copy');
+            
+            // Clean up
+            document.body.removeChild(textArea);
+            
+            // Restore selection if there was any
+            if (selected && document.getSelection()) {
+                document.getSelection()?.removeAllRanges();
+                document.getSelection()?.addRange(selected);
+            }
+            
+            if (success) {
+                setCopySuccess(true);
+                showToast('Copied to clipboard successfully!');
+                setTimeout(() => setCopySuccess(false), 2000);
+            } else {
+                showToast('Failed to copy text. Please try selecting and copying manually.');
+            }
+        } catch (err) {
+            console.error('Fallback copy failed: ', err);
+            showToast('Failed to copy text. Please try selecting and copying manually.');
+        }
     };
 
     return (
         <div className={styles.container}>
+            <AnimatePresence mode="wait">
+                {isLoading && (
+                    <motion.div 
+                        className={styles.generatingOverlay}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <div className={styles.loadingIcon}>
+                            <div className={styles.spinner}></div>
+                            <Image 
+                                src="/icons/lawbit-preview.svg" 
+                                alt="LawBit Logo" 
+                                width={70} 
+                                height={70} 
+                                className={styles.logo}
+                            />
+                        </div>
+                        <h2 className={styles.loadingText}>Generating Your Contract</h2>
+                        <p className={styles.loadingDescription}>{generationSteps[generationStep]}</p>
+                        <div className={styles.progressBarContainer}>
+                            <div 
+                                className={styles.progressBar} 
+                                style={{ width: `${generationProgress}%` }}
+                            ></div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            
             <div className={styles.formSection}>
                 <form onSubmit={handleSubmit}>
                     <div className={styles.field}>
@@ -1204,6 +1330,9 @@ const CreateContract = () => {
                         <div className={cn(styles.optionalContent, {
                             [styles.visible]: enabledOptionalFields.keyTerms
                         })}>
+                            <div className={styles.suggestiveText}>
+                                These are suggested terms for your legal document. You can modify them as needed.
+                            </div>
                             <textarea
                                 name="keyTerms"
                                 value={contractData.keyTerms}
@@ -1218,6 +1347,9 @@ const CreateContract = () => {
                     </div>
                     <div className={styles.field}>
                         <label>Agreement Description</label>
+                        <div className={styles.suggestiveText}>
+                            This is a suggested description based on the contract type. Feel free to customize it.
+                        </div>
                         <textarea
                             name="description"
                             value={contractData.description}
@@ -1259,8 +1391,22 @@ const CreateContract = () => {
                             </button>
                         </div>
                     </div>
-                    <button type="submit" className={styles.submitButton}>
-                        <span>Generate Legal Draft</span>
+                    
+                    <div className={styles.legalDisclaimer}>
+                        <div className={styles.disclaimerTitle}>Legal Disclaimer</div>
+                        <div className={styles.disclaimerText}>
+                            <p>This website provides tools for creating and analyzing legal documents for informational purposes only. It does not offer legal advice, representation, or services in any jurisdiction.</p>
+                            
+                            <p>No attorney-client relationship is established through the use of this website. The documents, templates, and analyses generated are not a substitute for professional legal advice. Laws and regulations vary across jurisdictions and are subject to change. We do not guarantee the completeness, accuracy, or suitability of any content for your specific legal needs.</p>
+                            
+                            <p>You acknowledge that any reliance on the materials provided is at your own risk. We disclaim all liability for any errors, omissions, or outcomes resulting from the use of this website. For legally binding advice and document validation, always consult a qualified legal professional.</p>
+                            
+                            <p>By using this website, you agree to these terms and accept full responsibility for any decisions made based on the content provided.</p>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" className={styles.submitButton} disabled={isLoading}>
+                        <span>{isLoading ? 'Generating...' : 'Generate Legal Draft'}</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
@@ -1430,11 +1576,24 @@ const CreateContract = () => {
                                     type="button" 
                                     className={styles.iconButton} 
                                     onClick={() => copyToClipboard(generatedContract?.content || '')}
+                                    aria-label={copySuccess ? "Copied" : "Copy to clipboard"}
                                 >
                                     {copySuccess ? (
-                                        <Image src="/icons/tick.svg" alt="Copied" width={24} height={24} />
+                                        <Image 
+                                            src="/icons/tick.svg" 
+                                            alt="Copied" 
+                                            width={24} 
+                                            height={24} 
+                                            className={styles.success}
+                                            priority
+                                        />
                                     ) : (
-                                        <Image src="/icons/copy.svg" alt="Copy" width={24} height={24} />
+                                        <Image 
+                                            src="/icons/copy.svg" 
+                                            alt="Copy" 
+                                            width={24} 
+                                            height={24}
+                                        />
                                     )}
                                 </button>
                             </div>

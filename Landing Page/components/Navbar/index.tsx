@@ -234,7 +234,7 @@ const Navbar = () => {
                                 
                                 {user && (
                                     <div className={styles.menuSection}>
-                                        <TokenUsage />
+                                        <TokenUsage className={styles.tokenUsage} />
                                     </div>
                                 )}
                                 

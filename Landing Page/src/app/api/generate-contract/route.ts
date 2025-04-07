@@ -52,7 +52,7 @@ export async function POST(request: Request) {
         });
 
         // Generate contract using Gemini
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
         const geminiResponse = await model.generateContent(prompt);
         const geminiText = geminiResponse.response.text();
 
