@@ -576,10 +576,24 @@ const AnalyzeContract = () => {
                     ) : (
                         <div className={styles.pasteZone}>
                             <textarea
-                                placeholder="Paste your text here..."
+                                placeholder=" "
                                 value={text}
                                 onChange={handleTextChange}
                             />
+                            {!text && (
+                                <div className={styles.pastePlaceholder}>
+                                    <Image 
+                                        src="/icons/lawbit-preview.svg" 
+                                        alt="Lawbit Logo" 
+                                        width={120} 
+                                        height={120}
+                                        className={styles.pasteIcon} 
+                                    />
+                                    <p className={styles.placeholderText}>
+                                        Paste your text here...
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     )}
                     

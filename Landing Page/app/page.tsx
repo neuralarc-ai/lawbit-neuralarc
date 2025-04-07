@@ -88,6 +88,7 @@ const pricing = [
         description: 'When your legal go beyond the basics',
         features: [
             '250,000 tokens',
+            '10+ Contracts / Risk Analysis',
             'Usage History',
             'Advanced Agreement analysis',
         ],
@@ -100,6 +101,7 @@ const pricing = [
         description: 'When your legal go beyond the ordinary',
         features: [
             '600,000 tokens',
+            '30 Contracts / Risk Analysis',
             'Usage History',
             'Advanced Agreement analysis',
         ],
