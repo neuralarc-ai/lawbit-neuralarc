@@ -19,6 +19,21 @@ declare global {
     }
 }
 
+// Add interface for Google Places prediction
+interface PlacePrediction {
+    description: string;
+    place_id: string;
+    structured_formatting?: {
+        main_text: string;
+        secondary_text: string;
+    };
+    terms?: Array<{
+        offset: number;
+        value: string;
+    }>;
+    types?: string[];
+}
+
 // Add this interface for the place object
 interface PlaceDetails {
     address_components?: Array<{
@@ -54,7 +69,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     const autocompleteServiceRef = useRef<any>(null);
     const [isScriptLoaded, setIsScriptLoaded] = useState(false);
     const [inputValue, setInputValue] = useState(value);
-    const [predictions, setPredictions] = useState<any[]>([]);
+    const [predictions, setPredictions] = useState<PlacePrediction[]>([]);
     const [showPredictions, setShowPredictions] = useState(false);
 
     useEffect(() => {
@@ -137,13 +152,13 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
 
         if (newValue.length > 2) {
             try {
-                let allPredictions: any[] = [];
+                let allPredictions: PlacePrediction[] = [];
                 
                 // Configure request differently based on type
                 if (type === 'jurisdiction') {
                     // For jurisdictions
-                const request = {
-                    input: newValue,
+                    const request = {
+                        input: newValue,
                         types: ['(regions)']
                     };
                     const results = await autocompleteServiceRef.current.getPlacePredictions(request);
@@ -158,11 +173,11 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                             };
                             const cityResults = await autocompleteServiceRef.current.getPlacePredictions(cityRequest);
                             // Combine and deduplicate results
-                            const cityPredictions = cityResults.predictions || [];
-                            const existingIds = new Set(allPredictions.map(p => p.place_id));
+                            const cityPredictions: PlacePrediction[] = cityResults.predictions || [];
+                            const existingIds = new Set(allPredictions.map((p: PlacePrediction) => p.place_id));
                             allPredictions = [
                                 ...allPredictions, 
-                                ...cityPredictions.filter(p => !existingIds.has(p.place_id))
+                                ...cityPredictions.filter((p: PlacePrediction) => !existingIds.has(p.place_id))
                             ];
                         } catch (e) {
                             // Ignore errors from secondary query
@@ -177,11 +192,11 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                             };
                             const adminResults = await autocompleteServiceRef.current.getPlacePredictions(adminRequest);
                             // Combine and deduplicate results
-                            const adminPredictions = adminResults.predictions || [];
-                            const updatedExistingIds = new Set(allPredictions.map(p => p.place_id));
+                            const adminPredictions: PlacePrediction[] = adminResults.predictions || [];
+                            const updatedExistingIds = new Set(allPredictions.map((p: PlacePrediction) => p.place_id));
                             allPredictions = [
                                 ...allPredictions, 
-                                ...adminPredictions.filter(p => !updatedExistingIds.has(p.place_id))
+                                ...adminPredictions.filter((p: PlacePrediction) => !updatedExistingIds.has(p.place_id))
                             ];
                         } catch (e) {
                             // Ignore errors from tertiary query
@@ -206,11 +221,11 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                         const establishmentResults = await autocompleteServiceRef.current.getPlacePredictions(establishmentRequest);
                         
                         // Combine and deduplicate results
-                        const establishmentPredictions = establishmentResults.predictions || [];
-                        const existingIds = new Set(allPredictions.map(p => p.place_id));
+                        const establishmentPredictions: PlacePrediction[] = establishmentResults.predictions || [];
+                        const existingIds = new Set(allPredictions.map((p: PlacePrediction) => p.place_id));
                         allPredictions = [
                             ...allPredictions, 
-                            ...establishmentPredictions.filter(p => !existingIds.has(p.place_id))
+                            ...establishmentPredictions.filter((p: PlacePrediction) => !existingIds.has(p.place_id))
                         ];
                     } catch (e) {
                         // Ignore errors from secondary query
@@ -226,11 +241,11 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                         const geocodeResults = await autocompleteServiceRef.current.getPlacePredictions(geocodeRequest);
                         
                         // Combine and deduplicate results
-                        const geocodePredictions = geocodeResults.predictions || [];
-                        const updatedExistingIds = new Set(allPredictions.map(p => p.place_id));
+                        const geocodePredictions: PlacePrediction[] = geocodeResults.predictions || [];
+                        const updatedExistingIds = new Set(allPredictions.map((p: PlacePrediction) => p.place_id));
                         allPredictions = [
                             ...allPredictions, 
-                            ...geocodePredictions.filter(p => !updatedExistingIds.has(p.place_id))
+                            ...geocodePredictions.filter((p: PlacePrediction) => !updatedExistingIds.has(p.place_id))
                         ];
                     } catch (e) {
                         // Ignore errors from tertiary query
@@ -254,7 +269,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         }
     };
 
-    const handlePredictionClick = async (prediction: any) => {
+    const handlePredictionClick = async (prediction: PlacePrediction) => {
         try {
             const place = await getPlaceDetails(prediction.place_id);
             if (place) {
@@ -263,9 +278,9 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                     // Improved component selection prioritizing more specific components
                     const getComponent = (types: string[]) => {
                         for (const type of types) {
-                        const component = addressComponents.find(
-                            (comp: any) => comp.types.includes(type)
-                        );
+                            const component = addressComponents.find(
+                                (comp: any) => comp.types.includes(type)
+                            );
                             if (component) return component.long_name;
                         }
                         return '';

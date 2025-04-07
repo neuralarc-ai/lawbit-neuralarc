@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '../Toast/Toaster';
 import { useSupabase } from '@/components/Providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
-import Button from 'components/Button';
+import Button from '@/components/Button';
 
 const AnalyzeContract = () => {
     const { showToast } = useToast();
