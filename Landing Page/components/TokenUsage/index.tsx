@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { createClient } from '@/lib/supabase';
 import styles from './TokenUsage.module.sass';
@@ -16,13 +16,13 @@ interface TokenUsageData {
 const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
   const [tokenUsage, setTokenUsage] = useState<TokenUsageData>({
     total: 0,
-    limit: 50000,
+    limit: 100000,
     remaining: 50000
   });
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
-  const fetchTokenUsage = async () => {
+  const fetchTokenUsage = useCallback(async () => {
     try {
       console.log('Fetching token usage...');
       const { data: { user } } = await supabase.auth.getUser();
@@ -48,10 +48,9 @@ const TokenUsage: React.FC<TokenUsageProps> = ({ className }) => {
       }
     } catch (error) {
       console.error('Error fetching token usage:', error);
-    } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
 
   useEffect(() => {
     fetchTokenUsage();

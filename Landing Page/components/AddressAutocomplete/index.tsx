@@ -19,6 +19,16 @@ declare global {
     }
 }
 
+// Add this interface for the place object
+interface PlaceDetails {
+    address_components?: Array<{
+        long_name: string;
+        short_name: string;
+        types: string[];
+    }>;
+    formatted_address?: string;
+}
+
 const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     value,
     onChange,
@@ -73,7 +83,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         }
     }, [isScriptLoaded]);
 
-    const getPlaceDetails = async (placeId: string) => {
+    const getPlaceDetails = async (placeId: string): Promise<PlaceDetails | null> => {
         if (!isScriptLoaded) return null;
 
         try {
@@ -125,13 +135,11 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     };
 
     const handlePredictionClick = async (prediction: any) => {
-        if (!isScriptLoaded) return;
-
         try {
             const place = await getPlaceDetails(prediction.place_id);
             if (place) {
-            if (type === 'jurisdiction') {
-                const addressComponents = place.address_components || [];
+                if (type === 'jurisdiction') {
+                    const addressComponents = place.address_components || [];
                     const getComponent = (type: string) => {
                         const component = addressComponents.find(
                             (comp: any) => comp.types.includes(type)
@@ -139,28 +147,23 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                         return component ? component.long_name : '';
                     };
 
-                    const city = getComponent('locality') || getComponent('administrative_area_level_2');
-                    const state = getComponent('administrative_area_level_1');
-                    const country = getComponent('country');
+                    const jurisdiction = [
+                        getComponent('administrative_area_level_1'),
+                        getComponent('country')
+                    ].filter(Boolean).join(', ');
 
-                    let jurisdiction = '';
-                    if (city) jurisdiction += city;
-                    if (state) jurisdiction += (jurisdiction ? ', ' : '') + state;
-                    if (country) jurisdiction += (jurisdiction ? ', ' : '') + country;
-
-                    if (!jurisdiction && place.formatted_address) {
-                        jurisdiction = place.formatted_address;
+                    if (jurisdiction) {
+                        setInputValue(jurisdiction);
+                        onChange(jurisdiction);
                     }
-
-                    setInputValue(jurisdiction);
-                onChange(jurisdiction);
-            } else {
-                    setInputValue(place.formatted_address);
-                    onChange(place.formatted_address);
+                } else {
+                    const formattedAddress = place.formatted_address || '';
+                    setInputValue(formattedAddress);
+                    onChange(formattedAddress);
                 }
             }
-        } catch (err) {
-            console.error('Error handling prediction click:', err);
+        } catch (error) {
+            console.error('Error getting place details:', error);
         }
         setShowPredictions(false);
     };

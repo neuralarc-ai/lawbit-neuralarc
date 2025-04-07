@@ -95,7 +95,7 @@ const Disclaimer = () => {
                     </div>
 
                     <div className={styles.footer}>
-                        <p>By using Lawbit's website and services, you acknowledge that you have read, understood, and agreed to this Disclaimer.</p>
+                        <p>By using Lawbit&apos;s website and services, you acknowledge that you have read, understood, and agreed to this Disclaimer.</p>
                     </div>
                 </div>
             </motion.div>

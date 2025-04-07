@@ -179,6 +179,7 @@
     display: grid
     grid-template-columns: repeat(3, 1fr)
     gap: 32px
+    position: relative
     @media (max-width: 1024px)
         grid-template-columns: repeat(2, 1fr)
     @media (max-width: 768px)
@@ -318,7 +319,7 @@
     img
         width: 100%
         height: auto
-        display: block
+        object-fit: contain
 
 .testimonialGrid
     display: grid
@@ -359,12 +360,11 @@
     display: grid
     grid-template-columns: repeat(3, 1fr)
     gap: 32px
+    position: relative
     @media (max-width: 1024px)
         grid-template-columns: repeat(2, 1fr)
     @media (max-width: 768px)
         grid-template-columns: 1fr
-    position: relative
-    
 
 .pricingCard
     position: relative
@@ -572,5 +572,5 @@
         height: auto
         object-fit: contain
     @media (max-width: 1024px)
-    bottom: 0
+        bottom: 0
         right: -25%
