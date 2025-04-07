@@ -445,6 +445,8 @@ const CreateContract = () => {
         'Option B': null
     });
 
+    const [copySuccess, setCopySuccess] = useState(false);
+
     const toggleOptionalField = (field: keyof typeof enabledOptionalFields) => {
         setEnabledOptionalFields(prev => ({
             ...prev,
@@ -1074,8 +1076,17 @@ const CreateContract = () => {
     };
 
     const copyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text);
-        showToast('Text copied to clipboard');
+        if (!text || text.trim() === '') {
+            showToast('No content to copy');
+            return;
+        }
+
+        navigator.clipboard.writeText(text).then(() => {
+            setCopySuccess(true);
+            setTimeout(() => setCopySuccess(false), 2000);
+        }).catch(() => {
+            showToast('Failed to copy text');
+        });
     };
 
     return (
@@ -1415,8 +1426,16 @@ const CreateContract = () => {
                         </div>
                         <div className={styles.buttonWrapper}>
                             <div className={styles.buttonInner}>
-                                <button type="button" className={styles.iconButton} onClick={() => copyToClipboard(generatedContract?.content || '')}>
-                                    <Image src="/icons/copy.svg" alt="Copy" width={24} height={24} />
+                                <button 
+                                    type="button" 
+                                    className={styles.iconButton} 
+                                    onClick={() => copyToClipboard(generatedContract?.content || '')}
+                                >
+                                    {copySuccess ? (
+                                        <Image src="/icons/tick.svg" alt="Copied" width={24} height={24} />
+                                    ) : (
+                                        <Image src="/icons/copy.svg" alt="Copy" width={24} height={24} />
+                                    )}
                                 </button>
                             </div>
                         </div>
