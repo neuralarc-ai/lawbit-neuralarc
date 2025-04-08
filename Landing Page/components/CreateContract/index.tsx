@@ -16,32 +16,33 @@ import AddressAutocomplete from '../AddressAutocomplete';
 import Script from 'next/script';
 
 const contractSchema = z.object({
-    contractType: z.string().min(1, 'Contract type is required'),
+    contractType: z.string().min(1, 'Agreement type is required'),
     firstPartyName: z.string().min(1, 'First party name is required'),
     firstPartyAddress: z.string().optional(),
     secondPartyName: z.string().min(1, 'Second party name is required'),
     secondPartyAddress: z.string().optional(),
     jurisdiction: z.string().min(1, 'Jurisdiction is required'),
     keyTerms: z.string().optional(),
-    description: z.string().min(1, 'Contract description is required'),
+    description: z.string().min(1, 'Agreement description is required'),
     intensity: z.enum(['Simple', 'Moderate', 'Watertight']),
     preference: z.enum(['Option A', 'Option B'])
 });
 
 const contractTypes = [
-    'Employment Contract',
+    'Employment Agreement',
     'Non-Disclosure Agreement',
     'Service Agreement',
     'Lease Agreement',
-    'Sales Contract',
+    'Sale and Purchase Agreement',
     'Partnership Agreement',
-    'Consulting Agreement',
+    'Consultant Agreement',
     'License Agreement',
     'Franchise Agreement',
     'Joint Venture Agreement',
     'Distribution Agreement',
     'Supply Agreement',
-    'Confidentiality Agreement',
+    'Rent Agreement',
+    'Vendor Agreement',
     'Settlement Agreement',
     'Loan Agreement',
     'Insurance Contract',
@@ -50,6 +51,7 @@ const contractTypes = [
     'Software License Agreement',
     'Trademark License Agreement',
     'Patent License Agreement',
+    'Merger and Acquisition Agreement',
     'Merger Agreement',
     'Acquisition Agreement',
     'Shareholder Agreement',
@@ -58,6 +60,20 @@ const contractTypes = [
     'Sponsorship Agreement',
     'Event Contract',
     'Photography Contract',
+    'Memorandum of Understanding',
+    'Article of Association',
+    'Mutual Agreement',
+    'Money Lender Agreement',
+    'Debt Agreement',
+    'Deed of Assignment',
+    'Deed of Trust',
+    'Deed of Gift',
+    'Deed of Lease',
+    'Deed of Sale',
+    'Deed of Purchase',
+    'Deed of Transfer',
+    'Deed of Warranty',
+    'Deed of Release',
     'Freelance Agreement'
 ];
 
@@ -66,15 +82,14 @@ const contractTypeDescriptions: Record<string, string> = {
     'Non-Disclosure Agreement': 'This agreement protects confidential information shared between parties, preventing unauthorized disclosure and use of sensitive business information.',
     'Service Agreement': 'This contract defines the terms of service provision between a service provider and client, including scope of work, payment terms, and service standards.',
     'Lease Agreement': 'This document establishes the terms of property rental between a landlord and tenant, including rent amount, duration, and property maintenance responsibilities.',
-    'Sales Contract': 'This agreement formalizes the terms of a sale transaction between a buyer and seller, including product specifications, price, and delivery terms.',
+    'Sales Agreement': 'This agreement formalizes the terms of a sale transaction between a buyer and seller, including product specifications, price, and delivery terms.',
     'Partnership Agreement': 'This contract outlines the terms of a business partnership, including profit sharing, decision-making processes, and partner responsibilities.',
-    'Consulting Agreement': 'This document defines the terms of consulting services, including scope of work, deliverables, and compensation structure.',
+    'Consultant Agreement': 'This document defines the terms of consulting services, including scope of work, deliverables, and compensation structure.',
     'License Agreement': 'This agreement grants permission to use intellectual property or other assets under specified terms and conditions.',
     'Franchise Agreement': 'This contract establishes the terms of a franchise relationship, including brand usage, operational standards, and franchise fees.',
     'Joint Venture Agreement': 'This document outlines the terms of a business collaboration between two or more parties for a specific project or purpose.',
     'Distribution Agreement': 'This agreement defines the terms of product distribution between a manufacturer and distributor.',
     'Supply Agreement': 'This contract establishes the terms of product or service supply between a supplier and purchaser.',
-    'Confidentiality Agreement': 'This document protects sensitive information shared between parties during business discussions or transactions.',
     'Settlement Agreement': 'This agreement formalizes the resolution of a dispute between parties, including terms of settlement and release of claims.',
     'Loan Agreement': 'This contract outlines the terms of a loan, including principal amount, interest rate, repayment schedule, and collateral.',
     'Insurance Contract': 'This agreement defines the terms of insurance coverage, including premiums, coverage limits, and claim procedures.',
@@ -91,7 +106,25 @@ const contractTypeDescriptions: Record<string, string> = {
     'Sponsorship Agreement': 'This agreement defines the terms of a sponsorship arrangement, including benefits, obligations, and payment terms.',
     'Event Contract': 'This document outlines the terms of event planning and execution, including services, timeline, and payment schedule.',
     'Photography Contract': 'This agreement defines the terms of photography services, including usage rights, deliverables, and payment terms.',
-    'Freelance Agreement': 'This contract establishes the terms of freelance work, including project scope, payment terms, and intellectual property rights.'
+    'Freelance Agreement': 'This contract establishes the terms of freelance work, including project scope, payment terms, and intellectual property rights.',
+    'Rent Agreement': 'This document formalizes the terms of property rental, including rent amount, duration, maintenance responsibilities, and tenant rights.',
+    'Vendor Agreement': 'This contract defines the relationship between a business and its vendors, including product specifications, pricing, delivery terms, and quality standards.',
+    'Confidentiality Agreement': 'This agreement protects sensitive business information by establishing confidentiality obligations between parties.',
+    'Merger and Acquisition Agreement': 'This comprehensive document outlines the complete terms of a business combination, including structure, valuation, due diligence, and post-merger integration.',
+    'Article of Association': 'This document defines the rules and regulations governing a company\'s internal management and operations.',
+    'Mutual Agreement': 'This document formalizes a mutual understanding between parties regarding specific terms, conditions, or actions.',
+    'Money Lender Agreement': 'This contract establishes the terms of a money lending arrangement, including loan amount, interest rate, repayment schedule, and default conditions.',
+    'Debt Agreement': 'This document formalizes the terms of a debt arrangement, including principal amount, interest rate, repayment schedule, and consequences of default.',
+    'Deed of Assignment': 'This legal document transfers rights, interests, or property from one party to another.',
+    'Deed of Trust': 'This document establishes a trust relationship where property is held by a trustee for the benefit of beneficiaries.',
+    'Deed of Gift': 'This legal document formalizes the transfer of property as a gift from one party to another.',
+    'Deed of Lease': 'This document formalizes the terms of a property lease, including rent, duration, and maintenance responsibilities.',
+    'Deed of Sale': 'This document formalizes the transfer of property ownership from seller to buyer, including terms of sale and warranties.',
+    'Deed of Purchase': 'This document formalizes the acquisition of property, including purchase price, conditions, and warranties.',
+    'Deed of Transfer': 'This document formalizes the transfer of property rights from one party to another.',
+    'Deed of Warranty': 'This document provides guarantees regarding the title or quality of property being transferred.',
+    'Deed of Release': 'This document formalizes the release of claims, rights, or interests in property or other assets.',
+    'Memorandum of Understanding': 'This document outlines the preliminary understanding between parties before a formal agreement is reached, establishing the framework for future negotiations.'
 };
 
 const contractTypeKeyFields: Record<string, string[]> = {
@@ -101,8 +134,12 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Working Hours and Schedule',
         'Probation Period',
         'Termination Conditions',
+        'Term of Agreement',
         'Non-Compete Clause',
         'Intellectual Property Rights',
+        'Governing Law',
+        'Dispute Resolution',
+        'Miscellaneous Clause',
         'Confidentiality Requirements'
     ],
     'Non-Disclosure Agreement': [
@@ -112,7 +149,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Permitted Disclosures',
         'Return of Information',
         'Remedies for Breach',
-        'Governing Law'
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause',
+
     ],
     'Service Agreement': [
         'Scope of Services',
@@ -122,6 +163,9 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Termination Conditions',
         'Liability Limitations',
         'Intellectual Property Rights',
+        'Governing Law',
+        'Dispute Resolution',
+        'Miscellaneous Clause',
         'Service Level Agreements'
     ],
     'Lease Agreement': [
@@ -131,6 +175,10 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Security Deposit',
         'Maintenance Responsibilities',
         'Subletting Conditions',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause',
         'Renewal Terms',
         'Early Termination Conditions'
     ],
@@ -140,6 +188,10 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Delivery Terms',
         'Warranty Information',
         'Return Policy',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause',
         'Title Transfer',
         'Risk of Loss',
         'Force Majeure'
@@ -152,6 +204,9 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Partner Responsibilities',
         'Admission of New Partners',
         'Dissolution Terms',
+        'Governing Law',
+        'Term and Termination',
+        'Miscellaneous Clause',
         'Dispute Resolution'
     ],
     'Consulting Agreement': [
@@ -162,6 +217,10 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Expense Reimbursement',
         'Independent Contractor Status',
         'Confidentiality',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause',
         'Intellectual Property Rights'
     ],
     'License Agreement': [
@@ -171,6 +230,10 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Term and Renewal',
         'Royalties and Payments',
         'Quality Control',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause',
         'Termination Rights',
         'Sub-licensing Terms'
     ],
@@ -182,7 +245,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Marketing Requirements',
         'Renewal Terms',
         'Transfer Conditions',
-        'Termination Rights'
+        'Termination Rights',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Joint Venture Agreement': [
         'Purpose and Scope',
@@ -192,7 +259,8 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Decision Making',
         'Term and Termination',
         'Dispute Resolution',
-        'Confidentiality'
+        'Confidentiality',
+        'Governing Law'
     ],
     'Distribution Agreement': [
         'Territory',
@@ -202,7 +270,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Delivery Terms',
         'Marketing Requirements',
         'Performance Metrics',
-        'Termination Conditions'
+        'Termination Conditions',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Supply Agreement': [
         'Product Specifications',
@@ -212,7 +284,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Quality Standards',
         'Payment Terms',
         'Force Majeure',
-        'Termination Rights'
+        'Termination Rights',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Confidentiality Agreement': [
         'Definition of Confidential Information',
@@ -222,7 +298,10 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Return of Information',
         'Remedies',
         'Governing Law',
-        'Jurisdiction'
+        'Jurisdiction',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Settlement Agreement': [
         'Dispute Description',
@@ -232,7 +311,10 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Confidentiality',
         'No Admission of Liability',
         'Governing Law',
-        'Enforcement Terms'
+        'Enforcement Terms',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Loan Agreement': [
         'Loan Amount',
@@ -242,7 +324,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Default Terms',
         'Prepayment Conditions',
         'Late Payment Penalties',
-        'Security Requirements'
+        'Security Requirements',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Insurance Contract': [
         'Coverage Details',
@@ -252,7 +338,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Exclusions',
         'Claims Process',
         'Cancellation Terms',
-        'Renewal Conditions'
+        'Renewal Conditions',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Real Estate Purchase Agreement': [
         'Property Description',
@@ -262,7 +352,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Contingencies',
         'Title Requirements',
         'Inspection Rights',
-        'Closing Costs'
+        'Closing Costs',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Construction Contract': [
         'Project Scope',
@@ -272,7 +366,8 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Warranty Terms',
         'Insurance Requirements',
         'Lien Waivers',
-        'Dispute Resolution'
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Software License Agreement': [
         'License Type',
@@ -282,7 +377,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Support Services',
         'Updates and Upgrades',
         'Termination Rights',
-        'Data Protection'
+        'Data Protection',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Trademark License Agreement': [
         'Trademark Details',
@@ -292,7 +391,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Term and Renewal',
         'Infringement Protection',
         'Termination Rights',
-        'Sub-licensing'
+        'Sub-licensing',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Patent License Agreement': [
         'Patent Details',
@@ -302,7 +405,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Improvements',
         'Infringement Protection',
         'Termination Rights',
-        'Sub-licensing'
+        'Sub-licensing',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Merger Agreement': [
         'Transaction Structure',
@@ -312,7 +419,10 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Covenants',
         'Termination Rights',
         'Indemnification',
-        'Governing Law'
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Acquisition Agreement': [
         'Assets/Stock Description',
@@ -322,7 +432,10 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Covenants',
         'Termination Rights',
         'Indemnification',
-        'Governing Law'
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Shareholder Agreement': [
         'Share Transfer Restrictions',
@@ -332,7 +445,10 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Pre-emptive Rights',
         'Drag-Along Rights',
         'Tag-Along Rights',
-        'Dispute Resolution'
+        'Dispute Resolution',
+        'Governing Law',
+        'Term and Termination',
+        'Miscellaneous Clause'
     ],
     'Operating Agreement': [
         'Management Structure',
@@ -342,7 +458,10 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Transfer Restrictions',
         'Dissolution Terms',
         'Dispute Resolution',
-        'Amendments Process'
+        'Amendments Process',
+        'Governing Law',
+        'Term and Termination',
+        'Miscellaneous Clause'
     ],
     'Subscription Agreement': [
         'Service Description',
@@ -352,7 +471,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Service Level Agreement',
         'Termination Rights',
         'Data Protection',
-        'Service Updates'
+        'Service Updates',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Sponsorship Agreement': [
         'Sponsorship Benefits',
@@ -362,7 +485,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Exclusivity Terms',
         'Performance Requirements',
         'Termination Rights',
-        'Indemnification'
+        'Indemnification',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Event Contract': [
         'Event Description',
@@ -372,7 +499,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Cancellation Terms',
         'Force Majeure',
         'Insurance Requirements',
-        'Liability Limitations'
+        'Liability Limitations',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Photography Contract': [
         'Shoot Details',
@@ -382,7 +513,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Cancellation Policy',
         'Model Releases',
         'Copyright Terms',
-        'Editing Rights'
+        'Editing Rights',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ],
     'Freelance Agreement': [
         'Project Scope',
@@ -392,7 +527,11 @@ const contractTypeKeyFields: Record<string, string[]> = {
         'Revisions Policy',
         'Intellectual Property Rights',
         'Termination Terms',
-        'Independent Contractor Status'
+        'Independent Contractor Status',
+        'Governing Law',
+        'Term and Termination',
+        'Dispute Resolution',
+        'Miscellaneous Clause'
     ]
 };
 
@@ -404,6 +543,91 @@ interface FormattedContentItem {
     level?: number;
     number?: string;
 }
+
+// Contract categories by department
+interface ContractCategory {
+    name: string;
+    contracts: string[];
+}
+
+const contractCategories: ContractCategory[] = [
+    {
+        name: "Business",
+        contracts: [
+            'Partnership Agreement',
+            'Joint Venture Agreement',
+            'Merger Agreement',
+            'Acquisition Agreement',
+            'Shareholder Agreement',
+            'Operating Agreement',
+            'Distribution Agreement',
+            'Supply Agreement',
+            'Franchise Agreement',
+            'Merger and Acquisition Agreement',
+            'Article of Association',
+            'Mutual Agreement'
+        ]
+    },
+    {
+        name: "Employment & Services",
+        contracts: [
+            'Employment Contract',
+            'Consultant Agreement',
+            'Freelance Agreement',
+            'Service Agreement',
+            'Photography Contract',
+            'Vendor Agreement'
+        ]
+    },
+    {
+        name: "Real Estate & Property",
+        contracts: [
+            'Lease Agreement',
+            'Real Estate Purchase Agreement',
+            'Construction Contract',
+            'Rent Agreement',
+            'Deed of Lease',
+            'Deed of Sale',
+            'Deed of Purchase',
+            'Deed of Transfer',
+            'Deed of Warranty'
+        ]
+    },
+    {
+        name: "Intellectual Property",
+        contracts: [
+            'Non-Disclosure Agreement',
+            'Confidentiality Agreement',
+            'License Agreement',
+            'Software License Agreement',
+            'Trademark License Agreement',
+            'Patent License Agreement'
+        ]
+    },
+    {
+        name: "Sales & Marketing",
+        contracts: [
+            'Sales Agreement',
+            'Subscription Agreement',
+            'Sponsorship Agreement',
+            'Event Contract'
+        ]
+    },
+    {
+        name: "Financial",
+        contracts: [
+            'Loan Agreement',
+            'Insurance Contract',
+            'Settlement Agreement',
+            'Money Lender Agreement',
+            'Debt Agreement',
+            'Deed of Assignment',
+            'Deed of Trust',
+            'Deed of Gift',
+            'Deed of Release'
+        ]
+    }
+];
 
 const CreateContract = () => {
     const { showToast } = useToast();
@@ -428,6 +652,8 @@ const CreateContract = () => {
     const [error, setError] = useState<string | null>(null);
     const [generationStep, setGenerationStep] = useState(0);
     const [generationProgress, setGenerationProgress] = useState(0);
+    const [lastUsedContracts, setLastUsedContracts] = useState<string[]>([]);
+    const [displayedCategories, setDisplayedCategories] = useState<ContractCategory[]>([...contractCategories]);
     const [enabledOptionalFields, setEnabledOptionalFields] = useState<{
         firstPartyAddress: boolean;
         secondPartyAddress: boolean;
@@ -437,6 +663,9 @@ const CreateContract = () => {
         secondPartyAddress: false,
         keyTerms: false
     });
+    const [showTooltip, setShowTooltip] = useState(false);
+    const [tooltipText, setTooltipText] = useState('');
+    const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
     // Generation steps descriptions
     const generationSteps = [
@@ -446,6 +675,21 @@ const CreateContract = () => {
         "Drafting comprehensive terms...",
         "Finalizing your legal document..."
     ];
+
+    // Load last used contracts from localStorage on component mount
+    useEffect(() => {
+        const savedLastUsed = localStorage.getItem('lastUsedContracts');
+        if (savedLastUsed) {
+            try {
+                const parsedLastUsed = JSON.parse(savedLastUsed);
+                if (Array.isArray(parsedLastUsed)) {
+                    setLastUsedContracts(parsedLastUsed);
+                }
+            } catch (e) {
+                console.error('Error parsing last used contracts:', e);
+            }
+        }
+    }, []);
 
     // Update progress during generation
     useEffect(() => {
@@ -541,6 +785,18 @@ const CreateContract = () => {
                 ...prev,
                 keyTerms: true
             }));
+            
+            // Update recently used contracts
+            if (value) {
+                // Remove from current position (if exists)
+                const filteredContracts = lastUsedContracts.filter(c => c !== value);
+                // Add to beginning of array
+                const updatedContracts = [value, ...filteredContracts];
+                // Update state
+                setLastUsedContracts(updatedContracts);
+                // Save to localStorage
+                localStorage.setItem('lastUsedContracts', JSON.stringify(updatedContracts));
+            }
         }
     };
 
@@ -668,7 +924,15 @@ const CreateContract = () => {
             const tokenUsage = userData.token_usage as { total: number; limit: number; remaining: number };
             
             if (tokenUsage.remaining < 20000) {
-                throw new Error('Insufficient tokens. Please upgrade your plan to continue.');
+                // Instead of throwing an error, redirect to subscription modal
+                setIsLoading(false);
+                showToast('Insufficient tokens. Please upgrade your plan to continue.');
+                
+                // Access the subscription modal through the Navbar component
+                const event = new CustomEvent('openSubscriptionModal');
+                window.dispatchEvent(event);
+                
+                return;
             }
 
             // Generate contract for current option
@@ -936,8 +1200,13 @@ const CreateContract = () => {
             }
         });
         
-        // Generate a filename based on the contract title
-        const filename = generateContractTitle().replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() + '.pdf';
+        // Format the filename with agreement type, date and time
+        const now = new Date();
+        const date = now.toISOString().split('T')[0]; // YYYY-MM-DD
+        const time = now.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
+        const agreementType = contractData.contractType.toLowerCase().replace(/[^a-zA-Z0-9]/g, '_');
+        const filename = `${agreementType}-${date}-${time}.pdf`;
+        
         doc.save(filename);
         showToast('Contract downloaded as PDF');
     };
@@ -1107,8 +1376,13 @@ const CreateContract = () => {
         const buffer = await Packer.toBuffer(doc);
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
         
-        // Generate a filename based on the contract title
-        const filename = generateContractTitle().replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() + '.docx';
+        // Format the filename with agreement type, date and time
+        const now = new Date();
+        const date = now.toISOString().split('T')[0]; // YYYY-MM-DD
+        const time = now.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
+        const agreementType = contractData.contractType.toLowerCase().replace(/[^a-zA-Z0-9]/g, '_');
+        const filename = `${agreementType}-${date}-${time}.docx`;
+        
         saveAs(blob, filename);
         showToast('Contract downloaded as DOCX');
     };
@@ -1184,6 +1458,25 @@ const CreateContract = () => {
         }
     };
 
+    // Handle mouse enter for contract options
+    const handleContractOptionHover = (e: React.MouseEvent<HTMLOptionElement>, contractType: string) => {
+        const description = contractTypeDescriptions[contractType] || '';
+        if (description) {
+            setTooltipText(description);
+            const rect = e.currentTarget.getBoundingClientRect();
+            setTooltipPosition({
+                top: rect.bottom + window.scrollY,
+                left: rect.left + window.scrollX
+            });
+            setShowTooltip(true);
+        }
+    };
+
+    // Handle mouse leave for contract options
+    const handleContractOptionLeave = () => {
+        setShowTooltip(false);
+    };
+
     return (
         <div className={styles.container}>
             <AnimatePresence mode="wait">
@@ -1221,20 +1514,65 @@ const CreateContract = () => {
                 <form onSubmit={handleSubmit}>
                     <div className={styles.field}>
                         <label>Agreement type</label>
-                        <select
-                            name="contractType"
-                            value={contractData.contractType}
-                            onChange={handleContractTypeChange}
-                            onBlur={handleBlur}
-                            className={cn(styles.select, { [styles.error]: errors.contractType })}
-                        >
-                            <option value="">{errors.contractType || "Select contract type"}</option>
-                            {contractTypes.map((type) => (
-                                <option key={type} value={type}>
-                                    {type}
-                                </option>
-                            ))}
-                        </select>
+                        <div className={styles.selectWrapper}>
+                            <select
+                                name="contractType"
+                                value={contractData.contractType}
+                                onChange={handleContractTypeChange}
+                                onBlur={handleBlur}
+                                className={cn(styles.select, { [styles.error]: errors.contractType })}
+                            >
+                                <option value="">{errors.contractType || "Select contract type"}</option>
+                                
+                                {/* Recently Used Contracts */}
+                                {lastUsedContracts.length > 0 && (
+                                    <>
+                                        <optgroup label="Recently Used">
+                                            {lastUsedContracts.slice(0, 5).map((type) => (
+                                                <option 
+                                                    key={`recent-${type}`} 
+                                                    value={type}
+                                                    onMouseEnter={(e) => handleContractOptionHover(e, type)}
+                                                    onMouseLeave={handleContractOptionLeave}
+                                                    className={styles.selectedOption}
+                                                >
+                                                    {type}
+                                                </option>
+                                            ))}
+                                        </optgroup>
+                                    </>
+                                )}
+
+                                {/* Contracts Grouped by Department */}
+                                {contractCategories.map((category) => (
+                                    <optgroup key={category.name} label={category.name}>
+                                        {category.contracts.map((type) => (
+                                            <option 
+                                                key={type} 
+                                                value={type}
+                                                onMouseEnter={(e) => handleContractOptionHover(e, type)}
+                                                onMouseLeave={handleContractOptionLeave}
+                                            >
+                                                {type}
+                                            </option>
+                                        ))}
+                                    </optgroup>
+                                ))}
+                            </select>
+                            
+                            {/* Contract Description Tooltip */}
+                            {showTooltip && (
+                                <div 
+                                    className={cn(styles.contractTooltip, styles.visible)}
+                                    style={{
+                                        top: `${tooltipPosition.top}px`,
+                                        left: `${tooltipPosition.left}px`
+                                    }}
+                                >
+                                    {tooltipText}
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <div className={styles.field}>
                         <label>First party name</label>
@@ -1406,7 +1744,7 @@ const CreateContract = () => {
                     </div>
                     
                     <button type="submit" className={styles.submitButton} disabled={isLoading}>
-                        <span>{isLoading ? 'Generating...' : 'Generate Legal Draft'}</span>
+                        <span>{isLoading ? 'Generating...' : 'Legal Draft Template'}</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>

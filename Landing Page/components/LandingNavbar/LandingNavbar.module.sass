@@ -27,75 +27,17 @@
     gap: 48px
 
 .link
-    color: rgba(255, 255, 255, 0.85)
+    color: rgba(255, 255, 255, 0.7)
     text-decoration: none
     font-size: 16px
     font-weight: 500
-    transition: all 0.3s ease
+    transition: color 0.3s ease
     background: none
     border: none
-    padding: 8px 12px
+    padding: 0
     cursor: pointer
-    position: relative
-    margin: 0 4px
-    border-radius: 8px
-    
-    &:after
-        content: ''
-        position: absolute
-        width: 0
-        height: 2px
-        bottom: 0
-        left: 50%
-        transform: translateX(-50%)
-        background: linear-gradient(to right, rgba(138, 48, 255, 0.8), rgba(248, 66, 178, 0.8))
-        transition: width 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease
-        opacity: 0
-        border-radius: 4px
-        box-shadow: 0 2px 8px rgba(248, 66, 178, 0)
-    
-    &:before
-        content: ''
-        position: absolute
-        width: 0
-        height: 0
-        top: 0
-        left: 50%
-        transform: translateX(-50%)
-        border-left: 4px solid transparent
-        border-right: 4px solid transparent
-        border-top: 0px solid rgba(248, 66, 178, 0.8)
-        transition: all 0.3s ease
-        opacity: 0
-    
     &:hover
         color: rgba(255, 255, 255, 1)
-        transform: translateY(-2px)
-        background: rgba(255, 255, 255, 0.03)
-        text-shadow: 0 0 8px rgba(255, 255, 255, 0.4)
-        
-        &:after
-            width: 70%
-            opacity: 1
-            box-shadow: 0 2px 8px rgba(248, 66, 178, 0.3)
-    
-    &.active
-        color: rgba(255, 255, 255, 1)
-        font-weight: 600
-        background: rgba(255, 255, 255, 0.05)
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5)
-        
-        &:after
-            width: 85%
-            opacity: 1
-            height: 3px
-            background: linear-gradient(to right, rgba(138, 48, 255, 1), rgba(248, 66, 178, 1))
-            box-shadow: 0 2px 10px rgba(248, 66, 178, 0.5)
-            
-        &:before
-            opacity: 1
-            border-top: 4px solid rgba(248, 66, 178, 0.8)
-            top: -4px
 
 .buttons
     display: flex
@@ -123,7 +65,7 @@
     background: rgba(255, 255, 255, 0.07)
     backdrop-filter: blur(100px)
     padding: 20px 32px
-    color: rgba(255, 255, 255, 0.9)
+    color: rgba(255, 255, 255, 0.7)
     transition: all 0.3s ease
     box-shadow: inset 2px 4px 16px 0 rgba(248, 248, 248, 0.06)
     position: relative
@@ -139,7 +81,6 @@
         mask-composite: exclude
     &:hover
         color: rgba(255, 255, 255, 1)
-        text-shadow: 0 0 8px rgba(255, 255, 255, 0.4)
 
 .tryNowButton
     background: linear-gradient(to right, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 50%, rgba(248, 91, 66, 1) 100%)

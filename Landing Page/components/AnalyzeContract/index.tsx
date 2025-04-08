@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '../Toast/Toaster';
 import { useSupabase } from '@/components/Providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
-import Button from '@/components/Button';
+import Button from '../../components/Button';
 
 const AnalyzeContract = () => {
     const { showToast } = useToast();
@@ -158,7 +158,15 @@ const AnalyzeContract = () => {
 
             const tokenUsage = userData.token_usage || { total: 0, limit: 50000, remaining: 50000 };
             if (tokenUsage.remaining < 20000) {
-                throw new Error('Insufficient tokens. Please upgrade your plan to continue.');
+                // Instead of throwing an error, redirect to subscription modal
+                setIsAnalyzing(false);
+                showToast('Insufficient tokens. Please upgrade your plan to continue.');
+                
+                // Access the subscription modal through the Navbar component
+                const event = new CustomEvent('openSubscriptionModal');
+                window.dispatchEvent(event);
+                
+                return;
             }
 
             let response;

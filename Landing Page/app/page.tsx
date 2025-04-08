@@ -78,8 +78,9 @@ const pricing = [
         period: '',
         description: 'Perfect for exploring LawBit\'s capabilities',
         features: [
-            '1 Document generation',
+            '1 Legal Draft Template',
             '1 Basic risk analysis',
+            '1 Legal Draft Generation',
         ],
         buttonText: 'Start Free Trial',
         popular: false
@@ -90,7 +91,7 @@ const pricing = [
         description: 'When your legal go beyond the basics',
         features: [
             '250,000 tokens',
-            '10+ Contracts / Risk Analysis',
+            '10+ Legal Drafts / Risk Analysis',
             'Usage History',
             'Advanced Agreement analysis',
         ],
@@ -103,7 +104,7 @@ const pricing = [
         description: 'When your legal go beyond the ordinary',
         features: [
             '600,000 tokens',
-            '30 Contracts / Risk Analysis',
+            '30 Legal Draft / Risk Analysis',
             'Usage History',
             'Advanced Agreement analysis',
         ],
@@ -371,8 +372,8 @@ export default function Home() {
                                         title={
                                             <div className={styles.btnContent}>
                                                 <span>{plan.buttonText}</span>
-                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M13 5l7 7-7 7M5 12h15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                                 </svg>
                                             </div>
                                         }
@@ -385,12 +386,12 @@ export default function Home() {
                                             <div className={styles.btnContent}>
                                                 <span>Purchase Now</span>
                                                 {plan.popular ? (
-                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M12 2v20M17 12l-5-5-5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                                     </svg>
                                                 ) : (
-                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-3M16 5v6M13 8h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M8 3H5a2 2 0 00-2 2v14a2 2 0 002 2h3m4-9l5-5-5-5m5 5H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                                     </svg>
                                                 )}
                                             </div>

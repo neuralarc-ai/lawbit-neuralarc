@@ -74,7 +74,7 @@
 .tabs
     position: relative
     display: flex
-    width: 500px
+    width: 700px
     padding: 4px
     background: rgba(18, 18, 18, 0.40)
     border-radius: 50px
@@ -83,7 +83,7 @@
         content: ""
         position: absolute
         left: 4px
-        width: calc(50% - 4px)
+        width: calc(33.333% - 4px)
         height: 44px
         border-radius: 50px
         pointer-events: none
@@ -98,6 +98,10 @@
         &:before,
         &:after
             transform: translateX(100%)
+    &[data-state="generate"]
+        &:before,
+        &:after
+            transform: translateX(200%)
 
 .tab
     position: relative
@@ -108,13 +112,15 @@
     align-items: center
     height: 44px
     flex: 1
-    font-size: 15px
+    font-size: 14px
     font-weight: 600
     color: rgba($n2, .56)
     transition: color .2s
     background: none
     border: none
     cursor: pointer
+    white-space: nowrap
+    padding: 0 12px
     svg
         width: 18px
         height: 18px

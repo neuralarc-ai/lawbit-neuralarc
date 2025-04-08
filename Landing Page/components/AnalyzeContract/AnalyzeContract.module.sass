@@ -1226,62 +1226,25 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
 .legalDisclaimer
     margin-top: 24px
     margin-bottom: 32px
-    padding: 20px 24px
+    padding: 20px
     background: rgba(18, 18, 18, 0.3)
     border: 1px solid rgba(255, 255, 255, 0.1)
-    border-radius: 16px
-    width: 100%
-    position: relative
-    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1)
-    backdrop-filter: blur(10px)
-    transition: all 0.3s ease
-    
-    &:before
-        content: ''
-        position: absolute
-        inset: 0
-        border-radius: 16px
-        padding: 1px
-        background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1))
-        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
-        -webkit-mask-composite: destination-out
-        mask-composite: exclude
-        pointer-events: none
+    border-radius: 12px
     
     .disclaimerTitle
         font-size: 16px
         font-weight: 600
         color: rgba(255, 255, 255, 0.9)
-        margin-bottom: 16px
-        display: flex
-        align-items: center
-        
-        &:before
-            content: ''
-            display: inline-block
-            width: 4px
-            height: 16px
-            margin-right: 10px
-            background: radial-gradient(circle at center, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 60%, rgba(248, 91, 66, 1) 100%)
-            border-radius: 2px
+        margin-bottom: 12px
     
     .disclaimerText
         font-size: 13px
-        line-height: 1.6
+        line-height: 1.5
         color: rgba(255, 255, 255, 0.6)
         margin: 0
         
         p
-            margin: 10px 0
-            &:first-child
-                margin-top: 0
-            &:last-child
-                margin-bottom: 0
-            
-    &:hover
-        border-color: rgba(255, 255, 255, 0.2)
-        background: rgba(18, 18, 18, 0.4)
-        box-shadow: 0 4px 8px -2px rgba(18, 18, 18, 0.1), inset 0 2px 2px rgba(255, 255, 255, 0.03) 
+            margin: 8px 0 
 
 .analyzingOverlay
     position: fixed
@@ -1289,97 +1252,11 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     left: 0
     right: 0
     bottom: 0
+    background: rgba(0, 0, 0, 0.85)
+    backdrop-filter: blur(10px)
     display: flex
     flex-direction: column
     align-items: center
     justify-content: center
     z-index: 1000
-    background: rgba(0, 0, 0, 0.85)
-    backdrop-filter: blur(8px)
-    animation: fadeIn 0.3s ease
-    gap: 32px
-
-.loadingIcon
-    width: 120px
-    height: 120px
-    position: relative
-    display: flex
-    align-items: center
-    justify-content: center
-    
-    .spinner
-        position: absolute
-        width: 120px
-        height: 120px
-        border-radius: 50%
-        border: 4px solid transparent
-        border-top: 4px solid rgba(248, 66, 178, 1)
-        border-right: 4px solid rgba(138, 48, 255, 1)
-        animation: spin 1.5s linear infinite
-    
-    .logo
-        position: relative
-        z-index: 2
-        width: 70px
-        height: 70px
-        opacity: 0.9
-        animation: pulse 2s infinite
-
-@keyframes pulse
-    0%
-        opacity: 0.7
-        transform: scale(0.95)
-    50%
-        opacity: 1
-        transform: scale(1.05)
-    100%
-        opacity: 0.7
-        transform: scale(0.95)
-
-@keyframes spin
-    0%
-        transform: rotate(0deg)
-    100%
-        transform: rotate(360deg)
-
-.loadingText
-    font-size: 24px
-    font-weight: 600
-    color: white
-    margin-bottom: 16px
-    text-align: center
-    background: linear-gradient(to right, rgba(138, 48, 255, 1), rgba(248, 66, 178, 1), rgba(248, 91, 66, 1))
-    -webkit-background-clip: text
-    -webkit-text-fill-color: transparent
-    background-clip: text
-    animation: shimmerText 2s infinite linear
-
-.loadingDescription
-    font-size: 16px
-    color: rgba(255, 255, 255, 0.7)
-    text-align: center
-    max-width: 600px
-    margin: 0 auto
-    line-height: 1.6
-
-@keyframes shimmerText
-    0%
-        background-position: -200% 0
-    100%
-        background-position: 200% 0 
-
-.progressBarContainer
-    width: 80%
-    max-width: 400px
-    height: 6px
-    background-color: rgba(255, 255, 255, 0.2)
-    border-radius: 10px
-    overflow: hidden
-    margin-top: 20px
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
-
-.progressBar
-    height: 100%
-    background: linear-gradient(90deg, #4a6cf7 0%, #6a8dff 100%)
-    border-radius: 10px
-    transition: width 0.3s ease 
+    border-radius: 32px 

@@ -15,7 +15,7 @@ export async function POST(request: Request) {
         const { contractType, firstPartyName, secondPartyName, jurisdiction, keyTerms, description, intensity, preference } = body;
 
         // Create prompt for contract generation
-        const prompt = `Generate a professional legal contract with the following specifications:
+        const prompt = `Generate a professional legal draft with the following specifications:
         Contract Type: ${contractType}
         First Party: ${firstPartyName}
         Second Party: ${secondPartyName}
@@ -27,16 +27,16 @@ export async function POST(request: Request) {
 
         IMPORTANT FORMATTING INSTRUCTIONS:
         1. DO NOT use any markdown symbols (*, #, -, etc.)
-        2. Use proper legal document formatting with clear section headings in CAPITAL LETTERS
+        2. Use proper legal drafting formatting with clear section headings in CAPITAL LETTERS
         3. Use proper indentation and spacing (4 spaces for each level)
         4. Use proper legal numbering system (1.1, 1.1.1, etc.)
         5. Use proper legal language based on the intensity level
-        6. Include proper date formatting (e.g., "this 1st day of January, 2024")
+        6. Include proper date formatting (Date of Agreement)
         7. Use proper party definitions and references
         8. Include proper signature blocks
-        9. Use proper legal document structure:
-           TITLE
-           PARTIES
+        9. Use proper legal draft structure:
+           TITLE 
+           PARTIES 
            RECITALS
            DEFINITIONS
            MAIN BODY

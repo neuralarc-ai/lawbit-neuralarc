@@ -157,8 +157,8 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                 // Configure request differently based on type
                 if (type === 'jurisdiction') {
                     // For jurisdictions
-                    const request = {
-                        input: newValue,
+                const request = {
+                    input: newValue,
                         types: ['(regions)']
                     };
                     const results = await autocompleteServiceRef.current.getPlacePredictions(request);
@@ -275,37 +275,59 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             if (place) {
                 if (type === 'jurisdiction') {
                     const addressComponents = place.address_components || [];
-                    // Improved component selection prioritizing more specific components
+                    // Get only city, state, and country components
                     const getComponent = (types: string[]) => {
                         for (const type of types) {
-                            const component = addressComponents.find(
-                                (comp: any) => comp.types.includes(type)
-                            );
+                        const component = addressComponents.find(
+                            (comp: any) => comp.types.includes(type)
+                        );
                             if (component) return component.long_name;
                         }
                         return '';
                     };
 
-                    // Build jurisdiction with more granularity
-                    const jurisdiction = [
-                        getComponent(['locality', 'sublocality']),
-                        getComponent(['administrative_area_level_3']),
-                        getComponent(['administrative_area_level_2']),
-                        getComponent(['administrative_area_level_1']),
-                        getComponent(['country'])
-                    ].filter(Boolean).join(', ');
+                    // Build jurisdiction with only city, state, and country
+                    const city = getComponent(['locality', 'sublocality']);
+                    const state = getComponent(['administrative_area_level_1']);
+                    const country = getComponent(['country']);
+
+                    const jurisdiction = [city, state, country]
+                        .filter(Boolean)
+                        .join(', ');
 
                     if (jurisdiction) {
                         setInputValue(jurisdiction);
                         onChange(jurisdiction);
                     } else {
-                        // Fallback to Google's full formatted address if components approach fails
-                        setInputValue(prediction.description);
-                        onChange(prediction.description);
+                        // Fallback to a simplified version of the prediction description
+                        const parts = prediction.description.split(',');
+                        const simplifiedParts = parts
+                            .map(part => part.trim())
+                            .filter(part => part.length > 0)
+                            .slice(0, 3); // Take only first 3 parts (city, state, country)
+                        setInputValue(simplifiedParts.join(', '));
+                        onChange(simplifiedParts.join(', '));
                     }
                 } else {
-                    // For addresses, use the full formatted address from Google
-                    const formattedAddress = place.formatted_address || prediction.description || '';
+                    // For addresses, extract postal code and include it in the formatted address
+                    const addressComponents = place.address_components || [];
+                    const postalCode = addressComponents.find(
+                        (comp: any) => comp.types.includes('postal_code')
+                    )?.long_name || '';
+                    
+                    // Get the formatted address from Google
+                    let formattedAddress = place.formatted_address || prediction.description || '';
+                    
+                    // If we found a postal code and it's not already in the formatted address, append it
+                    if (postalCode && !formattedAddress.includes(postalCode)) {
+                        // Check if the address already ends with a comma
+                        if (formattedAddress.endsWith(',')) {
+                            formattedAddress += ` ${postalCode}`;
+                        } else {
+                            formattedAddress += `, ${postalCode}`;
+                        }
+                    }
+                    
                     setInputValue(formattedAddress);
                     onChange(formattedAddress);
                 }

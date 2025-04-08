@@ -1,0 +1,296 @@
+@import @/styles/variables
+
+.container
+  display: flex
+  flex-direction: column
+  width: 100%
+  height: 100%
+  color: $n1
+  position: relative
+  padding: 0
+
+.content
+  display: flex
+  flex-direction: column
+  gap: 24px
+  max-width: 100%
+  width: 100%
+  padding: 24px
+  position: relative
+
+.title
+  font-size: 24px
+  font-weight: 600
+  margin-bottom: 8px
+  color: $n1
+
+.inputArea
+  width: 100%
+  min-height: 200px
+  margin-bottom: 20px
+  border-radius: 16px
+  background: rgba(41, 41, 41, 0.25)
+  backdrop-filter: blur(10px)
+  -webkit-backdrop-filter: blur(10px)
+  border: 1px solid rgba(255, 255, 255, 0.08)
+  position: relative
+  overflow: hidden
+
+.textarea
+  width: 100%
+  height: 100%
+  min-height: 200px
+  padding: 20px
+  resize: none
+  background: transparent
+  color: $n1
+  font-size: 16px
+  border: none
+  outline: none
+  font-family: inherit
+  &::placeholder
+    color: rgba($n1, 0.5)
+
+.legalDisclaimer
+  margin: 20px 0
+  padding: 20px
+  border-radius: 16px
+  background: rgba(41, 41, 41, 0.25)
+  backdrop-filter: blur(10px)
+  -webkit-backdrop-filter: blur(10px)
+  border: 1px solid rgba(255, 255, 255, 0.08)
+  position: relative
+  transition: all 0.3s ease
+  
+  &::before
+    content: ""
+    position: absolute
+    top: 0
+    left: 0
+    width: 4px
+    height: 100%
+    background: linear-gradient(180deg, #FF5CAA 0%, #6950FB 100%)
+    border-radius: 4px 0 0 4px
+
+.disclaimerTitle
+  font-size: 18px
+  font-weight: 600
+  margin-bottom: 16px
+  color: $n1
+
+.disclaimerText
+  color: rgba($n1, 0.8)
+  font-size: 14px
+  line-height: 1.5
+  
+  p
+    margin-bottom: 12px
+    &:last-child
+      margin-bottom: 0
+
+.actionsRow
+  display: flex
+  justify-content: center
+  margin-top: 24px
+
+.generateButton
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 16px 32px
+  font-size: 16px
+  font-weight: 600
+  color: $n1
+  background: linear-gradient(90deg, #FF5CAA 0%, #6950FB 100%)
+  border: none
+  border-radius: 30px
+  cursor: pointer
+  transition: all 0.3s ease
+  text-transform: none
+  min-width: 240px
+  
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2)
+  
+  &:disabled
+    opacity: 0.7
+    cursor: not-allowed
+    transform: none
+    box-shadow: none
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)
+  
+  &.generating
+    opacity: 0.7
+    cursor: wait
+
+.generatingOverlay
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background: rgba(0, 0, 0, 0.85)
+  backdrop-filter: blur(10px)
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  z-index: 1000
+  border-radius: 32px
+
+.loadingIcon
+  position: relative
+  width: 120px
+  height: 120px
+  margin-bottom: 32px
+
+.spinner
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  border: 4px solid transparent
+  border-top-color: #FF5CAA
+  border-right-color: #6950FB
+  border-radius: 50%
+  animation: spin 1s linear infinite
+
+.logo
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  animation: pulse 2s ease-in-out infinite
+
+.loadingText
+  font-size: 24px
+  font-weight: 600
+  color: $n1
+  margin-bottom: 8px
+  background: linear-gradient(90deg, #FF5CAA, #6950FB)
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+  animation: shimmer 2s linear infinite
+
+.loadingDescription
+  font-size: 16px
+  color: rgba($n1, 0.7)
+  margin-bottom: 24px
+  text-align: center
+
+.progressBarContainer
+  width: 300px
+  height: 4px
+  background: rgba(255, 255, 255, 0.1)
+  border-radius: 2px
+  overflow: hidden
+
+.progressBar
+  height: 100%
+  background: linear-gradient(90deg, #FF5CAA, #6950FB)
+  transition: width 0.3s ease
+
+.resultSection
+  width: 100%
+  padding: 24px
+  background: rgba(41, 41, 41, 0.25)
+  backdrop-filter: blur(10px)
+  border: 1px solid rgba(255, 255, 255, 0.08)
+  border-radius: 16px
+
+.contractContent
+  color: $n1
+  font-size: 14px
+  line-height: 1.6
+  white-space: pre-wrap
+  margin: 24px 0
+  max-height: 500px
+  overflow-y: auto
+  padding: 20px
+  background: rgba(0, 0, 0, 0.2)
+  border-radius: 12px
+  border: 1px solid rgba(255, 255, 255, 0.1)
+  &::-webkit-scrollbar
+    width: 8px
+  &::-webkit-scrollbar-track
+    background: rgba(255, 255, 255, 0.05)
+    border-radius: 4px
+  &::-webkit-scrollbar-thumb
+    background: rgba(255, 255, 255, 0.1)
+    border-radius: 4px
+    &:hover
+      background: rgba(255, 255, 255, 0.2)
+
+.downloadSection
+  display: flex
+  justify-content: center
+  gap: 16px
+  margin-top: 24px
+  flex-wrap: wrap
+
+.actionButton
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 8px
+  padding: 12px 24px
+  font-size: 14px
+  font-weight: 600
+  color: $n1
+  background: rgba(255, 255, 255, 0.1)
+  border: 1px solid rgba(255, 255, 255, 0.2)
+  border-radius: 30px
+  cursor: pointer
+  transition: all 0.3s ease
+  min-width: 160px
+  &:hover
+    background: rgba(255, 255, 255, 0.15)
+    transform: translateY(-2px)
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2)
+  &.success
+    background: rgba(39, 174, 96, 0.2)
+    border-color: rgba(39, 174, 96, 0.3)
+    color: #2ecc71
+
+.newDraftButton
+  display: flex
+  align-items: center
+  justify-content: center
+  margin: 32px auto 0
+  padding: 12px 24px
+  font-size: 14px
+  font-weight: 600
+  color: $n1
+  background: linear-gradient(90deg, #FF5CAA 0%, #6950FB 100%)
+  border: none
+  border-radius: 30px
+  cursor: pointer
+  transition: all 0.3s ease
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2)
+
+@keyframes spin
+  from
+    transform: rotate(0deg)
+  to
+    transform: rotate(360deg)
+
+@keyframes pulse
+  0%
+    opacity: 0.5
+    transform: translate(-50%, -50%) scale(0.95)
+  50%
+    opacity: 1
+    transform: translate(-50%, -50%) scale(1.05)
+  100%
+    opacity: 0.5
+    transform: translate(-50%, -50%) scale(0.95)
+
+@keyframes shimmer
+  0%
+    background-position: -200% center
+  100%
+    background-position: 200% center 

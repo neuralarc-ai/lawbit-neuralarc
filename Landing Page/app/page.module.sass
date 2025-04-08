@@ -578,66 +578,115 @@
 // Pricing buttons
 .pricingButton
     width: 100%
-    padding: 18px 24px
-    font-size: 16px
+    padding: 16px 24px
+    font-size: 18px
     font-weight: 600
-    border-radius: 16px
-    transition: all 0.3s ease
+    border-radius: 24px
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
     transform: translateY(0)
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1)
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12)
     position: relative
     overflow: hidden
-    letter-spacing: 0.5px
-    display: flex
-    align-items: center
-    justify-content: center
-
+    text-transform: uppercase
+    letter-spacing: 1px
+    
+    &:before
+        content: ''
+        position: absolute
+        top: 0
+        left: -100%
+        width: 100%
+        height: 100%
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0))
+        z-index: 1
+        opacity: 0
+        transition: all 0.6s ease
+    
     &:hover
-        transform: translateY(-4px)
-        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15)
+        transform: translateY(-5px) scale(1.03)
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25)
+        
+        &:before
+            opacity: 1
+            left: 100%
+            animation: shimmer 1.5s infinite
 
 .freeButton
-    background: linear-gradient(to right, #4A6572, #334752)
-    border: 1px solid rgba(255, 255, 255, 0.2)
+    background: linear-gradient(45deg, #4A6572, #334752)
+    border: 2px solid rgba(255, 255, 255, 0.2)
     color: white
+    background-size: 150% 150%
+    animation: gradientBG 8s ease infinite
     
     &:hover
-        background: linear-gradient(to right, #5A7582, #435762)
-        border-color: rgba(255, 255, 255, 0.3)
+        background: linear-gradient(45deg, #5A7582, #435762)
+        border-color: rgba(255, 255, 255, 0.4)
 
 .standardButton
-    background: linear-gradient(to right, #607D8B, #455A64)
-    border: 1px solid rgba(255, 255, 255, 0.2)
+    background: linear-gradient(45deg, #607D8B, #455A64)
+    border: 2px solid rgba(255, 255, 255, 0.2)
     color: white
+    background-size: 150% 150%
+    animation: gradientBG 8s ease infinite
+    animation-delay: 0.3s
     
     &:hover
-        background: linear-gradient(to right, #708D9B, #556A74)
-        border-color: rgba(255, 255, 255, 0.3)
+        background: linear-gradient(45deg, #708D9B, #556A74)
+        border-color: rgba(255, 255, 255, 0.4)
 
 .popularButton
-    background: linear-gradient(to right, #8A30FF, #F842B2)
+    background: linear-gradient(45deg, #8A30FF, #F842B2)
     border: none
     color: white
     position: relative
     z-index: 1
-    box-shadow: 0 8px 16px rgba(138, 48, 255, 0.2)
+    box-shadow: 0 8px 20px rgba(138, 48, 255, 0.3), 0 0 0 4px rgba(248, 66, 178, 0.1)
+    background-size: 200% 200%
+    animation: gradientBG 6s ease infinite
     
     &:after
         content: ''
         position: absolute
-        top: -1px
-        left: -1px
-        right: -1px
-        bottom: -1px
-        background: linear-gradient(to right, #8A30FF, #F842B2)
+        top: -2px
+        left: -2px
+        right: -2px
+        bottom: -2px
+        background: linear-gradient(45deg, #8A30FF, #F842B2, #FF4E90, #8A30FF)
+        background-size: 400% 400%
         z-index: -1
-        border-radius: 17px
-        opacity: 0
-        transition: opacity 0.3s ease
+        border-radius: 26px
+        animation: borderAnimation 3s ease-in-out infinite
         
     &:hover
-        background: linear-gradient(to right, #9B41FF, #F953C3)
-        box-shadow: 0 12px 20px rgba(138, 48, 255, 0.3)
+        background: linear-gradient(45deg, #9B41FF, #F953C3)
+        box-shadow: 0 15px 30px rgba(138, 48, 255, 0.4), 0 0 0 6px rgba(248, 66, 178, 0.15)
+        transform: translateY(-8px) scale(1.05)
+
+@keyframes shimmer
+    0%
+        left: -100%
+        opacity: 0
+    20%
+        opacity: 1
+    100%
+        left: 100%
+        opacity: 0
+
+@keyframes gradientBG
+    0%
+        background-position: 0% 50%
+    50%
+        background-position: 100% 50%
+    100%
+        background-position: 0% 50%
+
+@keyframes borderAnimation
+    0%
+        background-position: 0% 50%
+    50%
+        background-position: 100% 50%
+    100%
+        background-position: 0% 50%
 
 .btnContent
     display: flex
@@ -654,14 +703,12 @@
     svg
         position: relative
         z-index: 2
-        transition: transform 0.3s ease
+        transition: all 0.3s ease
         flex-shrink: 0
-        opacity: 0.9
-
-.pricingButton:hover
-    .btnContent
+    
+    &:hover
         span
-            transform: translateX(-2px)
+            transform: translateX(-3px)
         
         svg
-            transform: translateX(2px)
+            transform: translateX(3px)

@@ -3,12 +3,13 @@ import cn from 'classnames';
 import styles from './Dashboard.module.sass';
 import CreateContract from '../CreateContract';
 import AnalyzeContract from '../AnalyzeContract';
+import GenerateLegalDraft from '../GenerateLegalDraft';
 import Image from 'next/image';
 import StarField from '@/components/StarField';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../Navbar';
 
-type TabType = 'create' | 'analyze';
+type TabType = 'create' | 'analyze' | 'generate';
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState<TabType>('create');
@@ -80,7 +81,7 @@ const Dashboard = () => {
                                 height={28}
                                 className={styles.tabIcon}
                             />
-                            Generate Legal Draft
+                            Legal Draft Template
                         </button>
                         <button 
                             className={cn(styles.tab, { [styles.active]: activeTab === 'analyze' })}
@@ -95,6 +96,19 @@ const Dashboard = () => {
                             />
                             Analyze Legal Draft
                         </button>
+                        <button 
+                            className={cn(styles.tab, { [styles.active]: activeTab === 'generate' })}
+                            onClick={() => setActiveTab('generate')}
+                        >
+                            <Image 
+                                src="/icons/generate.svg" 
+                                alt="Generate" 
+                                width={28} 
+                                height={28}
+                                className={styles.tabIcon}
+                            />
+                            Generate Legal Draft
+                        </button>
                     </div>
                 </motion.div>
 
@@ -108,7 +122,9 @@ const Dashboard = () => {
                         transition={{ duration: 0.3 }}
                     >
                         <div className={styles.mainContent}>
-                            {activeTab === 'create' ? <CreateContract /> : <AnalyzeContract />}
+                            {activeTab === 'create' ? <CreateContract /> : 
+                             activeTab === 'analyze' ? <AnalyzeContract /> : 
+                             <GenerateLegalDraft />}
                         </div>
                     </motion.div>
                 </AnimatePresence>

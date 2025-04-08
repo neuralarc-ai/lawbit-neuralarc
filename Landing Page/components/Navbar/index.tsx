@@ -33,7 +33,17 @@ const Navbar = () => {
             setUser(session?.user ?? null);
         });
 
-        return () => subscription.unsubscribe();
+        // Add event listener for opening subscription modal
+        const handleOpenSubscriptionModal = () => {
+            setIsSubscriptionModalOpen(true);
+        };
+        
+        window.addEventListener('openSubscriptionModal', handleOpenSubscriptionModal);
+
+        return () => {
+            subscription.unsubscribe();
+            window.removeEventListener('openSubscriptionModal', handleOpenSubscriptionModal);
+        };
     }, [supabase.auth]);
 
     const toggleMenu = () => {
