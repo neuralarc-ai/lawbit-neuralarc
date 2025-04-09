@@ -645,7 +645,7 @@ const CreateContract = () => {
         intensity: 'Simple',
         preference: 'Option A'
     });
-
+    const [isTemplateGenerated, setIsTemplateGenerated] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [generatedContract, setGeneratedContract] = useState<ContractResponse | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -915,6 +915,7 @@ const CreateContract = () => {
             contractSchema.parse(contractData);
             setIsLoading(true);
             setError(null);
+            setIsTemplateGenerated(true);
 
             // Check token usage before generating contracts
             const supabase = createClient();
@@ -1925,18 +1926,22 @@ const CreateContract = () => {
                             <button
                                 type="button"
                                 className={cn(styles.tabButton, {
-                                    [styles.active]: contractData.preference === 'Option A'
+                                    [styles.active]: contractData.preference === 'Option A',
+                                    [styles.disabled]: !isTemplateGenerated
                                 })}
                                 onClick={() => handlePreferenceChange('Option A')}
+                                disabled={!isTemplateGenerated}
                             >
                                 Option A
                             </button>
                             <button
                                 type="button"
                                 className={cn(styles.tabButton, {
-                                    [styles.active]: contractData.preference === 'Option B'
+                                    [styles.active]: contractData.preference === 'Option B',
+                                    [styles.disabled]: !isTemplateGenerated
                                 })}
                                 onClick={() => handlePreferenceChange('Option B')}
+                                disabled={!isTemplateGenerated}
                             >
                                 Option B
                             </button>

@@ -94,14 +94,18 @@
     &:after
         border: 1.5px solid rgba(255, 255, 255, 0.05)
         mask-image: linear-gradient(172deg, black, transparent 50%)
-    &[data-state="analyze"]
+    &[data-state="create"]
         &:before,
         &:after
             transform: translateX(100%)
-    &[data-state="generate"]
+    &[data-state="analyze"]
         &:before,
         &:after
             transform: translateX(200%)
+    &[data-state="generate"]
+        &:before,
+        &:after
+            transform: translateX(0)
 
 .tab
     position: relative

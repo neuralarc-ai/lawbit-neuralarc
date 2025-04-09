@@ -12,7 +12,7 @@ import Navbar from '../Navbar';
 type TabType = 'create' | 'analyze' | 'generate';
 
 const Dashboard = () => {
-    const [activeTab, setActiveTab] = useState<TabType>('create');
+    const [activeTab, setActiveTab] = useState<TabType>('generate');
 
     const starfieldVariants = {
         hidden: { opacity: 0 },
@@ -71,6 +71,19 @@ const Dashboard = () => {
                 >
                     <div className={styles.tabs} data-state={activeTab}>
                         <button 
+                            className={cn(styles.tab, { [styles.active]: activeTab === 'generate' })}
+                            onClick={() => setActiveTab('generate')}
+                        >
+                            <Image 
+                                src="/icons/generate.svg" 
+                                alt="Generate" 
+                                width={28} 
+                                height={28}
+                                className={styles.tabIcon}
+                            />
+                            Generate Legal Draft
+                        </button>
+                        <button 
                             className={cn(styles.tab, { [styles.active]: activeTab === 'create' })}
                             onClick={() => setActiveTab('create')}
                         >
@@ -95,19 +108,6 @@ const Dashboard = () => {
                                 className={styles.tabIcon}
                             />
                             Analyze Legal Draft
-                        </button>
-                        <button 
-                            className={cn(styles.tab, { [styles.active]: activeTab === 'generate' })}
-                            onClick={() => setActiveTab('generate')}
-                        >
-                            <Image 
-                                src="/icons/generate.svg" 
-                                alt="Generate" 
-                                width={28} 
-                                height={28}
-                                className={styles.tabIcon}
-                            />
-                            Generate Legal Draft
                         </button>
                     </div>
                 </motion.div>

@@ -148,8 +148,13 @@ const AnalyzeContract = () => {
             return;
         }
 
-        if (!file) {
+        if (activeTab === 'upload' && !file) {
             toast.error('Please upload a contract first');
+            return;
+        }
+
+        if (activeTab === 'paste' && !text.trim()) {
+            toast.error('Please enter some text to analyze');
             return;
         }
 
@@ -186,22 +191,14 @@ const AnalyzeContract = () => {
 
             let response;
             if (activeTab === 'upload') {
-                if (!file) {
-                    throw new Error('Please select a file to analyze');
-                }
-
                 const formData = new FormData();
-                formData.append('file', file);
+                formData.append('file', file!);
 
                 response = await fetch('/api/analyze/file', {
                     method: 'POST',
                     body: formData
                 });
             } else {
-                if (!text.trim()) {
-                    throw new Error('Please enter some text to analyze');
-                }
-
                 response = await fetch('/api/analyze', {
                     method: 'POST',
                     headers: {
