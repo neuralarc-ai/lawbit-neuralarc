@@ -1,14 +1,16 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import cn from 'classnames';
 import styles from './AnalyzeContract.module.sass';
 import { AnalysisResponse, ClauseAnalysis, SuggestedAlternative } from '@/services/analysisService';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-import Image from 'next/image';
+import Image from '@/components/Image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '../Toast/Toaster';
 import { useSupabase } from '@/components/Providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
 import Button from '../../components/Button';
+import Icon from '@/components/Icon';
+import toast from 'react-hot-toast';
 
 const AnalyzeContract = () => {
     const { showToast } = useToast();
@@ -26,6 +28,8 @@ const AnalyzeContract = () => {
     const [expandedAlternative, setExpandedAlternative] = useState<{ [key: string]: number | null }>({});
     const [analysisStep, setAnalysisStep] = useState(0);
     const [analysisProgress, setAnalysisProgress] = useState(0);
+    const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
+    const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false);
 
     // Analysis steps descriptions
     const analysisSteps = [
@@ -131,10 +135,21 @@ const AnalyzeContract = () => {
         setError(null);
     };
 
-    const handleAnalyze = async () => {
+    const handleAnalyze = useCallback(async () => {
         if (!user) {
             showToast('Please sign in to analyze a contract');
             router.push('/auth/signin');
+            return;
+        }
+
+        if (!isDisclaimerAccepted) {
+            toast.error('Please accept the legal disclaimer before proceeding');
+            setIsDisclaimerOpen(true);
+            return;
+        }
+
+        if (!file) {
+            toast.error('Please upload a contract first');
             return;
         }
 
@@ -266,7 +281,7 @@ const AnalyzeContract = () => {
         } finally {
             setIsAnalyzing(false);
         }
-    };
+    }, [user, supabase, activeTab, text, file, isDisclaimerAccepted]);
 
     // Calculate risk score based on clause risk levels
     const calculateRiskScore = (clauses: ClauseAnalysis[]): number => {
@@ -606,6 +621,10 @@ const AnalyzeContract = () => {
         return `${month} ${day}, ${year} at ${hours}:${minutes}`;
     };
 
+    const toggleDisclaimer = useCallback(() => {
+        setIsDisclaimerOpen(prev => !prev);
+    }, []);
+
     return (
         <div className={styles.container}>
             <AnimatePresence mode="wait">
@@ -736,16 +755,47 @@ const AnalyzeContract = () => {
                     )}
                     
                     <div className={styles.legalDisclaimer}>
-                        <div className={styles.disclaimerTitle}>Legal Disclaimer</div>
-                        <div className={styles.disclaimerText}>
-                            <p>This website provides tools for creating and analyzing legal documents for informational purposes only. It does not offer legal advice, representation, or services in any jurisdiction.</p>
-                            
-                            <p>No attorney-client relationship is established through the use of this website. The documents, templates, and analyses generated are not a substitute for professional legal advice. Laws and regulations vary across jurisdictions and are subject to change. We do not guarantee the completeness, accuracy, or suitability of any content for your specific legal needs.</p>
-                            
-                            <p>You acknowledge that any reliance on the materials provided is at your own risk. We disclaim all liability for any errors, omissions, or outcomes resulting from the use of this website. For legally binding advice and document validation, always consult a qualified legal professional.</p>
-                            
-                            <p>By using this website, you agree to these terms and accept full responsibility for any decisions made based on the content provided.</p>
+                        <button 
+                            className={styles.disclaimerHeader}
+                            onClick={toggleDisclaimer}
+                            type="button"
+                        >
+                            <div className={styles.headerContent}>
+                                <h3 className={styles.disclaimerTitle}>
+                                    Legal Disclaimer
+                                    <span className={styles.requiredBadge}>Required</span>
+                                </h3>
+                                <Icon
+                                    className={cn(styles.chevron, {
+                                        [styles.open]: isDisclaimerOpen
+                                    })}
+                                    name="chevron-down"
+                                />
+                            </div>
+                        </button>
+                        <div className={cn(styles.disclaimerContent, {
+                            [styles.open]: isDisclaimerOpen
+                        })}>
+                            <div className={styles.disclaimerText}>
+                                <p>The contract analysis provided by this tool is for informational purposes only and does not constitute legal advice.</p>
+                                <p>The analysis is based on automated processing and may not identify all legal issues or risks present in your contract.</p>
+                                <p>We strongly recommend having any contract reviewed by a qualified legal professional before signing or relying on it.</p>
+                                <p>By proceeding, you acknowledge that you understand the limitations of this automated analysis tool.</p>
+                            </div>
                         </div>
+                        <label className={cn(styles.acceptanceRow, styles.required)}>
+                            <div className={styles.checkbox}>
+                                <input
+                                    type="checkbox"
+                                    checked={isDisclaimerAccepted}
+                                    onChange={(e) => setIsDisclaimerAccepted(e.target.checked)}
+                                />
+                                <span className={styles.checkmark}></span>
+                            </div>
+                            <span className={styles.label}>
+                                I understand and accept the legal disclaimer
+                            </span>
+                        </label>
                     </div>
                     
                     <div className={styles.actionsRow}>
@@ -782,10 +832,10 @@ const AnalyzeContract = () => {
                         <button 
                             type="button" 
                             className={cn(styles.analyzeButton, {
-                                [styles.analyzing]: isAnalyzing
+                                [styles.disabled]: !isDisclaimerAccepted
                             })} 
                             onClick={handleAnalyze}
-                            disabled={isAnalyzing}
+                            disabled={!isDisclaimerAccepted}
                         >
                             <span>{isAnalyzing ? 'Analyzing...' : 'Analyze Your Draft Now'}</span>
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

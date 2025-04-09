@@ -1224,27 +1224,185 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
             border-radius: 4px 
 
 .legalDisclaimer
-    margin-top: 24px
-    margin-bottom: 32px
-    padding: 20px
-    background: rgba(18, 18, 18, 0.3)
-    border: 1px solid rgba(255, 255, 255, 0.1)
-    border-radius: 12px
-    
-    .disclaimerTitle
-        font-size: 16px
-        font-weight: 600
-        color: rgba(255, 255, 255, 0.9)
-        margin-bottom: 12px
-    
+    margin: 24px 0
+    width: 100%
+    background: rgba(18, 18, 18, 0.4)
+    border: 1px solid rgba(255, 255, 255, 0.15)
+    border-radius: 16px
+    overflow: hidden
+    transition: all 0.3s ease
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2)
+
+    .disclaimerHeader
+        width: 100%
+        background: none
+        border: none
+        padding: 0
+        cursor: pointer
+        text-align: left
+
+        .headerContent
+            display: flex
+            align-items: center
+            justify-content: space-between
+            padding: 20px
+            background: rgba(255, 255, 255, 0.03)
+            transition: all 0.3s ease
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+
+            &:hover
+                background: rgba(255, 255, 255, 0.05)
+
+        .disclaimerTitle
+            font-size: 16px
+            font-weight: 600
+            color: rgba(255, 255, 255, 0.9)
+            margin: 0
+            display: flex
+            align-items: center
+            gap: 12px
+
+            .requiredBadge
+                font-size: 12px
+                font-weight: 500
+                color: #FF453A
+                background: rgba(255, 69, 58, 0.1)
+                padding: 4px 8px
+                border-radius: 12px
+                border: 1px solid rgba(255, 69, 58, 0.3)
+
+        .chevron
+            transition: transform 0.3s ease
+            opacity: 0.7
+            &.open
+                transform: rotate(180deg)
+
+    .disclaimerContent
+        max-height: 0
+        overflow: hidden
+        transition: all 0.3s ease-out
+        background: rgba(255, 255, 255, 0.02)
+
+        &.open
+            max-height: 500px
+            padding: 24px
+
     .disclaimerText
-        font-size: 13px
-        line-height: 1.5
-        color: rgba(255, 255, 255, 0.6)
-        margin: 0
-        
+        color: rgba(255, 255, 255, 0.7)
+        font-size: 14px
+        line-height: 1.6
+
         p
-            margin: 8px 0 
+            margin: 16px 0
+            padding-left: 24px
+            position: relative
+            
+            &:first-child
+                margin-top: 0
+                padding-left: 0
+            
+            &:last-child
+                margin-bottom: 0
+            
+            &:not(:first-child)
+                &:before
+                    content: ''
+                    position: absolute
+                    left: 0
+                    top: 8px
+                    width: 6px
+                    height: 6px
+                    background: rgba(255, 255, 255, 0.3)
+                    border-radius: 50%
+
+    .acceptanceRow
+        display: flex
+        align-items: center
+        padding: 20px
+        background: rgba(255, 255, 255, 0.03)
+        border-top: 1px solid rgba(255, 255, 255, 0.1)
+        cursor: pointer
+        transition: all 0.3s ease
+
+        &:hover
+            background: rgba(255, 255, 255, 0.05)
+
+        &.required
+            .label:after
+                content: '*'
+                color: #FF453A
+                margin-left: 4px
+
+        .checkbox
+            position: relative
+            display: inline-block
+            width: 24px
+            height: 24px
+            margin-right: 12px
+
+            input
+                position: absolute
+                opacity: 0
+                cursor: pointer
+                height: 0
+                width: 0
+
+            .checkmark
+                position: absolute
+                top: 0
+                left: 0
+                height: 24px
+                width: 24px
+                background: rgba(255, 255, 255, 0.1)
+                border-radius: 6px
+                transition: all 0.2s ease
+                border: 1px solid rgba(255, 255, 255, 0.2)
+
+                &:after
+                    content: ""
+                    position: absolute
+                    display: none
+                    left: 8px
+                    top: 3px
+                    width: 6px
+                    height: 12px
+                    border: solid white
+                    border-width: 0 2px 2px 0
+                    transform: rotate(45deg)
+
+            input:checked ~ .checkmark
+                background: #4CAF50
+                border-color: #4CAF50
+
+            input:checked ~ .checkmark:after
+                display: block
+
+        .label
+            color: rgba(255, 255, 255, 0.9)
+            font-size: 15px
+            user-select: none
+            font-weight: 500
+            line-height: 1.4
+
+.analyzeButton
+    &.disabled
+        opacity: 0.5
+        cursor: not-allowed
+        pointer-events: none
+        background: rgba(255, 255, 255, 0.1)
+        &:hover
+            transform: none
+            box-shadow: none
+
+    &:disabled
+        opacity: 0.5
+        cursor: not-allowed
+        background: linear-gradient(to right, rgba(138, 48, 255, 0.5), rgba(248, 66, 178, 0.5))
+        pointer-events: none
+        
+        &:hover
+            transform: none
+            box-shadow: none
 
 .analyzingOverlay
     position: fixed

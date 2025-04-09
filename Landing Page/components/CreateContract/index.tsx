@@ -666,6 +666,8 @@ const CreateContract = () => {
     const [showTooltip, setShowTooltip] = useState(false);
     const [tooltipText, setTooltipText] = useState('');
     const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+    const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
+    const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false);
 
     // Generation steps descriptions
     const generationSteps = [
@@ -897,6 +899,11 @@ const CreateContract = () => {
     // Update handleSubmit to generate both options
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (!isDisclaimerAccepted) {
+            showToast('Please accept the legal disclaimer to continue');
+            return;
+        }
         
         if (!user) {
             showToast('Please sign in to create a contract');
@@ -1731,16 +1738,58 @@ const CreateContract = () => {
                     </div>
                     
                     <div className={styles.legalDisclaimer}>
-                        <div className={styles.disclaimerTitle}>Legal Disclaimer</div>
-                        <div className={styles.disclaimerText}>
-                            <p>This website provides tools for creating and analyzing legal documents for informational purposes only. It does not offer legal advice, representation, or services in any jurisdiction.</p>
-                            
-                            <p>No attorney-client relationship is established through the use of this website. The documents, templates, and analyses generated are not a substitute for professional legal advice. Laws and regulations vary across jurisdictions and are subject to change. We do not guarantee the completeness, accuracy, or suitability of any content for your specific legal needs.</p>
-                            
-                            <p>You acknowledge that any reliance on the materials provided is at your own risk. We disclaim all liability for any errors, omissions, or outcomes resulting from the use of this website. For legally binding advice and document validation, always consult a qualified legal professional.</p>
-                            
-                            <p>By using this website, you agree to these terms and accept full responsibility for any decisions made based on the content provided.</p>
+                        <button 
+                            type="button"
+                            className={styles.disclaimerHeader} 
+                            onClick={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
+                        >
+                            <div className={styles.headerContent}>
+                                <h3 className={styles.disclaimerTitle}>Legal Disclaimer</h3>
+                                <Image 
+                                    src="/images/chevron-down.svg"
+                                    width={24}
+                                    height={24}
+                                    alt="Toggle"
+                                    className={cn(styles.chevron, {
+                                        [styles.open]: isDisclaimerOpen
+                                    })}
+                                />
+                            </div>
+                        </button>
+                        
+                        <div className={cn(styles.disclaimerContent, {
+                            [styles.open]: isDisclaimerOpen
+                        })}>
+                            <div className={styles.disclaimerText}>
+                                <p>
+                                    This AI-powered legal document generator is designed to provide general legal document templates and assistance. While we strive for accuracy and completeness, please note the following important points:
+                                </p>
+                                <p>
+                                    1. Not Legal Advice: The generated documents and information provided are not substitutes for professional legal advice. Consult with a qualified legal professional for specific legal matters.
+                                </p>
+                                <p>
+                                    2. No Attorney-Client Relationship: Use of this service does not create an attorney-client relationship between you and our platform or any affiliated parties.
+                                </p>
+                                <p>
+                                    3. Accuracy & Completeness: While we make efforts to keep information up-to-date and accurate, we cannot guarantee the completeness, accuracy, or adequacy of the generated documents for your specific needs.
+                                </p>
+                                <p>
+                                    4. Review Requirement: All generated documents should be thoroughly reviewed by a qualified legal professional before use or implementation.
+                                </p>
+                            </div>
                         </div>
+                        
+                        <label className={cn(styles.checkbox, styles.acceptanceRow)}>
+                            <input 
+                                type="checkbox"
+                                checked={isDisclaimerAccepted}
+                                onChange={(e) => setIsDisclaimerAccepted(e.target.checked)}
+                            />
+                            <span className={styles.checkmark}></span>
+                            <span className={styles.label}>
+                                I understand and accept the legal disclaimer
+                            </span>
+                        </label>
                     </div>
                     
                     <button type="submit" className={styles.submitButton} disabled={isLoading}>

@@ -1,0 +1,195 @@
+@import ../../styles/variables
+
+$p1: #FF5CAA // Primary color variable
+
+.container
+  display: flex
+  flex-direction: column
+  width: 100%
+  height: 100%
+  color: $n1
+  position: relative
+  border-radius: 48px
+
+.innerContainer
+  position: relative
+  width: 100%
+  height: 100%
+  background: linear-gradient(169.29deg, rgba(32, 32, 32, 0.4) 0%, rgba(32, 32, 32, 0.2) 100%)
+  backdrop-filter: blur(24px)
+  border-radius: 40px
+  padding: 2px
+
+.content
+  display: flex
+  flex-direction: column
+  gap: 24px
+  max-width: 100%
+  width: 100%
+  padding: 32px
+  position: relative
+  height: 100%
+  background: linear-gradient(169.29deg, rgba(32, 32, 32, 0.6) 0%, rgba(32, 32, 32, 0.3) 100%)
+  backdrop-filter: blur(24px)
+  border-radius: 32px
+
+.title
+  font-size: 24px
+  font-weight: 600
+  margin-bottom: 8px
+  color: $n1
+
+.templateGrid
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))
+  gap: 24px
+  margin-bottom: 32px
+
+.customizationSection
+  width: 100%
+  padding: 24px
+  background: rgba(41, 41, 41, 0.25)
+  backdrop-filter: blur(10px)
+  border: 1px solid rgba(255, 255, 255, 0.08)
+  border-radius: 16px
+  margin-bottom: 32px
+
+.legalDisclaimer
+  display: flex
+  flex-direction: column
+  gap: 16px
+  background: rgba(32, 32, 32, 0.4)
+  border-radius: 16px
+  overflow: hidden
+
+.disclaimerAccordion
+  border: 1px solid rgba(255, 255, 255, 0.1)
+  border-radius: 16px
+  overflow: hidden
+
+.disclaimerHeader
+  width: 100%
+  padding: 16px 24px
+  background: none
+  border: none
+  cursor: pointer
+  transition: background .2s
+  &:hover
+    background: rgba(255, 255, 255, 0.05)
+
+.headerContent
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 12px
+
+.disclaimerTitle
+  font-weight: 600
+  font-size: 18px
+  color: $n1
+
+.chevron
+  transition: transform .3s ease
+  &.open
+    transform: rotate(180deg)
+
+.disclaimerContent
+  max-height: 0
+  overflow: hidden
+  transition: max-height .3s ease-out
+  &.open
+    max-height: 800px
+
+.disclaimerText
+  padding: 0 24px 16px
+  color: rgba(255, 255, 255, 0.7)
+  font-size: 14px
+  line-height: 1.5
+  p
+    margin-bottom: 12px
+    &:last-child
+      margin-bottom: 0
+
+.acceptanceRow
+  padding: 16px
+  border: 1px solid rgba(255, 255, 255, 0.1)
+  background: rgba(32, 32, 32, 0.3)
+  border-radius: 12px
+
+.checkbox
+  display: flex
+  align-items: center
+  gap: 12px
+  cursor: pointer
+  user-select: none
+  input
+    position: absolute
+    opacity: 0
+    cursor: pointer
+    height: 0
+    width: 0
+  .checkmark
+    position: relative
+    height: 20px
+    width: 20px
+    background: rgba(255, 255, 255, 0.1)
+    border: 1px solid rgba(255, 255, 255, 0.2)
+    border-radius: 4px
+    transition: all .2s
+    &:after
+      content: ""
+      position: absolute
+      display: none
+      left: 6px
+      top: 2px
+      width: 5px
+      height: 10px
+      border: solid white
+      border-width: 0 2px 2px 0
+      transform: rotate(45deg)
+  input:checked ~ .checkmark
+    background: $p1
+    border-color: $p1
+    &:after
+      display: block
+  &:hover .checkmark
+    background: rgba(255, 255, 255, 0.15)
+  input:checked:hover ~ .checkmark
+    background: darken($p1, 5%)
+
+.label
+  color: $n1
+  font-size: 14px
+
+.actionsRow
+  display: flex
+  justify-content: center
+  margin-top: 24px
+
+.generateButton
+  display: inline-flex
+  align-items: center
+  height: 48px
+  padding: 0 32px
+  border-radius: 12px
+  background: linear-gradient(135deg, $p1 0%, darken($p1, 15%) 100%)
+  color: $n1
+  font-size: 16px
+  font-weight: 600
+  transition: all .2s
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 8px 24px rgba($p1, 0.25)
+  &.generating
+    opacity: 0.7
+    cursor: not-allowed
+    transform: none
+    box-shadow: none
+  &.disabled
+    opacity: 0.5
+    cursor: not-allowed
+    transform: none
+    box-shadow: none
+    &:hover
+      transform: none
+      box-shadow: none 

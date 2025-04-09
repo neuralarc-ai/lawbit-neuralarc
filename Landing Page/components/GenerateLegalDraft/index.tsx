@@ -11,6 +11,7 @@ import { createClient } from '@/lib/supabase';
 import { jsPDF } from 'jspdf';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
+import LegalDisclaimer from '../LegalDisclaimer'
 
 const GenerateLegalDraft = () => {
     const { showToast } = useToast();
@@ -23,6 +24,7 @@ const GenerateLegalDraft = () => {
     const [generationStep, setGenerationStep] = useState(0);
     const [generationProgress, setGenerationProgress] = useState(0);
     const [copySuccess, setCopySuccess] = useState(false);
+    const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
 
     const generationSteps = [
         "Analyzing your requirements...",
@@ -59,6 +61,10 @@ const GenerateLegalDraft = () => {
     }, [isGenerating, generationProgress]);
 
     const handleGenerate = async () => {
+        if (!disclaimerAccepted) {
+            // Show error or notification that user needs to accept disclaimer
+            return
+        }
         if (!user) {
             showToast('Please sign in to generate a legal draft');
             router.push('/auth/signin');
@@ -218,138 +224,138 @@ const GenerateLegalDraft = () => {
 
     return (
         <div className={styles.container}>
-            <AnimatePresence mode="wait">
-                {!generatedContract ? (
-                    <motion.div 
-                        className={styles.content}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <h2 className={styles.title}>Enter Your Details</h2>
-                        
-                        <div className={styles.inputArea}>
-                            <textarea
-                                className={styles.textarea}
-                                value={inputText}
-                                onChange={(e) => setInputText(e.target.value)}
-                                placeholder="Start Typing... Describe your legal requirements in detail. For example: I need a contract for a software development project where I will be hiring a freelance developer for 6 months..."
+            <div className={styles.innerContainer}>
+                <AnimatePresence mode="wait">
+                    {!generatedContract ? (
+                        <motion.div 
+                            className={styles.content}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
+                            <h2 className={styles.title}>Enter Your Details</h2>
+                            
+                            <div className={styles.inputArea}>
+                                <textarea
+                                    className={styles.textarea}
+                                    value={inputText}
+                                    onChange={(e) => setInputText(e.target.value)}
+                                    placeholder="Start Typing... Describe your legal requirements in detail. For example: I need a contract for a software development project where I will be hiring a freelance developer for 6 months..."
+                                />
+                            </div>
+                            
+                            <LegalDisclaimer 
+                                onAccept={setDisclaimerAccepted}
+                                isAccepted={disclaimerAccepted}
                             />
-                        </div>
-                        
-                        <div className={styles.legalDisclaimer}>
-                            <div className={styles.disclaimerTitle}>Legal Disclaimer</div>
-                            <div className={styles.disclaimerText}>
-                                <p>This website provides tools for creating and analyzing legal documents for informational purposes only. It does not offer legal advice, representation, or services in any jurisdiction.</p>
-                                <p>No attorney-client relationship is established through the use of this website. The documents, templates, and analyses generated are not a substitute for professional legal advice. Laws and regulations vary across jurisdictions and are subject to change. We do not guarantee the completeness, accuracy, or suitability of any content for your specific legal needs.</p>
-                                <p>You acknowledge that any reliance on the materials provided is at your own risk. We disclaim all liability for any errors, omissions, or outcomes resulting from the use of this website. For legally binding advice and document validation, always consult a qualified legal professional.</p>
-                                <p>By using this website, you agree to these terms and accept full responsibility for any decisions made based on the content provided.</p>
-                            </div>
-                        </div>
-                        
-                        <div className={styles.actionsRow}>
-                            <button 
-                                onClick={handleGenerate}
-                                className={cn(styles.generateButton, { [styles.generating]: isGenerating })}
-                                disabled={isGenerating || !inputText.trim()}
-                            >
-                                Generate Legal Draft &nbsp;→
-                            </button>
-                        </div>
-                    </motion.div>
-                ) : (
-                    <motion.div 
-                        className={styles.content}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <div className={styles.resultSection}>
-                            <h2 className={styles.title}>Generated Legal Draft</h2>
-                            <div className={styles.contractContent}>
-                                {generatedContract.content}
-                            </div>
-                            <div className={styles.downloadSection}>
+                            
+                            <div className={styles.actionsRow}>
                                 <button 
-                                    onClick={handleDownloadPDF}
-                                    className={styles.actionButton}
+                                    onClick={handleGenerate}
+                                    className={cn(styles.generateButton, { 
+                                        [styles.generating]: isGenerating,
+                                        [styles.disabled]: !disclaimerAccepted
+                                    })}
+                                    disabled={isGenerating || !inputText.trim() || !disclaimerAccepted}
                                 >
-                                    <Image 
-                                        src="/icons/pdf.svg" 
-                                        alt="PDF" 
-                                        width={20} 
-                                        height={20}
-                                    />
-                                    Download PDF
-                                </button>
-                                <button 
-                                    onClick={handleDownloadDOCX}
-                                    className={styles.actionButton}
-                                >
-                                    <Image 
-                                        src="/icons/word.svg" 
-                                        alt="Word" 
-                                        width={20} 
-                                        height={20}
-                                    />
-                                    Download Word
-                                </button>
-                                <button 
-                                    onClick={handleCopyText}
-                                    className={cn(styles.actionButton, { [styles.success]: copySuccess })}
-                                >
-                                    <Image 
-                                        src={copySuccess ? "/icons/check.svg" : "/icons/copy.svg"}
-                                        alt="Copy" 
-                                        width={20} 
-                                        height={20}
-                                    />
-                                    {copySuccess ? 'Copied!' : 'Copy Text'}
+                                    Generate Legal Draft &nbsp;→
                                 </button>
                             </div>
-                            <button 
-                                onClick={() => {
-                                    setGeneratedContract(null);
-                                    setInputText('');
-                                }}
-                                className={styles.newDraftButton}
-                            >
-                                Create New Draft
-                            </button>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                        </motion.div>
+                    ) : (
+                        <motion.div 
+                            className={styles.content}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
+                            <div className={styles.resultSection}>
+                                <h2 className={styles.title}>Generated Legal Draft</h2>
+                                <div className={styles.contractContent}>
+                                    {generatedContract.content}
+                                </div>
+                                <div className={styles.downloadSection}>
+                                    <button 
+                                        onClick={handleDownloadPDF}
+                                        className={styles.actionButton}
+                                    >
+                                        <Image 
+                                            src="/icons/pdf.svg" 
+                                            alt="PDF" 
+                                            width={20} 
+                                            height={20}
+                                        />
+                                        Download PDF
+                                    </button>
+                                    <button 
+                                        onClick={handleDownloadDOCX}
+                                        className={styles.actionButton}
+                                    >
+                                        <Image 
+                                            src="/icons/word.svg" 
+                                            alt="Word" 
+                                            width={20} 
+                                            height={20}
+                                        />
+                                        Download Word
+                                    </button>
+                                    <button 
+                                        onClick={handleCopyText}
+                                        className={cn(styles.actionButton, { [styles.success]: copySuccess })}
+                                    >
+                                        <Image 
+                                            src={copySuccess ? "/icons/check.svg" : "/icons/copy.svg"}
+                                            alt="Copy" 
+                                            width={20} 
+                                            height={20}
+                                        />
+                                        {copySuccess ? 'Copied!' : 'Copy Text'}
+                                    </button>
+                                </div>
+                                <button 
+                                    onClick={() => {
+                                        setGeneratedContract(null);
+                                        setInputText('');
+                                    }}
+                                    className={styles.newDraftButton}
+                                >
+                                    Create New Draft
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
-            <AnimatePresence>
-                {isGenerating && (
-                    <motion.div 
-                        className={styles.generatingOverlay}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <div className={styles.loadingIcon}>
-                            <div className={styles.spinner}></div>
-                            <Image 
-                                src="/icons/lawbit-preview.svg" 
-                                alt="LawBit Logo" 
-                                width={70} 
-                                height={70} 
-                                className={styles.logo}
-                            />
-                        </div>
-                        <h2 className={styles.loadingText}>Generating Your Legal Draft</h2>
-                        <p className={styles.loadingDescription}>{generationSteps[generationStep]}</p>
-                        <div className={styles.progressBarContainer}>
-                            <div 
-                                className={styles.progressBar} 
-                                style={{ width: `${generationProgress}%` }}
-                            ></div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                <AnimatePresence>
+                    {isGenerating && (
+                        <motion.div 
+                            className={styles.generatingOverlay}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
+                            <div className={styles.loadingIcon}>
+                                <div className={styles.spinner}></div>
+                                <Image 
+                                    src="/icons/lawbit-preview.svg" 
+                                    alt="LawBit Logo" 
+                                    width={70} 
+                                    height={70} 
+                                    className={styles.logo}
+                                />
+                            </div>
+                            <h2 className={styles.loadingText}>Generating Your Legal Draft</h2>
+                            <p className={styles.loadingDescription}>{generationSteps[generationStep]}</p>
+                            <div className={styles.progressBarContainer}>
+                                <div 
+                                    className={styles.progressBar} 
+                                    style={{ width: `${generationProgress}%` }}
+                                />
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
         </div>
     );
 };
