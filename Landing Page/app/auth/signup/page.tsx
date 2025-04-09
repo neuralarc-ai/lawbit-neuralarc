@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import styles from '../auth.module.sass'
 import { signUp } from '@/services/authService'
 import { useToast } from '@/components/Toast/Toaster'
+import PasswordStrength from '@/components/PasswordStrength/PasswordStrength'
 
 export default function SignUp() {
     const router = useRouter()
@@ -17,8 +18,24 @@ export default function SignUp() {
         mobile: ''
     })
 
+    const validatePassword = (password: string): boolean => {
+        const hasMinLength = password.length >= 8;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumbers = /[0-9]/.test(password);
+        const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+        
+        return hasMinLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        
+        if (!validatePassword(formData.password)) {
+            showToast('Please ensure your password meets all requirements')
+            return
+        }
+
         setLoading(true)
 
         try {
@@ -82,8 +99,8 @@ export default function SignUp() {
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required
-                    minLength={6}
                 />
+                <PasswordStrength password={formData.password} />
             </div>
 
             <div className={styles.field}>

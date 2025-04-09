@@ -8,6 +8,7 @@ import styles from './auth.module.sass'
 import { motion } from 'framer-motion'
 import StarField from '@/components/StarField'
 import Footer from '@/components/Footer'
+import Logo from '@/components/Logo'
 
 export default function AuthLayout({
     children,
@@ -31,14 +32,14 @@ export default function AuthLayout({
     return (
         <div className={styles.auth}>
             <div className={styles.starfieldWrapper}>
-            <motion.div 
-                className={styles.starfieldWrapper}
-                variants={starfieldVariants}
-                initial="hidden"
-                animate="visible"
-            >
-                <StarField />
-            </motion.div>
+                <motion.div 
+                    className={styles.starfieldWrapper}
+                    variants={starfieldVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    <StarField />
+                </motion.div>
                 <div className={styles.ellipse}>
                     <Image
                         src="/images/white-radial.svg"
@@ -49,16 +50,9 @@ export default function AuthLayout({
                     />
                 </div>
             </div>
+            
             <div className={styles.header}>
-                <Link href="/" className={styles.logo}>
-                    <Image
-                        src="/images/logo.svg"
-                        width={150}
-                        height={90}
-                        alt="LawBit"
-                        priority
-                    />
-                </Link>
+                <Logo width={150} height={90} />
                 <div className={styles.actions} data-state={isSignUp ? 'signup' : 'signin'}>
                     <Link
                         className={`${styles.link} ${

@@ -1,0 +1,51 @@
+@import @/styles/variables
+
+.logoWrapper
+    position: relative
+    display: inline-flex
+    align-items: center
+
+.logoLink
+    display: inline-flex
+    align-items: center
+    text-decoration: none
+    transition: opacity 0.2s ease
+    &:hover
+        opacity: 0.8
+
+.betaLabel
+    position: absolute
+    top: -8px
+    right: -24px
+    background: linear-gradient(90deg, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 100%)
+    color: white
+    font-size: 10px
+    font-weight: 600
+    padding: 2px 6px
+    border-radius: 4px
+    text-transform: uppercase
+    letter-spacing: 0.5px
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2)
+    animation: pulse 2s infinite
+    &::before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 4px
+        padding: 1px
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0))
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: xor
+        mask-composite: exclude
+        pointer-events: none
+
+@keyframes pulse
+    0%
+        transform: scale(1)
+        opacity: 1
+    50%
+        transform: scale(1.05)
+        opacity: 0.8
+    100%
+        transform: scale(1)
+        opacity: 1 
