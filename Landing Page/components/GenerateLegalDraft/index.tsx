@@ -25,6 +25,7 @@ const GenerateLegalDraft = () => {
     const [generationProgress, setGenerationProgress] = useState(0);
     const [copySuccess, setCopySuccess] = useState(false);
     const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
+    const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
 
     const generationSteps = [
         "Analyzing your requirements...",
@@ -225,106 +226,100 @@ const GenerateLegalDraft = () => {
     return (
         <div className={styles.container}>
             <div className={styles.innerContainer}>
-                <AnimatePresence mode="wait">
-                    {!generatedContract ? (
-                        <motion.div 
-                            className={styles.content}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                        >
-                            <h2 className={styles.title}>Enter Your Details</h2>
-                            
-                            <div className={styles.inputArea}>
-                                <textarea
-                                    className={styles.textarea}
-                                    value={inputText}
-                                    onChange={(e) => setInputText(e.target.value)}
-                                    placeholder="Start Typing... Describe your legal requirements in detail. For example: I need a contract for a software development project where I will be hiring a freelance developer for 6 months..."
-                                />
+                <div className={styles.content}>
+                    <h2 className={styles.title}>Generate Legal Draft</h2>
+                    
+                    <div className={styles.inputArea}>
+                        <textarea
+                            className={styles.textarea}
+                            value={inputText}
+                            onChange={(e) => setInputText(e.target.value)}
+                            placeholder="Describe your legal requirements here..."
+                        />
+                    </div>
+
+                    <div className={styles.legalDisclaimer}>
+                        <div className={styles.disclaimerHeader}>
+                            <div className={styles.disclaimerTitle}>
+                                Legal Disclaimer
+                                <span className={styles.requiredBadge}>Required</span>
                             </div>
-                            
-                            <LegalDisclaimer 
-                                onAccept={setDisclaimerAccepted}
-                                isAccepted={disclaimerAccepted}
-                            />
-                            
-                            <div className={styles.actionsRow}>
-                                <button 
-                                    onClick={handleGenerate}
-                                    className={cn(styles.generateButton, { 
-                                        [styles.generating]: isGenerating,
-                                        [styles.disabled]: !disclaimerAccepted
+                            <button 
+                                onClick={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
+                                className={styles.toggleButton}
+                                aria-expanded={isDisclaimerOpen}
+                                aria-label={isDisclaimerOpen ? "Close disclaimer" : "Open disclaimer"}
+                            >
+                                <svg 
+                                    width="20" 
+                                    height="20" 
+                                    viewBox="0 0 24 24" 
+                                    fill="none" 
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className={cn(styles.chevron, {
+                                        [styles.open]: isDisclaimerOpen
                                     })}
-                                    disabled={isGenerating || !inputText.trim() || !disclaimerAccepted}
                                 >
-                                    Generate Legal Draft &nbsp;→
-                                </button>
+                                    <path 
+                                        d="M6 9L12 15L18 9" 
+                                        stroke="currentColor" 
+                                        strokeWidth="2" 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div className={cn(styles.disclaimerContent, {
+                            [styles.open]: isDisclaimerOpen
+                        })}>
+                            <div className={styles.disclaimerText}>
+                                <p>This AI-powered legal document generator is designed to provide general legal document templates and assistance. While we strive for accuracy and completeness, please note the following important points:</p>
+                                <p>Not Legal Advice: The generated documents and information provided are not substitutes for professional legal advice. Consult with a qualified legal professional for specific legal matters.</p>
+                                <p>No Attorney-Client Relationship: Use of this service does not create an attorney-client relationship between you and our platform or any affiliated parties.</p>
+                                <p>Accuracy & Completeness: While we make efforts to keep information up-to-date and accurate, we cannot guarantee the completeness, accuracy, or adequacy of the generated documents for your specific needs.</p>
+                                <p>Review Requirement: All generated documents should be thoroughly reviewed by a qualified legal professional before use or implementation.</p>
                             </div>
-                        </motion.div>
-                    ) : (
-                        <motion.div 
-                            className={styles.content}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
+                        </div>
+
+                        <div 
+                            className={styles.acceptanceRow}
+                            onClick={() => setDisclaimerAccepted(!disclaimerAccepted)}
                         >
-                            <div className={styles.resultSection}>
-                                <h2 className={styles.title}>Generated Legal Draft</h2>
-                                <div className={styles.contractContent}>
-                                    {generatedContract.content}
-                                </div>
-                                <div className={styles.downloadSection}>
-                                    <button 
-                                        onClick={handleDownloadPDF}
-                                        className={styles.actionButton}
-                                    >
-                                        <Image 
-                                            src="/icons/pdf.svg" 
-                                            alt="PDF" 
-                                            width={20} 
-                                            height={20}
-                                        />
-                                        Download PDF
-                                    </button>
-                                    <button 
-                                        onClick={handleDownloadDOCX}
-                                        className={styles.actionButton}
-                                    >
-                                        <Image 
-                                            src="/icons/word.svg" 
-                                            alt="Word" 
-                                            width={20} 
-                                            height={20}
-                                        />
-                                        Download Word
-                                    </button>
-                                    <button 
-                                        onClick={handleCopyText}
-                                        className={cn(styles.actionButton, { [styles.success]: copySuccess })}
-                                    >
-                                        <Image 
-                                            src={copySuccess ? "/icons/check.svg" : "/icons/copy.svg"}
-                                            alt="Copy" 
-                                            width={20} 
-                                            height={20}
-                                        />
-                                        {copySuccess ? 'Copied!' : 'Copy Text'}
-                                    </button>
-                                </div>
-                                <button 
-                                    onClick={() => {
-                                        setGeneratedContract(null);
-                                        setInputText('');
-                                    }}
-                                    className={styles.newDraftButton}
-                                >
-                                    Create New Draft
-                                </button>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                            <label className={styles.checkbox}>
+                                <input
+                                    type="checkbox"
+                                    checked={disclaimerAccepted}
+                                    onChange={() => setDisclaimerAccepted(!disclaimerAccepted)}
+                                />
+                                <span className={styles.checkmark}></span>
+                            </label>
+                            <span className={styles.acceptanceLabel}>
+                                I have read and understand the legal disclaimer
+                            </span>
+                            <span className={cn(styles.acceptanceStatus, {
+                                [styles.pending]: !disclaimerAccepted,
+                                [styles.accepted]: disclaimerAccepted
+                            })}>
+                                {disclaimerAccepted ? 'Accepted' : 'Pending'}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className={styles.actionsRow}>
+                        <button
+                            className={cn(styles.generateButton, {
+                                [styles.disabled]: !disclaimerAccepted || !inputText.trim(),
+                                [styles.generating]: isGenerating
+                            })}
+                            onClick={handleGenerate}
+                            disabled={!disclaimerAccepted || !inputText.trim() || isGenerating}
+                        >
+                            {isGenerating ? 'Generating...' : 'Generate Legal Draft'}
+                        </button>
+                    </div>
+                </div>
 
                 <AnimatePresence>
                     {isGenerating && (

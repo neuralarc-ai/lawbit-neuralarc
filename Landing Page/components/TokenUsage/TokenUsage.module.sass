@@ -1,15 +1,17 @@
 .container
   width: 100%
-  padding: 16px 0
+  padding: 16px 12px
   border-radius: 12px
   margin-bottom: 16px
   z-index: 10
+  min-width: 280px
 
 .header
   display: flex
   justify-content: space-between
   align-items: center
   margin-bottom: 12px
+  padding: 0 4px
 
 .title
   font-size: 16px
@@ -28,10 +30,12 @@
   color: rgba(255, 255, 255, 0.8)
   margin-top: 4px
   text-align: right
+  white-space: nowrap
 
 .total
   font-size: 12px
   color: rgba(255, 255, 255, 0.6)
+  white-space: nowrap
 
 .progressContainer
   width: 100%
@@ -80,6 +84,7 @@
   justify-content: space-between
   width: 100%
   flex-direction: column
+  padding: 0 4px
 
 .usageStats
   display: flex
@@ -94,6 +99,7 @@
   -webkit-background-clip: text
   -webkit-text-fill-color: transparent
   font-weight: 500
+  white-space: nowrap
 
 .separator
   flex: 1
