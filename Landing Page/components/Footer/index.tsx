@@ -16,7 +16,7 @@ const Footer = () => {
                         <Link href="/disclaimer">Disclaimer</Link>
                     </div>
                     <div className={styles.copyright}>
-                        <p>Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, a product by Neural Paths</p>
+                        <p>Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, a product by <strong>Neural Paths</strong></p>
                         <Image src="/icons/footer-outline.svg" alt="Lawbit" width={24} height={24} />
                     </div>
                 </div>

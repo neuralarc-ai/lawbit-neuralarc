@@ -424,7 +424,7 @@ export default function Home() {
                             <a href="/disclaimer">Disclaimer</a>
                         </div>
                         <div className={styles.footerBottom}>
-                            <p>Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, a product by Neural Paths</p>
+                            <p>Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, a product by <strong>Neural Paths</strong></p>
                         </div>
                     </div>
                     <div className={styles.footerIllustration}>

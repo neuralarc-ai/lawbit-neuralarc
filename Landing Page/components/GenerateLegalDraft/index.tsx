@@ -246,25 +246,25 @@ const GenerateLegalDraft = () => {
                 <div className={styles.content}>
                     <h2 className={styles.title}>Generate Legal Draft</h2>
                     
-                    <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait">
                         {!showPreview ? (
-                            <motion.div
+                    <motion.div 
                                 key="input"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <div className={styles.inputArea}>
-                                    <textarea
-                                        className={styles.textarea}
-                                        value={inputText}
-                                        onChange={(e) => setInputText(e.target.value)}
+                        <div className={styles.inputArea}>
+                            <textarea
+                                className={styles.textarea}
+                                value={inputText}
+                                onChange={(e) => setInputText(e.target.value)}
                                         placeholder="Describe your legal requirements here..."
-                                    />
-                                </div>
-
-                                <div className={styles.legalDisclaimer}>
+                            />
+                        </div>
+                        
+                        <div className={styles.legalDisclaimer}>
                                     <div className={styles.disclaimerHeader}>
                                         <div className={styles.disclaimerTitle}>
                                             Legal Disclaimer
@@ -300,7 +300,7 @@ const GenerateLegalDraft = () => {
                                     <div className={cn(styles.disclaimerContent, {
                                         [styles.open]: isDisclaimerOpen
                                     })}>
-                                        <div className={styles.disclaimerText}>
+                            <div className={styles.disclaimerText}>
                                             <p>This AI-powered legal document generator is designed to provide general legal document templates and assistance. While we strive for accuracy and completeness, please note the following important points:</p>
                                             <p>Not Legal Advice: The generated documents and information provided are not substitutes for professional legal advice. Consult with a qualified legal professional for specific legal matters.</p>
                                             <p>No Attorney-Client Relationship: Use of this service does not create an attorney-client relationship between you and our platform or any affiliated parties.</p>
@@ -330,12 +330,12 @@ const GenerateLegalDraft = () => {
                                         })}>
                                             {disclaimerAccepted ? 'Accepted' : 'Pending'}
                                         </span>
-                                    </div>
-                                </div>
-
-                                <button
+                            </div>
+                        </div>
+                        
+                            <button 
                                     className={styles.generateButton}
-                                    onClick={handleGenerate}
+                                onClick={handleGenerate}
                                     disabled={isGenerating || !disclaimerAccepted}
                                 >
                                     {isGenerating ? (
@@ -353,10 +353,10 @@ const GenerateLegalDraft = () => {
                                     ) : (
                                         'Generate Legal Draft'
                                     )}
-                                </button>
-                            </motion.div>
-                        ) : (
-                            <motion.div
+                            </button>
+                    </motion.div>
+                ) : (
+                    <motion.div 
                                 key="preview"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -368,38 +368,38 @@ const GenerateLegalDraft = () => {
                                     <pre className={styles.contractText}>
                                         {generatedContract && formatContractContent(generatedContract.content)}
                                     </pre>
-                                </div>
+                            </div>
                                 <div className={styles.previewActions}>
-                                    <button
-                                        className={styles.actionButton}
+                                <button 
+                                    className={styles.actionButton}
                                         onClick={handleDownloadDOCX}
                                     >
                                         Download DOCX
-                                    </button>
-                                    <button
-                                        className={styles.actionButton}
+                                </button>
+                                <button 
+                                    className={styles.actionButton}
                                         onClick={handleDownloadPDF}
                                     >
                                         Download PDF
-                                    </button>
-                                    <button
+                                </button>
+                                <button 
                                         className={styles.actionButton}
-                                        onClick={handleCopyText}
+                                    onClick={handleCopyText}
                                     >
-                                        {copySuccess ? 'Copied!' : 'Copy Text'}
-                                    </button>
-                                    <button
+                                    {copySuccess ? 'Copied!' : 'Copy Text'}
+                                </button>
+                            <button 
                                         className={styles.actionButton}
                                         onClick={() => setShowPreview(false)}
                                     >
                                         Back to Input
-                                    </button>
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-            </div>
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+                        </div>
+                        </div>
         </div>
     );
 };
