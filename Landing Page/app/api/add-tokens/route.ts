@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2025-03-31.basil',
+    apiVersion: '2025-03-31.basil'
 });
 
 export async function POST(req: Request) {
@@ -70,11 +70,11 @@ export async function POST(req: Request) {
         }
 
         // Determine token amount based on price ID
-        let tokenAmount = 0;
+        let newTotal = 0;
         if (priceId === process.env.NEXT_PUBLIC_LAWBIT_PLUS_PRODUCT_ID) {
-            tokenAmount = 250000; // Plus plan: 250,000 tokens
-        } else if (priceId === process.env.NEXT_PUBLIC_LAWBIT_ULTA_PRODUCT_ID) {
-            tokenAmount = 600000; // Ultra plan: 600,000 tokens
+            newTotal = 300000; // Plus plan: 300,000 tokens
+        } else if (priceId === process.env.NEXT_PUBLIC_LAWBIT_ULTRA_PRODUCT_ID) {
+            newTotal = 650000; // Ultra plan: 650,000 tokens
         }
 
         // Get current token usage
@@ -94,33 +94,35 @@ export async function POST(req: Request) {
         }
 
         // Calculate new token balance
-        let newTokenUsage;
-        if (!tokenData?.token_usage) {
-            // Create new token usage object
-            newTokenUsage = {
-                total: tokenAmount,
-                limit: tokenAmount,
-                remaining: tokenAmount,
-                last_reset: new Date().toISOString()
-            };
-        } else {
-            // Add to existing token usage
-            const currentUsage = tokenData.token_usage;
-            newTokenUsage = {
-                total: (currentUsage.total || 0) + tokenAmount,
-                limit: (currentUsage.limit || 0) + tokenAmount,
-                remaining: (currentUsage.remaining || 0) + tokenAmount,
-                last_reset: currentUsage.last_reset || new Date().toISOString()
+        let currentUsage = {
+            total: 0,
+            used: 0,
+            remaining: 0,
+            last_reset: new Date().toISOString()
+        };
+
+        if (tokenData?.token_usage) {
+            currentUsage = {
+                total: tokenData.token_usage.total || 0,
+                used: tokenData.token_usage.used || 0,
+                remaining: tokenData.token_usage.remaining || 0,
+                last_reset: tokenData.token_usage.last_reset || new Date().toISOString()
             };
         }
 
-        // Update user's token usage in Supabase
+        // Calculate new token usage
+        const newTokenUsage = {
+            total: newTotal, // Set to new plan total
+            used: currentUsage.used, // Keep used tokens the same
+            remaining: newTotal - currentUsage.used, // Calculate remaining as: total - used
+            last_reset: currentUsage.last_reset
+        };
+
+        // Update token usage in Supabase
         const { error: updateError } = await supabase
             .from('users')
             .update({
-                token_usage: newTokenUsage,
-                subscription_status: priceId === process.env.NEXT_PUBLIC_LAWBIT_ULTA_PRODUCT_ID ? 'ultra' : 'plus',
-                subscription_id: paymentIntent.id,
+                token_usage: newTokenUsage
             })
             .eq('id', userId);
 
@@ -134,8 +136,10 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ 
             success: true,
-            tokensAdded: tokenAmount,
-            newBalance: newTokenUsage.remaining
+            tokensAdded: newTokenUsage.remaining - currentUsage.remaining,
+            newBalance: newTokenUsage.remaining,
+            newTotal: newTokenUsage.total,
+            usedTokens: newTokenUsage.used
         });
     } catch (error) {
         console.error('Error processing token addition:', error);

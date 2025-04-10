@@ -19,33 +19,55 @@ const PaymentForm: React.FC<{
     const stripe = useStripe();
     const elements = useElements();
     const [isProcessing, setIsProcessing] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!stripe || !elements) {
+            setError('Stripe has not been initialized');
             return;
         }
 
         setIsProcessing(true);
+        setError(null);
 
         try {
             const result = await stripe.confirmPayment({
                 elements,
+                redirect: 'if_required',
                 confirmParams: {
-                    return_url: `${window.location.origin}/payment-success`,
-                },
-            }) as { error?: { message: string }, paymentIntent?: { id: string } };
+                    return_url: `${window.location.origin}/payment/success`,
+                    payment_method_data: {
+                        billing_details: {
+                            address: {
+                                country: 'US'
+                            }
+                        }
+                    }
+                }
+            });
 
             if (result.error) {
-                throw new Error(result.error.message);
+                // Handle specific error cases
+                if (result.error.type === 'card_error' || result.error.type === 'validation_error') {
+                    setError(result.error.message || 'Payment failed. Please check your card details and try again.');
+                } else {
+                    setError('An unexpected error occurred. Please try again.');
+                }
+                return;
             }
 
             if (result.paymentIntent) {
-                onSuccess(result.paymentIntent.id);
+                if (result.paymentIntent.status === 'succeeded') {
+                    onSuccess(result.paymentIntent.id);
+                } else {
+                    setError('Payment is still processing. Please wait a moment and try again.');
+                }
             }
         } catch (err: any) {
             console.error('Payment error:', err);
+            setError(err.message || 'Payment failed. Please try again.');
         } finally {
             setIsProcessing(false);
         }
@@ -54,6 +76,11 @@ const PaymentForm: React.FC<{
     return (
         <form onSubmit={handleSubmit} className={styles.paymentForm}>
             <PaymentElement />
+            {error && (
+                <div className={styles.errorMessage}>
+                    {error}
+                </div>
+            )}
             <div className={styles.paymentButtons}>
                 <button
                     type="button"
@@ -107,6 +134,42 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
             setTokensAdded(data.tokensAdded);
             setNewBalance(data.newBalance);
             
+            const supabase = createClient();
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                // Update subscription tier based on the selected plan
+                const tier = selectedPlan === process.env.NEXT_PUBLIC_LAWBIT_PLUS_PRODUCT_ID ? 'plus' : 'ultra';
+                
+                // Call the update_subscription_tier function
+                const { error: updateError } = await supabase.rpc('update_subscription_tier', {
+                    p_user_id: user.id,
+                    p_tier: tier
+                });
+
+                if (updateError) {
+                    console.error('Error updating subscription tier:', updateError);
+                    throw new Error('Failed to update subscription tier');
+                }
+
+                // Create a new subscription record
+                const { error: subscriptionError } = await supabase
+                    .from('subscriptions')
+                    .insert({
+                        user_id: user.id,
+                        tier: tier,
+                        status: 'active',
+                        current_period_start: new Date().toISOString(),
+                        current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // 1 year from now
+                        cancel_at_period_end: false
+                    });
+
+                if (subscriptionError) {
+                    console.error('Error creating subscription:', subscriptionError);
+                    throw new Error('Failed to create subscription');
+                }
+            }
+            
+            // Close the modal after 3 seconds
             setTimeout(() => {
                 onClose();
                 setPaymentSuccess(false);
@@ -121,9 +184,15 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
         } finally {
             setIsLoading(false);
         }
-    }, [onClose]);
+    }, [onClose, selectedPlan]);
 
     const handlePlanSelect = async (priceId: string) => {
+        if (!priceId) {
+            setError('Please select a plan');
+            return;
+        }
+
+        console.log('Selected plan price ID:', priceId);
         setSelectedPlan(priceId);
         
         try {
@@ -133,6 +202,11 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
             const supabase = createClient();
             const { data: { user } } = await supabase.auth.getUser();
 
+            if (!user) {
+                throw new Error('User not authenticated');
+            }
+
+            console.log('Creating payment intent for user:', user.id);
             const response = await fetch('/api/create-payment-intent', {
                 method: 'POST',
                 headers: {
@@ -140,20 +214,22 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
                 },
                 body: JSON.stringify({
                     priceId,
-                    userId: user?.id,
+                    userId: user.id,
                 }),
             });
 
             const data = await response.json();
             
             if (data.error) {
+                console.error('Payment intent creation error:', data.error);
                 throw new Error(data.error);
             }
             
+            console.log('Payment intent created successfully:', data.paymentIntentId);
             setClientSecret(data.clientSecret);
         } catch (err: any) {
-            setError(err.message || 'Failed to initialize payment. Please try again.');
             console.error('Payment initialization error:', err);
+            setError(err.message || 'Failed to initialize payment. Please try again.');
             setSelectedPlan(null);
         } finally {
             setIsLoading(false);
@@ -285,7 +361,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isOpen, onClose }
                             </ul>
                             <button
                                 className={styles.subscribeButton}
-                                onClick={() => handlePlanSelect(process.env.NEXT_PUBLIC_LAWBIT_ULTA_PRODUCT_ID!)}
+                                onClick={() => handlePlanSelect(process.env.NEXT_PUBLIC_LAWBIT_ULTRA_PRODUCT_ID!)}
                                 disabled={isLoading}
                             >
                                 {isLoading ? 'Loading...' : 'Purchase Now'}

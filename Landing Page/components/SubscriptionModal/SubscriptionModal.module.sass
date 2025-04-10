@@ -204,23 +204,43 @@
         cursor: not-allowed
 
 .errorMessage
-    background-color: rgba(220, 38, 38, 0.1)
-    border: 1px solid rgba(220, 38, 38, 0.2)
-    color: #ef4444
-    padding: 1rem
+    background-color: rgba(239, 68, 68, 0.1)
+    border: 1px solid rgba(239, 68, 68, 0.2)
     border-radius: 0.5rem
-    margin-bottom: 1.5rem
+    padding: 1rem
+    margin-bottom: 1rem
+    color: #ef4444
     font-size: 0.875rem
+    text-align: center
+    animation: fadeIn 0.3s ease-out
+
+@keyframes fadeIn
+    0%
+        opacity: 0
+        transform: translateY(-10px)
+    100%
+        opacity: 1
+        transform: translateY(0)
 
 .successMessage
     display: flex
     flex-direction: column
     align-items: center
+    justify-content: center
     text-align: center
     padding: 2rem
-    background-color: rgba(16, 185, 129, 0.1)
-    border-radius: 0.5rem
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05))
+    border-radius: 1rem
     border: 1px solid rgba(16, 185, 129, 0.2)
+    animation: fadeIn 0.5s ease-out
+
+@keyframes fadeIn
+    0%
+        opacity: 0
+        transform: translateY(20px)
+    100%
+        opacity: 1
+        transform: translateY(0)
 
 .successIcon
     width: 64px
@@ -233,6 +253,7 @@
     margin-bottom: 1.5rem
     color: #10b981
     position: relative
+    animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)
     
     &:before
         content: ''
@@ -241,6 +262,14 @@
         border-radius: 50%
         background: radial-gradient(circle at center, rgba(16, 185, 129, 0.4), transparent 70%)
         animation: pulse 2s infinite
+
+@keyframes scaleIn
+    0%
+        transform: scale(0)
+        opacity: 0
+    100%
+        transform: scale(1)
+        opacity: 1
 
 @keyframes pulse
     0%
@@ -258,16 +287,27 @@
     font-weight: 600
     color: #10b981
     margin: 0 0 1rem 0
+    animation: slideUp 0.5s ease-out 0.2s backwards
 
 .successText
     color: #ffffff
     margin: 0 0 0.5rem 0
     font-size: 1rem
+    animation: slideUp 0.5s ease-out 0.3s backwards
 
 .successBalance
     color: #a0a0a0
     margin: 0
     font-size: 0.875rem
+    animation: slideUp 0.5s ease-out 0.4s backwards
+
+@keyframes slideUp
+    0%
+        opacity: 0
+        transform: translateY(10px)
+    100%
+        opacity: 1
+        transform: translateY(0)
 
 // Payment Form Styles
 .paymentForm

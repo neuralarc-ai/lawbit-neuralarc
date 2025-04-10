@@ -26,6 +26,7 @@ const GenerateLegalDraft = () => {
     const [copySuccess, setCopySuccess] = useState(false);
     const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
     const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
+    const [showPreview, setShowPreview] = useState(false);
 
     const generationSteps = [
         "Analyzing your requirements...",
@@ -63,8 +64,8 @@ const GenerateLegalDraft = () => {
 
     const handleGenerate = async () => {
         if (!disclaimerAccepted) {
-            // Show error or notification that user needs to accept disclaimer
-            return
+            showToast('Please accept the legal disclaimer first');
+            return;
         }
         if (!user) {
             showToast('Please sign in to generate a legal draft');
@@ -92,7 +93,7 @@ const GenerateLegalDraft = () => {
                 throw userError;
             }
             
-            const tokenUsage = userData.token_usage as { total: number; limit: number; remaining: number };
+            const tokenUsage = userData.token_usage as { total: number; used: number; remaining: number };
             
             if (tokenUsage.remaining < 10000) {
                 const event = new CustomEvent('openSubscriptionModal');
@@ -130,6 +131,7 @@ const GenerateLegalDraft = () => {
             }
             
             showToast('Legal draft generated successfully!');
+            setShowPreview(true);
         } catch (err) {
             console.error('Error generating legal draft:', err);
             setError(err instanceof Error ? err.message : 'Failed to generate legal draft');
@@ -223,133 +225,180 @@ const GenerateLegalDraft = () => {
         }
     };
 
+    const formatContractContent = (content: string) => {
+        const currentDate = new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        // Add date if not present in the content
+        if (!content.includes('Date:')) {
+            content = `Date: ${currentDate}\n\n${content}`;
+        }
+        
+        return content;
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.innerContainer}>
                 <div className={styles.content}>
                     <h2 className={styles.title}>Generate Legal Draft</h2>
                     
-                    <div className={styles.inputArea}>
-                        <textarea
-                            className={styles.textarea}
-                            value={inputText}
-                            onChange={(e) => setInputText(e.target.value)}
-                            placeholder="Describe your legal requirements here..."
-                        />
-                    </div>
-
-                    <div className={styles.legalDisclaimer}>
-                        <div className={styles.disclaimerHeader}>
-                            <div className={styles.disclaimerTitle}>
-                                Legal Disclaimer
-                                <span className={styles.requiredBadge}>Required</span>
-                            </div>
-                            <button 
-                                onClick={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
-                                className={styles.toggleButton}
-                                aria-expanded={isDisclaimerOpen}
-                                aria-label={isDisclaimerOpen ? "Close disclaimer" : "Open disclaimer"}
+                    <AnimatePresence mode="wait">
+                        {!showPreview ? (
+                            <motion.div
+                                key="input"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.3 }}
                             >
-                                <svg 
-                                    width="20" 
-                                    height="20" 
-                                    viewBox="0 0 24 24" 
-                                    fill="none" 
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className={cn(styles.chevron, {
-                                        [styles.open]: isDisclaimerOpen
-                                    })}
-                                >
-                                    <path 
-                                        d="M6 9L12 15L18 9" 
-                                        stroke="currentColor" 
-                                        strokeWidth="2" 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round"
+                                <div className={styles.inputArea}>
+                                    <textarea
+                                        className={styles.textarea}
+                                        value={inputText}
+                                        onChange={(e) => setInputText(e.target.value)}
+                                        placeholder="Describe your legal requirements here..."
                                     />
-                                </svg>
-                            </button>
-                        </div>
+                                </div>
 
-                        <div className={cn(styles.disclaimerContent, {
-                            [styles.open]: isDisclaimerOpen
-                        })}>
-                            <div className={styles.disclaimerText}>
-                                <p>This AI-powered legal document generator is designed to provide general legal document templates and assistance. While we strive for accuracy and completeness, please note the following important points:</p>
-                                <p>Not Legal Advice: The generated documents and information provided are not substitutes for professional legal advice. Consult with a qualified legal professional for specific legal matters.</p>
-                                <p>No Attorney-Client Relationship: Use of this service does not create an attorney-client relationship between you and our platform or any affiliated parties.</p>
-                                <p>Accuracy & Completeness: While we make efforts to keep information up-to-date and accurate, we cannot guarantee the completeness, accuracy, or adequacy of the generated documents for your specific needs.</p>
-                                <p>Review Requirement: All generated documents should be thoroughly reviewed by a qualified legal professional before use or implementation.</p>
-                            </div>
-                        </div>
+                                <div className={styles.legalDisclaimer}>
+                                    <div className={styles.disclaimerHeader}>
+                                        <div className={styles.disclaimerTitle}>
+                                            Legal Disclaimer
+                                            <span className={styles.requiredBadge}>Required</span>
+                                        </div>
+                                        <button 
+                                            onClick={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
+                                            className={styles.toggleButton}
+                                            aria-expanded={isDisclaimerOpen}
+                                            aria-label={isDisclaimerOpen ? "Close disclaimer" : "Open disclaimer"}
+                                        >
+                                            <svg 
+                                                width="20" 
+                                                height="20" 
+                                                viewBox="0 0 24 24" 
+                                                fill="none" 
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className={cn(styles.chevron, {
+                                                    [styles.open]: isDisclaimerOpen
+                                                })}
+                                            >
+                                                <path 
+                                                    d="M6 9L12 15L18 9" 
+                                                    stroke="currentColor" 
+                                                    strokeWidth="2" 
+                                                    strokeLinecap="round" 
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </div>
 
-                        <div 
-                            className={styles.acceptanceRow}
-                            onClick={() => setDisclaimerAccepted(!disclaimerAccepted)}
-                        >
-                            <label className={styles.checkbox}>
-                                <input
-                                    type="checkbox"
-                                    checked={disclaimerAccepted}
-                                    onChange={() => setDisclaimerAccepted(!disclaimerAccepted)}
-                                />
-                                <span className={styles.checkmark}></span>
-                            </label>
-                            <span className={styles.acceptanceLabel}>
-                                I have read and understand the legal disclaimer
-                            </span>
-                            <span className={cn(styles.acceptanceStatus, {
-                                [styles.pending]: !disclaimerAccepted,
-                                [styles.accepted]: disclaimerAccepted
-                            })}>
-                                {disclaimerAccepted ? 'Accepted' : 'Pending'}
-                            </span>
-                        </div>
-                    </div>
+                                    <div className={cn(styles.disclaimerContent, {
+                                        [styles.open]: isDisclaimerOpen
+                                    })}>
+                                        <div className={styles.disclaimerText}>
+                                            <p>This AI-powered legal document generator is designed to provide general legal document templates and assistance. While we strive for accuracy and completeness, please note the following important points:</p>
+                                            <p>Not Legal Advice: The generated documents and information provided are not substitutes for professional legal advice. Consult with a qualified legal professional for specific legal matters.</p>
+                                            <p>No Attorney-Client Relationship: Use of this service does not create an attorney-client relationship between you and our platform or any affiliated parties.</p>
+                                            <p>Accuracy & Completeness: While we make efforts to keep information up-to-date and accurate, we cannot guarantee the completeness, accuracy, or adequacy of the generated documents for your specific needs.</p>
+                                            <p>Review Requirement: All generated documents should be thoroughly reviewed by a qualified legal professional before use or implementation.</p>
+                                        </div>
+                                    </div>
 
-                    <div className={styles.actionsRow}>
-                        <button
-                            className={cn(styles.generateButton, {
-                                [styles.disabled]: !disclaimerAccepted || !inputText.trim(),
-                                [styles.generating]: isGenerating
-                            })}
-                            onClick={handleGenerate}
-                            disabled={!disclaimerAccepted || !inputText.trim() || isGenerating}
-                        >
-                            {isGenerating ? 'Generating...' : 'Generate Legal Draft'}
-                        </button>
-                    </div>
+                                    <div 
+                                        className={styles.acceptanceRow}
+                                        onClick={() => setDisclaimerAccepted(!disclaimerAccepted)}
+                                    >
+                                        <label className={styles.checkbox}>
+                                            <input
+                                                type="checkbox"
+                                                checked={disclaimerAccepted}
+                                                onChange={() => setDisclaimerAccepted(!disclaimerAccepted)}
+                                            />
+                                            <span className={styles.checkmark}></span>
+                                        </label>
+                                        <span className={styles.acceptanceLabel}>
+                                            I have read and understand the legal disclaimer
+                                        </span>
+                                        <span className={cn(styles.acceptanceStatus, {
+                                            [styles.pending]: !disclaimerAccepted,
+                                            [styles.accepted]: disclaimerAccepted
+                                        })}>
+                                            {disclaimerAccepted ? 'Accepted' : 'Pending'}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <button
+                                    className={styles.generateButton}
+                                    onClick={handleGenerate}
+                                    disabled={isGenerating || !disclaimerAccepted}
+                                >
+                                    {isGenerating ? (
+                                        <>
+                                            <span className={styles.progressText}>
+                                                {generationSteps[generationStep]}
+                                            </span>
+                                            <div className={styles.progressBar}>
+                                                <div
+                                                    className={styles.progressFill}
+                                                    style={{ width: `${generationProgress}%` }}
+                                                />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        'Generate Legal Draft'
+                                    )}
+                                </button>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="preview"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.3 }}
+                                className={styles.previewContainer}
+                            >
+                                <div className={styles.previewContent}>
+                                    <pre className={styles.contractText}>
+                                        {generatedContract && formatContractContent(generatedContract.content)}
+                                    </pre>
+                                </div>
+                                <div className={styles.previewActions}>
+                                    <button
+                                        className={styles.actionButton}
+                                        onClick={handleDownloadDOCX}
+                                    >
+                                        Download DOCX
+                                    </button>
+                                    <button
+                                        className={styles.actionButton}
+                                        onClick={handleDownloadPDF}
+                                    >
+                                        Download PDF
+                                    </button>
+                                    <button
+                                        className={styles.actionButton}
+                                        onClick={handleCopyText}
+                                    >
+                                        {copySuccess ? 'Copied!' : 'Copy Text'}
+                                    </button>
+                                    <button
+                                        className={styles.actionButton}
+                                        onClick={() => setShowPreview(false)}
+                                    >
+                                        Back to Input
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
-
-                <AnimatePresence>
-                    {isGenerating && (
-                        <motion.div 
-                            className={styles.generatingOverlay}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                        >
-                            <div className={styles.loadingIcon}>
-                                <div className={styles.spinner}></div>
-                                <Image 
-                                    src="/icons/lawbit-preview.svg" 
-                                    alt="LawBit Logo" 
-                                    width={70} 
-                                    height={70} 
-                                    className={styles.logo}
-                                />
-                            </div>
-                            <h2 className={styles.loadingText}>Generating Your Legal Draft</h2>
-                            <p className={styles.loadingDescription}>{generationSteps[generationStep]}</p>
-                            <div className={styles.progressBarContainer}>
-                                <div 
-                                    className={styles.progressBar} 
-                                    style={{ width: `${generationProgress}%` }}
-                                />
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
             </div>
         </div>
     );

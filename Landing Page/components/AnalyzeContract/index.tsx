@@ -136,15 +136,13 @@ const AnalyzeContract = () => {
     };
 
     const handleAnalyze = useCallback(async () => {
+        if (!isDisclaimerAccepted) {
+            showToast('Please accept the legal disclaimer first');
+            return;
+        }
         if (!user) {
             showToast('Please sign in to analyze a contract');
             router.push('/auth/signin');
-            return;
-        }
-
-        if (!isDisclaimerAccepted) {
-            toast.error('Please accept the legal disclaimer before proceeding');
-            setIsDisclaimerOpen(true);
             return;
         }
 
@@ -278,7 +276,7 @@ const AnalyzeContract = () => {
         } finally {
             setIsAnalyzing(false);
         }
-    }, [user, supabase, activeTab, text, file, isDisclaimerAccepted]);
+    }, [user, showToast, router, activeTab, text, file, supabase, setAnalysisData, setShowAnalysis, setError, setIsAnalyzing]);
 
     // Calculate risk score based on clause risk levels
     const calculateRiskScore = (clauses: ClauseAnalysis[]): number => {

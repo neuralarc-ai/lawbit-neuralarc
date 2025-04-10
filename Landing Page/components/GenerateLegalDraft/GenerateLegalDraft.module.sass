@@ -491,4 +491,160 @@ $p1: #FF5CAA // Primary color variable
   0%
     background-position: -200% center
   100%
-    background-position: 200% center 
+    background-position: 200% center
+
+.modeToggle
+  display: flex
+  gap: 8px
+  margin-bottom: 24px
+  background: rgba(41, 41, 41, 0.25)
+  padding: 4px
+  border-radius: 12px
+  width: fit-content
+
+.modeButton
+  padding: 8px 16px
+  border-radius: 8px
+  background: transparent
+  color: rgba($n1, 0.7)
+  font-size: 14px
+  font-weight: 500
+  transition: all 0.3s ease
+  border: none
+  cursor: pointer
+
+  &:hover
+    color: $n1
+    background: rgba(255, 255, 255, 0.1)
+
+  &.active
+    background: rgba(255, 255, 255, 0.1)
+    color: $n1
+
+  &:disabled
+    opacity: 0.5
+    cursor: not-allowed
+
+.previewContainer
+  display: flex
+  flex-direction: column
+  gap: 24px
+  width: 100%
+
+.previewContent
+  width: 100%
+  min-height: 400px
+  max-height: 600px
+  overflow-y: auto
+  background: rgba(41, 41, 41, 0.25)
+  border-radius: 16px
+  padding: 32px
+  border: 1px solid rgba(255, 255, 255, 0.08)
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)
+
+.contractText
+  white-space: pre-wrap
+  font-family: "Times New Roman", Times, serif
+  font-size: 14px
+  line-height: 1.8
+  color: $n1
+  margin: 0
+  letter-spacing: 0.5px
+
+  &::first-line
+    font-weight: bold
+
+.previewActions
+  display: flex
+  gap: 12px
+  justify-content: flex-end
+  margin-top: 16px
+
+.actionButton
+  padding: 8px 16px
+  border-radius: 8px
+  background: rgba(255, 255, 255, 0.1)
+  color: $n1
+  font-size: 14px
+  font-weight: 500
+  transition: all 0.3s ease
+  border: none
+  cursor: pointer
+
+  &:hover
+    background: rgba(255, 255, 255, 0.15)
+    transform: translateY(-2px)
+
+  &:active
+    background: rgba(255, 255, 255, 0.2)
+    transform: translateY(0)
+
+.progressText
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  color: $n1
+  font-size: 14px
+  font-weight: 500
+  z-index: 1
+
+.progressBar
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background: rgba(0, 0, 0, 0.2)
+
+.progressFill
+  height: 100%
+  background: linear-gradient(135deg, rgba($p1, 0.8) 0%, rgba(#6950FB, 0.8) 100%)
+  transition: width 0.3s ease
+
+.generateButton
+  width: 100%
+  padding: 16px
+  border-radius: 12px
+  background: linear-gradient(135deg, $p1 0%, #6950FB 100%)
+  color: $n1
+  font-size: 16px
+  font-weight: 600
+  transition: all 0.3s ease
+  border: none
+  cursor: pointer
+  position: relative
+  overflow: hidden
+
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 4px 12px rgba($p1, 0.3)
+
+  &:disabled
+    opacity: 0.7
+    cursor: not-allowed
+    transform: none
+    box-shadow: none
+
+.progressText
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  color: $n1
+  font-size: 14px
+  font-weight: 500
+  z-index: 1
+
+.progressBar
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background: rgba(0, 0, 0, 0.2)
+
+.progressFill
+  height: 100%
+  background: linear-gradient(135deg, rgba($p1, 0.8) 0%, rgba(#6950FB, 0.8) 100%)
+  transition: width 0.3s ease 
