@@ -452,6 +452,8 @@ export default function Home() {
                             <a href="/privacy">Privacy Policy</a>
                             <span>•</span>
                             <a href="/disclaimer">Disclaimer</a>
+                            <span>•</span>
+                            <a href="/responsible-ai">Responsible AI</a>
                         </div>
                         <div className={styles.footerBottom}>
                             <p>Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by 

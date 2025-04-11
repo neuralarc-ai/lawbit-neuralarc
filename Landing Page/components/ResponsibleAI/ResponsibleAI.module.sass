@@ -1,0 +1,105 @@
+.container
+    width: 100%
+    margin: 0 auto
+    padding-top: 48px
+    min-height: 100vh
+    color: #FFFFFF
+    position: relative
+    display: flex
+    flex-direction: column
+
+.mainContent
+    width: 100%
+    flex: 1
+
+.responsibleAIContainer
+    border-radius: 24px
+    max-width: 1440px
+    padding: 48px
+    margin: 0 auto
+
+.headerRow
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-bottom: 2rem
+    padding-bottom: 1rem
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+
+.pageTitle
+    font-size: 2rem
+    font-weight: 600
+    background: linear-gradient(to right, rgba(138, 48, 255, 1), rgba(248, 66, 178, 1))
+    -webkit-background-clip: text
+    background-clip: text
+    color: transparent
+    margin: 0
+
+.effectiveDate
+    font-size: 1rem
+    color: #989898
+    margin: 0
+
+.section
+    background: rgba(248, 248, 248, 0.05)
+    backdrop-filter: blur(100px)
+    border-radius: 12px
+    overflow: hidden
+    transition: all 0.3s ease
+    border: 1px solid transparent
+    box-shadow: inset 0 4px 4px 0 rgba(255, 255, 255, 0.05), 0 8px 16px -4px rgba(18, 18, 18, 0.2)
+    margin-bottom: 1.5rem
+
+    &.active
+        background: rgba(255, 255, 255, 0.08)
+        border-color: rgba(138, 48, 255, 0.3)
+
+.sectionHeader
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding: 1.5rem
+    cursor: pointer
+    transition: background-color 0.3s ease
+
+    &:hover
+        background: rgba(255, 255, 255, 0.05)
+
+.sectionTitle
+    font-size: 1.25rem
+    font-weight: 500
+    color: #FFFFFF
+    margin: 0
+
+.arrowIcon
+    transition: transform 0.3s ease
+    color: #989898
+
+    &.rotated
+        transform: rotate(180deg)
+
+.sectionContent
+    padding: 0 1.5rem 1.5rem
+    display: none
+    color: rgba(255, 255, 255, 0.8)
+    line-height: 1.6
+
+    .active &
+        display: block
+
+    p
+        margin: 0 0 1rem
+        font-size: 1rem
+
+        &:last-child
+            margin-bottom: 0
+
+@media (max-width: 768px)
+    .responsibleAIContainer
+        padding: 24px
+    
+    .pageTitle
+        font-size: 1.5rem
+    
+    .sectionTitle
+        font-size: 1.1rem 

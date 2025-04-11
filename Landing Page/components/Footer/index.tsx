@@ -14,6 +14,8 @@ const Footer = () => {
                         <Link href="/privacy">Privacy Policy</Link>
                         <span>•</span>
                         <Link href="/disclaimer">Disclaimer</Link>
+                        <span>•</span>
+                        <Link href="/responsible-ai">Responsible AI</Link>
                     </div>
                     <div className={styles.copyright}>
                         <p>
