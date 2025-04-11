@@ -13,7 +13,7 @@ const Footer = () => {
                         <span>•</span>
                         <Link href="/privacy">Privacy Policy</Link>
                         <span>•</span>
-                        <Link href="/disclaimer">Disclaimer</Link>
+                        <Link href="/disclaimer">AI Enabled Content Notice</Link>
                         <span>•</span>
                         <Link href="/responsible-ai">Responsible AI</Link>
                     </div>
