@@ -276,7 +276,7 @@ const AnalyzeContract = () => {
         } finally {
             setIsAnalyzing(false);
         }
-    }, [user, showToast, router, activeTab, text, file, supabase, setAnalysisData, setShowAnalysis, setError, setIsAnalyzing]);
+    }, [user, showToast, router, activeTab, text, file, supabase, setAnalysisData, setShowAnalysis, setError, setIsAnalyzing, isDisclaimerAccepted]);
 
     // Calculate risk score based on clause risk levels
     const calculateRiskScore = (clauses: ClauseAnalysis[]): number => {

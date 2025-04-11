@@ -16,8 +16,16 @@ const Footer = () => {
                         <Link href="/disclaimer">Disclaimer</Link>
                     </div>
                     <div className={styles.copyright}>
-                        <p>Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, a product by <strong>Neural Paths</strong></p>
-                        <Image src="/icons/footer-outline.svg" alt="Lawbit" width={24} height={24} />
+                        <p>
+                            Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by &nbsp;
+                            <Image 
+                                src="/neuralpath.svg" 
+                                alt="Neural Paths" 
+                                width={100} 
+                                height={24} 
+                                style={{ display: 'inline-block', verticalAlign: 'middle' }}
+                            />
+                        </p>
                     </div>
                 </div>
             </div>
@@ -26,3 +34,5 @@ const Footer = () => {
 }
 
 export default Footer
+
+

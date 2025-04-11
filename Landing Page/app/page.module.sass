@@ -351,7 +351,7 @@
 
 // Pricing Section
 .pricing
-    padding: 20px 0 120px 0px
+    padding: 20px 0 70px 0px
     scroll-margin-top: 80px
     
 
@@ -712,3 +712,57 @@
         
         svg
             transform: translateX(3px)
+
+.productHunt
+    padding: 40px 0
+    position: relative
+    z-index: 1
+    background: linear-gradient(180deg, rgba(32, 32, 32, 0) 0%, rgba(32, 32, 32, 0.8) 100%)
+    overflow: hidden
+
+.productHuntContent
+    display: flex
+    flex-direction: column
+    align-items: center
+    text-align: center
+    max-width: 800px
+    margin: 0 auto
+
+.productHuntBadge
+    margin-top: 32px
+    background: rgba(255, 255, 255, 0.03)
+    padding: 40px 48px
+    border-radius: 24px
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    backdrop-filter: blur(10px)
+    box-shadow: 0 8px 16px -4px rgba(18, 18, 18, 0.2), 0 8px 20px 3px rgba(254, 83, 185, 0.25), inset 0 4px 4px rgba(255, 255, 255, 0.05)
+    position: relative
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 24px
+        border: 1.5px solid transparent
+        background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
+        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: destination-out
+        mask-composite: exclude
+    &:hover
+        transform: translateY(-4px)
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3)
+        border-color: rgba(138, 48, 255, 0.4)
+        background: rgba(255, 255, 255, 0.05)
+
+.badgeLink
+    display: block
+    transition: transform 0.3s ease
+    &:hover
+        transform: scale(1.02)
+
+.badgeImage
+    width: 250px
+    height: 54px
+    transition: all 0.3s ease
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))
+    object-fit: contain

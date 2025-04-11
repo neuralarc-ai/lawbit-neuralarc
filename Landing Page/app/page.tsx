@@ -406,6 +406,36 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* Product Hunt Section */}
+            <section className={styles.productHunt}>
+                <div className={styles.container}>
+                    <div className={styles.productHuntContent}>
+                        <h2 className={styles.sectionTitle}>
+                            <span>Join the AI Legal Revolution</span>
+                        </h2>
+                        <p className={styles.sectionSubtitle}>
+                        From Hours to Seconds: Analyze Legal Docs with LawBit&apos;s Cutting-Edge AI
+                        </p>
+                        <div className={styles.productHuntBadge}>
+                            <a 
+                                href="https://www.producthunt.com/products/lawbit/reviews?utm_source=badge-product_review&utm_medium=badge&utm_souce=badge-lawbit" 
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.badgeLink}
+                            >
+                                <Image 
+                                    src="https://api.producthunt.com/widgets/embed-image/v1/product_review.svg?product_id=1053856&theme=dark"
+                                    alt="Lawbit - Revolutionize Your Legal Drafting with AI Precision | Product Hunt"
+                                    width={250}
+                                    height={54}
+                                    className={styles.badgeImage}
+                                />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Footer */}
             <footer className={styles.footer}>
                 <div className={styles.footerContainer}>
@@ -424,7 +454,15 @@ export default function Home() {
                             <a href="/disclaimer">Disclaimer</a>
                         </div>
                         <div className={styles.footerBottom}>
-                            <p>Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, a product by <strong>Neural Paths</strong></p>
+                            <p>Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by 
+                                <Image 
+                                    src="/neuralpath.svg" 
+                                    alt="Neural Paths" 
+                                    width={15} 
+                                    height={54} 
+                                    style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '8px' }}
+                                />
+                            </p>
                         </div>
                     </div>
                     <div className={styles.footerIllustration}>

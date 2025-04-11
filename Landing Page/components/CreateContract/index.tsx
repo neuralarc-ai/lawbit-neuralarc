@@ -1777,7 +1777,7 @@ const CreateContract = () => {
                                 <p>
                                     4. Review Requirement: All generated documents should be thoroughly reviewed by a qualified legal professional before use or implementation.
                                 </p>
-                            </div>
+                        </div>
                         </div>
                         
                         <label className={cn(styles.checkbox, styles.acceptanceRow)}>
