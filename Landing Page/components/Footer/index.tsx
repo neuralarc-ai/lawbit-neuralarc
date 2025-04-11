@@ -17,16 +17,17 @@ const Footer = () => {
                     </div>
                     <div className={styles.copyright}>
                         <p>
-                            Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by &nbsp;
-                            <Image 
+                            Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by&nbsp;
+                        </p>
+                        
+                    </div>
+                    <Image 
                                 src="/neuralpath.svg" 
                                 alt="Neural Paths" 
-                                width={100} 
-                                height={24} 
-                                style={{ display: 'inline-block', verticalAlign: 'middle' }}
-                            />
-                        </p>
-                    </div>
+                                width={140} 
+                                height={60} 
+                                style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '0px' }}
+                            /> 
                 </div>
             </div>
         </footer>

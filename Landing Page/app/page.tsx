@@ -458,8 +458,8 @@ export default function Home() {
                                 <Image 
                                     src="/neuralpath.svg" 
                                     alt="Neural Paths" 
-                                    width={15} 
-                                    height={54} 
+                                    width={115} 
+                                    height={80 } 
                                     style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '8px' }}
                                 />
                             </p>
