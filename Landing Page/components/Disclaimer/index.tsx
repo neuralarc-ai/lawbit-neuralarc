@@ -41,6 +41,7 @@ const Disclaimer = () => {
     return (
         <div className={styles.container}>
             <Navbar />
+            <div style={{ marginTop: '40px' }}></div>
             <motion.div
                 className={styles.mainContent}
                 initial={{ opacity: 0, y: 10 }}
@@ -49,53 +50,20 @@ const Disclaimer = () => {
             >
                 <div className={styles.disclaimerContainer}>
                     <div className={styles.headerRow}>
-                        <h1 className={styles.pageTitle}>Disclaimer</h1>
-                        <p className={styles.effectiveDate}>Effective Date: 20/02/25</p>
+                        <h1 className={styles.pageTitle}>AI Enabled Content Notice</h1>
+                        <p className={styles.effectiveDate}>Updated: April 2025</p>
                     </div>
 
-                    <div className={styles.welcomeSection}>
-                        <p>Welcome to Lawbit. This Disclaimer outlines important information about the use of our services and the limitations of our legal document tools.</p>
-                    </div>
-
-                    <div className={styles.sectionsContainer}>
-                        {sections.map((section) => (
-                            <div 
-                                key={section.id}
-                                className={cn(
-                                    styles.section,
-                                    { [styles.active]: activeSection === section.id }
-                                )}
-                            >
-                                <div 
-                                    className={styles.sectionHeader}
-                                    onClick={() => setActiveSection(activeSection === section.id ? null : section.id)}
-                                >
-                                    <h2 className={styles.sectionTitle}>{section.title}</h2>
-                                    <svg 
-                                        className={cn(
-                                            styles.arrowIcon,
-                                            { [styles.rotated]: activeSection === section.id }
-                                        )}
-                                        width="24" 
-                                        height="24" 
-                                        viewBox="0 0 24 24" 
-                                        fill="none" 
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </div>
-                                {activeSection === section.id && (
-                                    <div className={styles.sectionContent}>
-                                        <p>{section.content}</p>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className={styles.footer}>
-                        <p>By using Lawbit&apos;s website and services, you acknowledge that you have read, understood, and agreed to this Disclaimer.</p>
+                    <div className={styles.contentSection}>
+                        <p>
+                            This website features content, including text, images, and other media, created by humans (us!) with the assistance of advanced artificial intelligence (AI) technologies.
+                        </p>
+                        <p>
+                            While we work hard to ensure the information is accurate, relevant, and high-quality, it&apos;s important to note that AI tools, while sophisticated, are not flawless and may occasionally generate content that is incorrect, incomplete, or imperfect—just like humans.
+                        </p>
+                        <p>
+                            We encourage critical thinking and recommend independently verifying any information when needed. Though we strive to update and improve content as necessary, there may be instances where outdated or inaccurate information remains. If you come across any errors, we&apos;d love to hear from you!
+                        </p>
                     </div>
                 </div>
             </motion.div>

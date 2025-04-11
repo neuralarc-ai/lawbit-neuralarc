@@ -439,42 +439,64 @@ export default function Home() {
             {/* Footer */}
             <footer className={styles.footer}>
                 <div className={styles.footerContainer}>
-                    <div className={styles.footerContent}>
+                    <div className={styles.footerMainContent}>
                         <div className={styles.footerLeft}>
                             <div className={styles.footerLogo}>
-                                <Image src="/icons/footer-logo.svg" alt="LawBit" width={160} height={55}/>
+                                <Image 
+                                    src="/icons/footer-logo.svg" 
+                                    alt="LawBit" 
+                                    width={160} 
+                                    height={55}
+                                    priority
+                                />
                                 <span>The future of legal ops; AI-powered, business-ready</span>
                             </div>
+                            
+                            <div className={styles.footerLinks}>
+                                <a href="/terms">Terms of use</a>
+                                <span>•</span>
+                                <a href="/privacy">Privacy Policy</a>
+                                <span>•</span>
+                                <a href="/disclaimer">Disclaimer</a>
+                                <span>•</span>
+                                <a href="/responsible-ai">Responsible AI</a>
+                            </div>
+                            
+                            <div className={styles.footerBottom}>
+                                <p>
+                                    Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by&nbsp;
+                                    <Image 
+                                        src="/neuralpath.svg" 
+                                        alt="Neural Paths" 
+                                        width={115} 
+                                        height={30} 
+                                        style={{ 
+                                            display: 'inline-block', 
+                                            verticalAlign: 'middle', 
+                                            marginLeft: '8px' 
+                                        }}
+                                    />
+                                </p>
+                            </div>
                         </div>
-                        <div className={styles.footerLinks}>
-                            <a href="/terms">Terms of use</a>
-                            <span>•</span>
-                            <a href="/privacy">Privacy Policy</a>
-                            <span>•</span>
-                            <a href="/disclaimer">Disclaimer</a>
-                            <span>•</span>
-                            <a href="/responsible-ai">Responsible AI</a>
+                        
+                        <div className={styles.footerRight}>
+                            <Image 
+                                src="/images/footer-illustration.png" 
+                                alt="Footer Illustration" 
+                                width={400} 
+                                height={200}
+                                style={{
+                                    maxWidth: '100%',
+                                    height: 'auto',
+                                    objectFit: 'contain',
+                                    objectPosition: 'bottom right',
+                                    display: 'block',
+                                    marginBottom: '-5px'
+                                }}
+                                priority
+                            />
                         </div>
-                        <div className={styles.footerBottom}>
-                            <p>Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by 
-                                <Image 
-                                    src="/neuralpath.svg" 
-                                    alt="Neural Paths" 
-                                    width={115} 
-                                    height={80 } 
-                                    style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '8px' }}
-                                />
-                            </p>
-                        </div>
-                    </div>
-                    <div className={styles.footerIllustration}>
-                        <Image 
-                            src="/images/footer-illustration.png" 
-                            alt="Footer Illustration" 
-                            width={400} 
-                            height={200}
-                            className=''
-                        />
                     </div>
                 </div>
             </footer>

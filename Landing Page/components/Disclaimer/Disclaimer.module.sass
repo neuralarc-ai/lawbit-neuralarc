@@ -12,37 +12,48 @@
     display: flex
     flex-direction: column
     gap: 2rem
+    margin-top: 40px
 
 .disclaimerContainer
-    max-width: 1400px
-    border-radius: 1rem
+    max-width: 1000px
+    border-radius: 24px
     padding: 48px
     margin: 0 auto
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+    background: rgba(31, 31, 31, 0.8)
+    backdrop-filter: blur(50px)
+    box-shadow: 0 8px 16px -4px rgba(18, 18, 18, 0.2)
+    border: 1px solid rgba(255, 255, 255, 0.1)
 
 .headerRow
     display: flex
     justify-content: space-between
     align-items: center
     margin-bottom: 2rem
+    padding-bottom: 1rem
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1)
 
 .pageTitle
-    font-size: 2.5rem
-    font-weight: 700
-    color: #FFFFFF
+    font-size: 2rem
+    font-weight: 600
+    background: linear-gradient(to right, rgba(138, 48, 255, 1), rgba(248, 66, 178, 1))
+    -webkit-background-clip: text
+    background-clip: text
+    color: transparent
     margin: 0
 
 .effectiveDate
     font-size: 1rem
-    color: #888888
+    color: rgba(255, 255, 255, 0.6)
     margin: 0
 
-.welcomeSection
-    margin-bottom: 2rem
+.contentSection
     p
         font-size: 1.1rem
         line-height: 1.6
-        color: #CCCCCC
+        color: rgba(255, 255, 255, 0.8)
+        margin-bottom: 1.5rem
+        &:last-child
+            margin-bottom: 0
 
 .sectionsContainer
     display: flex
@@ -103,8 +114,12 @@
     .container
         padding: 1rem
 
+    .mainContent
+        margin-top: 20px
+        gap: 1.5rem
+
     .disclaimerContainer
-        padding: 1.5rem
+        padding: 24px
 
     .headerRow
         flex-direction: column
@@ -112,10 +127,14 @@
         gap: 0.5rem
 
     .pageTitle
-        font-size: 2rem
+        font-size: 1.5rem
 
     .sectionHeader
         padding: 1rem
 
     .sectionContent
-        padding: 0 1rem 1rem 
+        padding: 0 1rem 1rem
+
+    .contentSection
+        p
+            font-size: 1rem 
