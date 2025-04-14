@@ -213,6 +213,7 @@
     display: flex
     flex-direction: column
     gap: 24px
+    max-height: 1618px
 
 .tabSelector
     display: flex
@@ -266,60 +267,30 @@
             background: rgba(255, 255, 255, 0.1)
 
 .submitButton
+    margin-top: 24px
     width: 100%
-    padding: 16px
+    padding: 16px 24px
+    background: linear-gradient(135deg, #8A30FF 0%, #F842B2 100%)
     border: none
     border-radius: 12px
-    background: radial-gradient(circle at center, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 60%, rgba(248, 91, 66, 1) 100%)
     color: white
     font-size: 16px
     font-weight: 600
     cursor: pointer
     transition: all 0.3s ease
-    position: relative
-    overflow: hidden
     display: flex
     align-items: center
     justify-content: center
     gap: 8px
-    box-shadow: 0 8px 16px -4px rgba(18, 18, 18, 0.2), 0 8px 20px 3px rgba(254, 83, 185, 0.25), inset 0 4px 4px rgba(255, 255, 255, 0.05)
-    &:before
-        content: ''
-        position: absolute
-        inset: 0
-        background: radial-gradient(circle at center, rgba(138, 48, 255, 0.8) 0%, rgba(248, 66, 178, 0.8) 60%, rgba(248, 91, 66, 0.8) 100%)
-        opacity: 0
-        transition: opacity 0.3s ease
-    &:after
-        content: ''
-        position: absolute
-        inset: 0px
-        border-radius: 10px
-        border: 2px solid transparent
-        background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
-        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
-        -webkit-mask-composite: destination-out
-        mask-composite: exclude
-    &:hover:before
-        opacity: 1
-    span
-        position: relative
-        z-index: 1
-    svg
-        position: relative
-        z-index: 1
-        transition: transform 0.3s ease
-    &:hover svg
-        transform: translateX(4px)
+
+    &:hover
+        transform: translateY(-2px)
+        box-shadow: 0 8px 24px rgba(138, 48, 255, 0.3)
+
     &:disabled
-        opacity: 0.5
+        opacity: 0.7
         cursor: not-allowed
-        background: radial-gradient(circle at center, rgba(138, 48, 255, 0.5) 0%, rgba(248, 66, 178, 0.5) 60%, rgba(248, 91, 66, 0.5) 100%)
-        box-shadow: 0 4px 8px -2px rgba(18, 18, 18, 0.1), 0 4px 10px 1px rgba(254, 83, 185, 0.1), inset 0 2px 2px rgba(255, 255, 255, 0.03)
-        &:hover:before
-            opacity: 0
-        &:hover svg
-            transform: none
+        transform: none
 
 .previewSection
     flex: 1
@@ -329,18 +300,20 @@
     box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.02)
     backdrop-filter: blur(20px)
     overflow: hidden
+    display: flex
+    flex-direction: column
 
 .previewContent
     flex: 1
-    height: 100%    
     overflow-y: auto
     padding: 24px
     color: #FFFFFF
     position: relative
     display: flex
     flex-direction: column
-    justify-content: center
+    justify-content: flex-start
     align-items: center
+    height: 100%
 
 .previewPlaceholder
     display: flex
@@ -528,7 +501,7 @@
 
 .contractPreview
     width: 100%
-    height: 1160px
+    height: 100%
     overflow: hidden
     display: flex
     flex-direction: column
@@ -539,30 +512,37 @@
     line-height: 1.6
     color: #FFFFF
     padding: 20px
+    width: 100%
+    word-wrap: break-word
+    overflow-x: hidden
+    height: 100%
     overflow-y: auto
-    max-height: 100%
     
     h1
         font-size: 16px
         font-weight: bold
         margin-bottom: 15px
         color: #FFF
+        word-wrap: break-word
     
     h2
         font-size: 14px
         font-weight: bold
         margin-bottom: 10px
         color: #FFF
+        word-wrap: break-word
     
     p
         font-size: 12px
         margin-bottom: 10px
+        word-wrap: break-word
     
     .listItem
         font-size: 12px
         margin-bottom: 8px
         display: flex
         align-items: flex-start
+        word-wrap: break-word
         
         .bullet
             margin-right: 8px
@@ -573,6 +553,7 @@
         margin-bottom: 8px
         display: flex
         align-items: flex-start
+        word-wrap: break-word
         
         .number
             font-weight: bold
@@ -584,6 +565,7 @@
         margin-bottom: 8px
         display: flex
         align-items: flex-start
+        word-wrap: break-word
         
         .key
             font-weight: bold
@@ -592,6 +574,7 @@
         
         .value
             flex: 1
+            word-wrap: break-word
 
 .legalDisclaimer
     margin-top: 24px
@@ -632,14 +615,14 @@
             margin: 0
 
         .chevron
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1)
+            transition: transform 0.3s ease
             opacity: 0.8
-            transform-origin: center
+            
             &:hover
                 opacity: 1
-                transform: scale(1.1)
+            
             &.open
-                transform: rotate(180deg) scale(1.1)
+                transform: rotate(180deg)
                 opacity: 1
 
     .disclaimerContent
@@ -724,6 +707,7 @@
             font-size: 14px
             user-select: none
             font-weight: 500
+            margin-left: 8px
 
 // Add the full-screen loading overlay
 .generatingOverlay

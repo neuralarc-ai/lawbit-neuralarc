@@ -1739,22 +1739,31 @@ const CreateContract = () => {
                     </div>
                     
                     <div className={styles.legalDisclaimer}>
-                        <button 
+                        <button
                             type="button"
-                            className={styles.disclaimerHeader} 
+                            className={styles.disclaimerHeader}
                             onClick={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
                         >
                             <div className={styles.headerContent}>
                                 <h3 className={styles.disclaimerTitle}>Legal Disclaimer</h3>
-                                <Image 
-                                    src="/images/chevron-down.svg"
-                                    width={24}
-                                    height={24}
-                                    alt="Toggle"
+                                <svg 
+                                    width="20" 
+                                    height="20" 
+                                    viewBox="0 0 24 24" 
+                                    fill="none" 
+                                    xmlns="http://www.w3.org/2000/svg"
                                     className={cn(styles.chevron, {
                                         [styles.open]: isDisclaimerOpen
                                     })}
-                                />
+                                >
+                                    <path 
+                                        d="M6 9L12 15L18 9" 
+                                        stroke="#FFFFFF" 
+                                        strokeWidth="2" 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
                             </div>
                         </button>
                         
