@@ -1,29 +1,31 @@
-@import ../../styles/variables
+@import @/styles/variables
 
 $p1: #FF5CAA // Primary color variable
 
 .legalDisclaimer
-    display: flex
-    flex-direction: column
-    gap: 16px
-    background: rgba(32, 32, 32, 0.4)
-    border-radius: 16px
-    overflow: hidden
+    margin: 24px 0
     width: 100%
-    margin-top: auto
 
 .disclaimerAccordion
+    width: 100%
+    background: rgba(18, 18, 18, 0.3)
     border: 1px solid rgba(255, 255, 255, 0.1)
     border-radius: 16px
     overflow: hidden
+    transition: all 0.3s ease
 
 .disclaimerHeader
     width: 100%
-    padding: 16px 24px
-    background: none
+    padding: 16px
+    background: rgba(255, 255, 255, 0.03)
     border: none
     cursor: pointer
-    transition: background .2s
+    display: flex
+    align-items: center
+    justify-content: space-between
+    transition: all 0.3s ease
+    margin: 0
+
     &:hover
         background: rgba(255, 255, 255, 0.05)
 
@@ -31,82 +33,186 @@ $p1: #FF5CAA // Primary color variable
     display: flex
     align-items: center
     justify-content: space-between
-    gap: 12px
+    width: 100%
 
 .disclaimerTitle
+    font-size: 16px
     font-weight: 600
-    font-size: 18px
-    color: $n1
+    color: rgba(255, 255, 255, 0.9)
+    margin: 0
+    display: flex
+    align-items: center
+    gap: 12px
+
+.requiredBadge
+    background: rgba(255, 92, 170, 0.1)
+    color: #FF5CAA
+    padding: 4px 8px
+    border-radius: 4px
+    font-size: 12px
+    font-weight: 500
+    animation: pulse 2s infinite
+
+@keyframes pulse
+    0%
+        opacity: 1
+    50%
+        opacity: 0.7
+    100%
+        opacity: 1
 
 .chevron
-    transition: transform .3s ease
+    width: 24px
+    height: 24px
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+    transform-origin: center
+    color: rgba(255, 255, 255, 0.7)
+    flex-shrink: 0
+
     &.open
         transform: rotate(180deg)
 
 .disclaimerContent
     max-height: 0
     overflow: hidden
-    transition: max-height .3s ease-out
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+    background: rgba(255, 255, 255, 0.02)
+    opacity: 0
+    transform: translateY(-10px)
+    
     &.open
-        max-height: 800px
+        max-height: 500px
+        padding: 20px
+        opacity: 1
+        transform: translateY(0)
 
 .disclaimerText
-    padding: 0 24px 16px
-    color: rgba(255, 255, 255, 0.7)
+    padding: 24px
+    color: rgba(255, 255, 255, 0.8)
     font-size: 14px
-    line-height: 1.5
+    line-height: 1.6
+
     p
-        margin-bottom: 12px
+        margin-bottom: 16px
+        position: relative
+        padding-left: 20px
+
+        &:before
+            content: "•"
+            position: absolute
+            left: 0
+            color: rgba(255, 255, 255, 0.4)
+
         &:last-child
             margin-bottom: 0
 
 .acceptanceRow
-    padding: 16px
-    border: 1px solid rgba(255, 255, 255, 0.1)
-    background: rgba(32, 32, 32, 0.3)
-    border-radius: 12px
-
-.checkbox
     display: flex
     align-items: center
     gap: 12px
+    padding: 16px 24px
+    border-top: 1px solid rgba(255, 255, 255, 0.1)
+    background: rgba(18, 18, 18, 0.2)
+    transition: all 0.3s ease
+    cursor: default
+
+    &.enabled
+        opacity: 1
+        pointer-events: auto
+        background: rgba(18, 18, 18, 0.3)
+
+    &:not(.enabled)
+        opacity: 0.5
+        pointer-events: none
+
+.checkbox
+    position: relative
+    width: 20px
+    height: 20px
+    border: 2px solid rgba(255, 255, 255, 0.2)
+    border-radius: 4px
     cursor: pointer
-    user-select: none
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+    background: rgba(255, 255, 255, 0.05)
+
+    &:hover
+        border-color: rgba(255, 255, 255, 0.4)
+        background: rgba(255, 255, 255, 0.1)
+        transform: scale(1.05)
+
     input
         position: absolute
         opacity: 0
         cursor: pointer
-        height: 0
-        width: 0
-    .checkmark
-        position: relative
-        height: 20px
-        width: 20px
-        background: rgba(255, 255, 255, 0.1)
-        border: 1px solid rgba(255, 255, 255, 0.2)
-        border-radius: 4px
-        transition: all .2s
-        &:after
-            content: ""
-            position: absolute
-            display: none
-            left: 6px
-            top: 2px
-            width: 5px
-            height: 10px
-            border: solid white
-            border-width: 0 2px 2px 0
-            transform: rotate(45deg)
-    input:checked ~ .checkmark
-        background: $p1
-        border-color: $p1
-        &:after
-            display: block
-    &:hover .checkmark
-        background: rgba(255, 255, 255, 0.15)
-    input:checked:hover ~ .checkmark
-        background: darken($p1, 5%)
+        width: 100%
+        height: 100%
 
-.label
-    color: $n1
-    font-size: 14px 
+    .checkmark
+        position: absolute
+        top: 2px
+        left: 2px
+        width: 12px
+        height: 12px
+        background: #FF5CAA
+        border-radius: 2px
+        opacity: 0
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+        transform: scale(0.8)
+        cursor: pointer
+
+        &.checked
+            opacity: 1
+            transform: scale(1)
+            animation: checkmarkPop 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+
+@keyframes checkmarkPop
+    0%
+        transform: scale(0.8)
+        opacity: 0
+    50%
+        transform: scale(1.2)
+    100%
+        transform: scale(1)
+        opacity: 1
+
+.acceptanceLabel
+    font-size: 14px
+    color: rgba(255, 255, 255, 0.8)
+    cursor: default
+    transition: color 0.2s ease
+
+    &:hover
+        color: rgba(255, 255, 255, 0.9)
+
+.toggleButton
+    background: none
+    border: none
+    padding: 4px
+    cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: center
+    color: rgba(255, 255, 255, 0.7)
+    transition: all 0.3s ease
+    border-radius: 50%
+    
+    &:hover
+        background: rgba(255, 255, 255, 0.1)
+        color: rgba(255, 255, 255, 0.9)
+
+.acceptanceStatus
+    font-size: 12px
+    font-weight: 500
+    padding: 4px 8px
+    border-radius: 12px
+    transition: all 0.3s ease
+    
+    &.pending
+        color: #FFD700
+        background: rgba(255, 215, 0, 0.1)
+        border: 1px solid rgba(255, 215, 0, 0.3)
+        
+    &.accepted
+        color: #32CD32
+        background: rgba(50, 205, 50, 0.1)
+        border: 1px solid rgba(50, 205, 50, 0.3) 

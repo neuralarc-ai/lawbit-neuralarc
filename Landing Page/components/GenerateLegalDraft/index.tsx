@@ -264,94 +264,54 @@ const GenerateLegalDraft = () => {
                             />
                         </div>
                         
-                        <div className={styles.legalDisclaimer}>
-                                    <div className={styles.disclaimerHeader}>
-                                        <div className={styles.disclaimerTitle}>
-                                            Legal Disclaimer
-                                            <span className={styles.requiredBadge}>Required</span>
-                                        </div>
-                                        <button 
-                                            onClick={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
-                                            className={styles.toggleButton}
-                                            aria-expanded={isDisclaimerOpen}
-                                            aria-label={isDisclaimerOpen ? "Close disclaimer" : "Open disclaimer"}
-                                        >
-                                            <svg 
-                                                width="20" 
-                                                height="20" 
-                                                viewBox="0 0 24 24" 
-                                                fill="none" 
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className={cn(styles.chevron, {
-                                                    [styles.open]: isDisclaimerOpen
-                                                })}
-                                            >
-                                                <path 
-                                                    d="M6 9L12 15L18 9" 
-                                                    stroke="currentColor" 
-                                                    strokeWidth="2" 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                        </button>
-                                    </div>
-
-                                    <div className={cn(styles.disclaimerContent, {
-                                        [styles.open]: isDisclaimerOpen
-                                    })}>
-                            <div className={styles.disclaimerText}>
-                                            <p>This AI-powered legal document generator is designed to provide general legal document templates and assistance. While we strive for accuracy and completeness, please note the following important points:</p>
-                                            <p>Not Legal Advice: The generated documents and information provided are not substitutes for professional legal advice. Consult with a qualified legal professional for specific legal matters.</p>
-                                            <p>No Attorney-Client Relationship: Use of this service does not create an attorney-client relationship between you and our platform or any affiliated parties.</p>
-                                            <p>Accuracy & Completeness: While we make efforts to keep information up-to-date and accurate, we cannot guarantee the completeness, accuracy, or adequacy of the generated documents for your specific needs.</p>
-                                            <p>Review Requirement: All generated documents should be thoroughly reviewed by a qualified legal professional before use or implementation.</p>
-                                        </div>
-                                    </div>
-
-                                    <div 
-                                        className={styles.acceptanceRow}
-                                        onClick={() => setDisclaimerAccepted(!disclaimerAccepted)}
-                                    >
-                                        <label className={styles.checkbox}>
-                                            <input
-                                                type="checkbox"
-                                                checked={disclaimerAccepted}
-                                                onChange={() => setDisclaimerAccepted(!disclaimerAccepted)}
-                                            />
-                                            <span className={styles.checkmark}></span>
-                                        </label>
-                                        <span className={styles.acceptanceLabel}>
-                                            I have read and understand the legal disclaimer
-                                        </span>
-                                        <span className={cn(styles.acceptanceStatus, {
-                                            [styles.pending]: !disclaimerAccepted,
-                                            [styles.accepted]: disclaimerAccepted
-                                        })}>
-                                            {disclaimerAccepted ? 'Accepted' : 'Pending'}
-                                        </span>
-                            </div>
+                        <div className={styles.legalDisclaimerContainer}>
+                            <LegalDisclaimer 
+                                onAccept={() => setDisclaimerAccepted(true)}
+                                isAccepted={disclaimerAccepted}
+                                isOpen={isDisclaimerOpen}
+                                onToggle={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
+                            />
                         </div>
                         
                             <button 
-                                    className={styles.generateButton}
+                                    className={cn(styles.generateButton, {
+                                        [styles.loading]: isGenerating
+                                    })}
                                 onClick={handleGenerate}
                                     disabled={isGenerating || !disclaimerAccepted}
                                 >
                                     {isGenerating ? (
                                         <>
-                                            <span className={styles.progressText}>
-                                                {generationSteps[generationStep]}
-                                            </span>
                                             <div className={styles.progressBar}>
                                                 <div
                                                     className={styles.progressFill}
                                                     style={{ width: `${generationProgress}%` }}
                                                 />
                                             </div>
+                                            <span className={styles.progressText}>
+                                                {generationSteps[generationStep]}
+                                            </span>
                                         </>
                                     ) : (
-                                        'Generate Legal Draft'
+                                        <>
+                                            Generate Legal Draft
+                                            <svg 
+                                                className={styles.arrowIcon}
+                                                width="20" 
+                                                height="20" 
+                                                viewBox="0 0 20 20" 
+                                                fill="none" 
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path 
+                                                    d="M4.16666 10H15.8333M15.8333 10L10 4.16666M15.8333 10L10 15.8333" 
+                                                    stroke="currentColor" 
+                                                    strokeWidth="1.5" 
+                                                    strokeLinecap="round" 
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                        </>
                                     )}
                             </button>
                     </motion.div>

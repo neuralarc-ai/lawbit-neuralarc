@@ -24,6 +24,9 @@ $p1: #FF5CAA // Primary color variable
     -webkit-mask-composite: xor
     mask-composite: exclude
     pointer-events: none
+  animation: containerReveal 1s cubic-bezier(0.16, 1, 0.3, 1)
+  transform-origin: center
+  perspective: 1000px
 
 .innerContainer
   position: relative
@@ -84,6 +87,29 @@ $p1: #FF5CAA // Primary color variable
   border: 1px solid rgba(255, 255, 255, 0.08)
   position: relative
   overflow: hidden
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
+  transform-style: preserve-3d
+  &:focus-within
+    transform: translateY(-4px) translateZ(20px)
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3)
+    border-color: rgba(255, 255, 255, 0.3)
+    
+    &::after
+      content: ''
+      position: absolute
+      inset: -1px
+      background: linear-gradient(45deg, rgba(138, 48, 255, 0.2), rgba(248, 66, 178, 0.2))
+      border-radius: 16px
+      z-index: -1
+      animation: inputGlow 2s ease-in-out infinite
+
+@keyframes inputGlow
+  0%, 100%
+    opacity: 0.5
+    transform: scale(1)
+  50%
+    opacity: 0.8
+    transform: scale(1.02)
 
 .textarea
   width: 100%
@@ -99,204 +125,211 @@ $p1: #FF5CAA // Primary color variable
   font-family: inherit
   &::placeholder
     color: rgba($n1, 0.5)
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
+  transform-style: preserve-3d
+  
+  &:focus
+    transform: scale(1.02) translateZ(10px)
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2)
 
 .legalDisclaimer
-  margin: 20px 0
-  padding: 24px
+  margin-top: 24px
+  margin-bottom: 24px
+  width: 100%
+  background: rgba(18, 18, 18, 0.3)
+  border: 1px solid rgba(255, 255, 255, 0.1)
   border-radius: 16px
-  background: rgba(0, 0, 0, 0.2)
-  backdrop-filter: blur(10px)
-  -webkit-backdrop-filter: blur(10px)
-  border: 1px solid rgba(255, 255, 255, 0.08)
-  position: relative
+  overflow: hidden
   transition: all 0.3s ease
-  
-  &::before
-    content: ""
-    position: absolute
-    top: 0
-    left: 0
-    width: 4px
-    height: 100%
-    background: linear-gradient(180deg, #FF5CAA 0%, #6950FB 100%)
-    border-radius: 4px 0 0 4px
-
-  &:hover
-    border-color: rgba(255, 255, 255, 0.15)
-    background: rgba(41, 41, 41, 0.3)
+  position: relative
 
 .disclaimerHeader
-  display: flex
-  align-items: center
-  justify-content: space-between
-  margin-bottom: 20px
-  padding-bottom: 16px
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1)
-
-.toggleButton
-  background: none
+  width: 100%
+  padding: 16px
+  background: rgba(255, 255, 255, 0.03)
   border: none
-  padding: 4px
   cursor: pointer
   display: flex
   align-items: center
-  justify-content: center
-  color: rgba(255, 255, 255, 0.7)
+  justify-content: space-between
   transition: all 0.3s ease
-  border-radius: 50%
-  
-  &:hover
-    background: rgba(255, 255, 255, 0.1)
-    color: rgba(255, 255, 255, 0.9)
+  margin: 0
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1)
 
-.chevron
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)
-  transform-origin: center
-  
-  &.open
-    transform: rotate(180deg)
+  &:hover
+    background: rgba(255, 255, 255, 0.05)
 
 .disclaimerTitle
-  font-size: 18px
+  font-size: 16px
   font-weight: 600
-  color: $n1
+  color: rgba(255, 255, 255, 0.9)
+  margin: 0
   display: flex
   align-items: center
   gap: 12px
 
-  .requiredBadge
-    font-size: 12px
-    font-weight: 500
-    color: #FF453A
-    background: rgba(255, 69, 58, 0.1)
-    padding: 4px 8px
-    border-radius: 12px
-    border: 1px solid rgba(255, 69, 58, 0.3)
+.chevron
+  width: 24px
+  height: 24px
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+  transform-origin: center
+  color: rgba(255, 255, 255, 0.7)
+  flex-shrink: 0
+
+  &.open
+    transform: rotate(180deg)
 
 .disclaimerContent
   max-height: 0
   overflow: hidden
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1)
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+  background: rgba(255, 255, 255, 0.02)
   opacity: 0
-  margin-bottom: 0
+  transform: translateY(-10px)
   
   &.open
-    max-height: 800px
+    max-height: 500px
+    padding: 20px
     opacity: 1
-    margin-bottom: 20px
+    transform: translateY(0)
 
 .disclaimerText
-  color: rgba($n1, 0.8)
+  color: rgba(255, 255, 255, 0.7)
   font-size: 14px
   line-height: 1.6
   
   p
-    margin-bottom: 12px
+    margin: 12px 0
     display: flex
     align-items: flex-start
     gap: 8px
     
     &:before
       content: "•"
-      color: $p1
+      color: #8A30FF
       font-size: 16px
       line-height: 1
     
+    &:first-child
+      margin-top: 0
     &:last-child
       margin-bottom: 0
 
 .acceptanceRow
   display: flex
   align-items: center
-  gap: 12px
   padding: 16px
-  background: rgba(255, 255, 255, 0.03)
-  border-radius: 12px
+  background: rgba(255, 255, 255, 0.02)
+  border-top: 1px solid rgba(255, 255, 255, 0.05)
+  cursor: pointer
   transition: all 0.3s ease
-  cursor: pointer
-  margin-top: 20px
-  border-top: 1px solid rgba(255, 255, 255, 0.1)
-
+  gap: 0
+  opacity: 0.5
+  pointer-events: none
+  
   &:hover
-    background: rgba(255, 255, 255, 0.05)
+    background: rgba(255, 255, 255, 0.03)
 
-.checkbox
-  position: relative
-  display: inline-block
-  width: 20px
-  height: 20px
-  margin-right: 1px
-  cursor: pointer
-  z-index: 1
-
-  input
-    position: absolute
-    opacity: 0
+  &.enabled
+    opacity: 1
+    pointer-events: auto
     cursor: pointer
-    height: 20px
-    width: 20px
-    z-index: 2
 
-  .checkmark
-    position: absolute
-    top: 0
-    left: 0
+    .checkbox
+      cursor: pointer
+      pointer-events: auto
+
+      input
+        cursor: pointer
+        pointer-events: auto
+
+      .checkmark
+        cursor: pointer
+        pointer-events: auto
+
+  .checkbox
+    position: relative
+    display: inline-block
     width: 20px
     height: 20px
-    background: rgba(255, 255, 255, 0.1)
-    border: 1px solid rgba(255, 255, 255, 0.2)
-    border-radius: 4px
-    transition: all 0.2s ease
-    cursor: pointer
+    margin-right: 0
+    cursor: not-allowed
+    pointer-events: none
     z-index: 1
 
-    &:after
-      content: ""
+    input
       position: absolute
-      display: none
-      left: 6px
-      top: 2px
-      width: 5px
-      height: 10px
-      border: solid white
-      border-width: 0 2px 2px 0
-      transform: rotate(45deg)
+      opacity: 0
+      cursor: not-allowed
+      pointer-events: none
+      height: 20px
+      width: 20px
+      z-index: 2
 
-  input:checked ~ .checkmark
-    background: $p1
-    border-color: $p1
+    .checkmark
+      position: absolute
+      top: 0
+      left: 0
+      width: 20px
+      height: 20px
+      background: rgba(255, 255, 255, 0.1)
+      border: 1px solid rgba(255, 255, 255, 0.2)
+      border-radius: 4px
+      transition: all 0.2s ease
+      cursor: not-allowed
+      pointer-events: none
+      z-index: 1
 
-  input:checked ~ .checkmark:after
-    display: block
+      &:after
+        content: ""
+        position: absolute
+        display: none
+        left: 6px
+        top: 2px
+        width: 5px
+        height: 10px
+        border: solid white
+        border-width: 0 2px 2px 0
+        transform: rotate(45deg)
 
-  &:hover .checkmark
-    background: rgba(255, 255, 255, 0.15)
+    input:checked ~ .checkmark
+      background: #8A30FF
+      border-color: #8A30FF
 
-  input:checked:hover ~ .checkmark
-    background: darken($p1, 5%)
+    input:checked ~ .checkmark:after
+      display: block
 
-.acceptanceLabel
-  color: $n1
-  font-size: 14px
-  user-select: none
-  flex: 1
+    &:hover .checkmark
+      background: rgba(255, 255, 255, 0.15)
 
-.acceptanceStatus
-  font-size: 12px
-  font-weight: 500
-  padding: 4px 8px
-  border-radius: 12px
-  transition: all 0.3s ease
+    input:checked:hover ~ .checkmark
+      background: #7929E9
 
-  &.pending
-    color: #FFD700
-    background: rgba(255, 215, 0, 0.1)
-    border: 1px solid rgba(255, 215, 0, 0.3)
+  .acceptanceLabel
+    color: rgba(255, 255, 255, 0.7)
+    font-size: 14px
+    user-select: none
+    flex: 1
+    font-weight: 500
+    margin-left: -4px
+    padding-left: 0
 
-  &.accepted
-    color: #32CD32
-    background: rgba(50, 205, 50, 0.1)
-    border: 1px solid rgba(50, 205, 50, 0.3)
+  .acceptanceStatus
+    font-size: 12px
+    font-weight: 500
+    padding: 4px 8px
+    border-radius: 12px
+    transition: all 0.3s ease
+    
+    &.pending
+      color: #FFD700
+      background: rgba(255, 215, 0, 0.1)
+      border: 1px solid rgba(255, 215, 0, 0.3)
+      
+    &.accepted
+      color: #32CD32
+      background: rgba(50, 205, 50, 0.1)
+      border: 1px solid rgba(50, 205, 50, 0.3)
 
 .actionsRow
   display: flex
@@ -311,55 +344,74 @@ $p1: #FF5CAA // Primary color variable
   align-items: center
   justify-content: center
   width: auto
-  padding: 12px 24px
-  border-radius: 8px
-  background: linear-gradient(135deg, $p1 0%, #6950FB 100%)
+  padding: 16px 24px
+  border-radius: 12px
+  background: linear-gradient(135deg, #8A30FF 0%, #F842B2 100%)
   color: $n1
-  font-size: 14px
+  font-size: 16px
   font-weight: 600
-  transition: all 0.3s ease
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
+  transform-style: preserve-3d
   border: none
   cursor: pointer
   position: relative
   overflow: hidden
   min-width: 120px
   text-align: center
-  left: 50%
-  transform: translateX(-50%)
+  margin: 24px auto 0
+  gap: 8px
 
-  &:hover
-    transform: translateX(-50%) translateY(-2px)
-    box-shadow: 0 4px 12px rgba($p1, 0.3)
+  &::before
+    content: ''
+    position: absolute
+    inset: 0
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent)
+    transform: translateX(-100%) skewX(-15deg)
+    animation: buttonShine 2s infinite
+  
+  &:hover:not(:disabled)
+    transform: translateY(-4px) translateZ(20px) scale(1.02)
+    box-shadow: 0 12px 32px rgba(138, 48, 255, 0.4)
+    
+    .arrowIcon
+      transform: translateX(8px) translateZ(10px)
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)
 
   &:disabled
     opacity: 0.7
     cursor: not-allowed
-    transform: translateX(-50%)
+    transform: none
     box-shadow: none
 
   &:active
-    transform: translateX(-50%) scale(0.98)
+    transform: scale(0.98)
     transition-duration: 0.1s
 
   &.loading
-    background: linear-gradient(135deg, rgba($p1, 0.9) 0%, rgba(#6950FB, 0.9) 100%)
+    background: linear-gradient(135deg, rgba(138, 48, 255, 0.6) 0%, rgba(248, 66, 178, 0.6) 100%)
     color: transparent
     pointer-events: none
+    position: relative
+    overflow: hidden
 
     &::after
       content: ''
       position: absolute
       top: 0
-      left: 0
-      width: 100%
+      left: -100%
+      width: 50%
       height: 100%
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)
-      animation: shimmer 1.5s infinite
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0))
+      animation: shimmer 1.5s infinite linear
 
     .loadingContent
       position: absolute
+      top: 50%
+      left: 50%
+      transform: translate(-50%, -50%)
       display: flex
       align-items: center
+      justify-content: center
       gap: 8px
       color: $n1
       font-size: 14px
@@ -372,6 +424,14 @@ $p1: #FF5CAA // Primary color variable
         border-top-color: $n1
         border-radius: 50%
         animation: spin 0.8s linear infinite
+
+  .arrowIcon
+    transition: transform 0.3s ease
+    transform: translateX(0)
+
+  &:disabled
+    .arrowIcon
+      opacity: 0.5
 
 .generatingOverlay
   position: fixed
@@ -387,12 +447,32 @@ $p1: #FF5CAA // Primary color variable
   justify-content: center
   z-index: 1000
   border-radius: 32px
+  animation: overlayReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1)
+  transform-style: preserve-3d
+
+@keyframes overlayReveal
+  0%
+    opacity: 0
+    transform: scale(0.95) rotateX(5deg)
+    backdrop-filter: blur(0)
+  100%
+    opacity: 1
+    transform: scale(1) rotateX(0)
+    backdrop-filter: blur(10px)
 
 .loadingIcon
   position: relative
   width: 120px
   height: 120px
   margin-bottom: 32px
+  animation: iconFloat 3s cubic-bezier(0.16, 1, 0.3, 1) infinite
+  transform-style: preserve-3d
+
+@keyframes iconFloat
+  0%, 100%
+    transform: translateY(0) translateZ(0)
+  50%
+    transform: translateY(-15px) translateZ(20px)
 
 .spinner
   position: absolute
@@ -404,7 +484,8 @@ $p1: #FF5CAA // Primary color variable
   border-top-color: #FF5CAA
   border-right-color: #6950FB
   border-radius: 50%
-  animation: spin 1s linear infinite
+  animation: spin 1.2s cubic-bezier(0.16, 1, 0.3, 1) infinite
+  transform-style: preserve-3d
 
 .logo
   position: absolute
@@ -421,7 +502,16 @@ $p1: #FF5CAA // Primary color variable
   background: linear-gradient(90deg, #FF5CAA, #6950FB)
   -webkit-background-clip: text
   -webkit-text-fill-color: transparent
-  animation: shimmer 2s linear infinite
+  animation: textFlow 3s cubic-bezier(0.16, 1, 0.3, 1) infinite
+  transform-style: preserve-3d
+
+@keyframes textFlow
+  0%, 100%
+    background-position: 0% 50%
+    transform: translateZ(0)
+  50%
+    background-position: 100% 50%
+    transform: translateZ(10px)
 
 .loadingDescription
   font-size: 16px
@@ -439,7 +529,8 @@ $p1: #FF5CAA // Primary color variable
 .progressBar
   height: 100%
   background: linear-gradient(90deg, #FF5CAA, #6950FB)
-  transition: width 0.3s ease
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1)
+  transform-style: preserve-3d
 
 .resultSection
   width: 100%
@@ -448,6 +539,16 @@ $p1: #FF5CAA // Primary color variable
   backdrop-filter: blur(10px)
   border: 1px solid rgba(255, 255, 255, 0.08)
   border-radius: 16px
+  animation: resultReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+  transform-style: preserve-3d
+
+@keyframes resultReveal
+  0%
+    opacity: 0
+    transform: translateY(30px) rotateX(-10deg)
+  100%
+    opacity: 1
+    transform: translateY(0) rotateX(0)
 
 .contractContent
   color: $n1
@@ -492,12 +593,27 @@ $p1: #FF5CAA // Primary color variable
   border: 1px solid rgba(255, 255, 255, 0.2)
   border-radius: 30px
   cursor: pointer
-  transition: all 0.3s ease
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
+  transform-style: preserve-3d
+  position: relative
+  overflow: hidden
   min-width: 160px
+  
+  &::after
+    content: ''
+    position: absolute
+    inset: 0
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent)
+    transform: translateX(-100%) skewX(-15deg)
+    transition: transform 0.4s ease
+  
   &:hover
-    background: rgba(255, 255, 255, 0.15)
-    transform: translateY(-2px)
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2)
+    transform: translateY(-4px) translateZ(20px)
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3)
+    
+    &::after
+      transform: translateX(100%) skewX(-15deg)
+
   &.success
     background: rgba(39, 174, 96, 0.2)
     border-color: rgba(39, 174, 96, 0.3)
@@ -611,67 +727,78 @@ $p1: #FF5CAA // Primary color variable
   justify-content: flex-end
   margin-top: 16px
 
-.actionButton
-  padding: 8px 16px
+.progressText
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  color: $n1
+  font-size: 14px
+  font-weight: 500
+  z-index: 2
+  white-space: nowrap
+
+.progressBar
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  width: 100%
+  height: 100%
+  background: rgba(0, 0, 0, 0.2)
+  z-index: 1
   border-radius: 8px
-  background: rgba(255, 255, 255, 0.1)
-  color: $n1
-  font-size: 14px
-  font-weight: 500
-  transition: all 0.3s ease
-  border: none
-  cursor: pointer
-
-  &:hover
-    background: rgba(255, 255, 255, 0.15)
-    transform: translateY(-2px)
-
-  &:active
-    background: rgba(255, 255, 255, 0.2)
-    transform: translateY(0)
-
-.progressText
-  position: absolute
-  top: 50%
-  left: 50%
-  transform: translate(-50%, -50%)
-  color: $n1
-  font-size: 14px
-  font-weight: 500
-  z-index: 1
-
-.progressBar
-  position: absolute
-  top: 0
-  left: 0
-  width: 100%
-  height: 100%
-  background: rgba(0, 0, 0, 0.2)
-
-.progressFill
-  height: 100%
-  background: linear-gradient(135deg, rgba($p1, 0.8) 0%, rgba(#6950FB, 0.8) 100%)
-  transition: width 0.3s ease
-
-.progressText
-  position: absolute
-  top: 50%
-  left: 50%
-  transform: translate(-50%, -50%)
-  color: $n1
-  font-size: 14px
-  font-weight: 500
-  z-index: 1
-
-.progressBar
-  position: absolute
-  top: 0
-  left: 0
-  width: 100%
-  height: 100%
-  background: rgba(0, 0, 0, 0.2)
+  overflow: hidden
 
 .progressFill
   height: 100%
   background: linear-gradient(135deg, rgba($p1, 0.8) 0%, rgba(#6950FB, 0.8) 100%)
   transition: width 0.3s ease 
+
+@keyframes fadeIn
+  0%
+    opacity: 0
+    transform: scale(0.98)
+  100%
+    opacity: 1
+    transform: scale(1)
+
+@keyframes slideIn
+  0%
+    opacity: 0
+    transform: translateY(-10px)
+  100%
+    opacity: 1
+    transform: translateY(0)
+
+@keyframes buttonShine
+  0%
+    transform: translateX(-100%) skewX(-15deg)
+  50%
+    transform: translateX(100%) skewX(-15deg)
+  100%
+    transform: translateX(100%) skewX(-15deg)
+
+@keyframes spin
+  from
+    transform: rotate(0deg)
+  to
+    transform: rotate(360deg)
+
+@keyframes pulse
+  0%
+    opacity: 0.5
+    transform: translate(-50%, -50%) scale(0.95)
+  50%
+    opacity: 1
+    transform: translate(-50%, -50%) scale(1.05)
+  100%
+    opacity: 0.5
+    transform: translate(-50%, -50%) scale(0.95)
+
+@keyframes textShimmer
+  0%, 100%
+    background-position: 0% 50%
+  50%
+    background-position: 100% 50% 

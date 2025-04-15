@@ -142,7 +142,7 @@ export default function Home() {
     };
 
     const handleLegalDraftClick = () => {
-        router.push('/generate-legal-draft');
+        router.push('/contracts');
     };
 
     const handleLogout = async () => {

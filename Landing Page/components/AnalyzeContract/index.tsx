@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import Button from '../../components/Button';
 import Icon from '@/components/Icon';
 import toast from 'react-hot-toast';
+import LegalDisclaimer from '../LegalDisclaimer';
 
 const AnalyzeContract = () => {
     const { showToast } = useToast();
@@ -29,7 +30,7 @@ const AnalyzeContract = () => {
     const [analysisStep, setAnalysisStep] = useState(0);
     const [analysisProgress, setAnalysisProgress] = useState(0);
     const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
-    const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false);
+    const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
 
     // Analysis steps descriptions
     const analysisSteps = [
@@ -136,7 +137,7 @@ const AnalyzeContract = () => {
     };
 
     const handleAnalyze = useCallback(async () => {
-        if (!isDisclaimerAccepted) {
+        if (!disclaimerAccepted) {
             showToast('Please accept the legal disclaimer first');
             return;
         }
@@ -276,7 +277,7 @@ const AnalyzeContract = () => {
         } finally {
             setIsAnalyzing(false);
         }
-    }, [user, showToast, router, activeTab, text, file, supabase, setAnalysisData, setShowAnalysis, setError, setIsAnalyzing, isDisclaimerAccepted]);
+    }, [user, showToast, router, activeTab, text, file, supabase, setAnalysisData, setShowAnalysis, setError, setIsAnalyzing, disclaimerAccepted]);
 
     // Calculate risk score based on clause risk levels
     const calculateRiskScore = (clauses: ClauseAnalysis[]): number => {
@@ -616,9 +617,12 @@ const AnalyzeContract = () => {
         return `${month} ${day}, ${year} at ${hours}:${minutes}`;
     };
 
-    const toggleDisclaimer = useCallback(() => {
-        setIsDisclaimerOpen(prev => !prev);
-    }, []);
+    const handleDisclaimerToggle = () => {
+        if (!disclaimerAccepted) {
+            showToast('Please accept the legal disclaimer before proceeding');
+        }
+        setIsDisclaimerOpen(!isDisclaimerOpen);
+    };
 
     return (
         <div className={styles.container}>
@@ -749,48 +753,13 @@ const AnalyzeContract = () => {
                         </div>
                     )}
                     
-                    <div className={styles.legalDisclaimer}>
-                        <button 
-                            className={styles.disclaimerHeader}
-                            onClick={toggleDisclaimer}
-                            type="button"
-                        >
-                            <div className={styles.headerContent}>
-                                <h3 className={styles.disclaimerTitle}>
-                                    Legal Disclaimer
-                                    <span className={styles.requiredBadge}>Required</span>
-                                </h3>
-                                <Icon
-                                    className={cn(styles.chevron, {
-                                        [styles.open]: isDisclaimerOpen
-                                    })}
-                                    name="chevron-down"
-                                />
-                            </div>
-                        </button>
-                        <div className={cn(styles.disclaimerContent, {
-                            [styles.open]: isDisclaimerOpen
-                        })}>
-                            <div className={styles.disclaimerText}>
-                                <p>The contract analysis provided by this tool is for informational purposes only and does not constitute legal advice.</p>
-                                <p>The analysis is based on automated processing and may not identify all legal issues or risks present in your contract.</p>
-                                <p>We strongly recommend having any contract reviewed by a qualified legal professional before signing or relying on it.</p>
-                                <p>By proceeding, you acknowledge that you understand the limitations of this automated analysis tool.</p>
-                            </div>
-                        </div>
-                        <label className={cn(styles.acceptanceRow, styles.required)}>
-                            <div className={styles.checkbox}>
-                                <input
-                                    type="checkbox"
-                                    checked={isDisclaimerAccepted}
-                                    onChange={(e) => setIsDisclaimerAccepted(e.target.checked)}
-                                />
-                                <span className={styles.checkmark}></span>
-                            </div>
-                            <span className={styles.label}>
-                                I understand and accept the legal disclaimer
-                            </span>
-                        </label>
+                    <div className={styles.legalDisclaimerContainer}>
+                        <LegalDisclaimer
+                            onAccept={() => setDisclaimerAccepted(true)}
+                            isAccepted={disclaimerAccepted}
+                            isOpen={isDisclaimerOpen}
+                            onToggle={handleDisclaimerToggle}
+                        />
                     </div>
                     
                     <div className={styles.actionsRow}>
@@ -827,10 +796,10 @@ const AnalyzeContract = () => {
                         <button 
                             type="button" 
                             className={cn(styles.analyzeButton, {
-                                [styles.disabled]: !isDisclaimerAccepted
+                                [styles.disabled]: !disclaimerAccepted
                             })} 
                             onClick={handleAnalyze}
-                            disabled={!isDisclaimerAccepted}
+                            disabled={!disclaimerAccepted}
                         >
                             <span>{isAnalyzing ? 'Analyzing...' : 'Analyze Your Draft Now'}</span>
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

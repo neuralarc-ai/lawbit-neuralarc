@@ -340,8 +340,7 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
         cursor: wait
 
 .legalDisclaimer
-    margin-top: 24px
-    margin-bottom: 24px
+    margin: 20px 0
     width: 100%
     background: rgba(18, 18, 18, 0.3)
     border: 1px solid rgba(255, 255, 255, 0.1)
@@ -349,196 +348,205 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     overflow: hidden
     transition: all 0.3s ease
     position: relative
-
-.disclaimerHeader
-    width: 100%
-    padding: 16px
-    background: rgba(255, 255, 255, 0.03)
-    border: none
-    cursor: pointer
-    display: flex
-    align-items: center
-    justify-content: space-between
-    transition: all 0.3s ease
-    margin: 0
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+    
+    &::before
+        content: ""
+        position: absolute
+        top: 0
+        left: 0
+        width: 4px
+        height: 100%
+        background: linear-gradient(180deg, #8A30FF 0%, #F842B2 100%)
+        border-radius: 4px 0 0 4px
 
     &:hover
-        background: rgba(255, 255, 255, 0.05)
+        border-color: rgba(255, 255, 255, 0.2)
+        background: rgba(18, 18, 18, 0.4)
 
-.disclaimerTitle
-    font-size: 16px
-    font-weight: 600
-    color: rgba(255, 255, 255, 0.9)
-    margin: 0
-    display: flex
-    align-items: center
-    gap: 12px
-
-.chevron
-    width: 24px
-    height: 24px
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
-    transform-origin: center
-    color: rgba(255, 255, 255, 0.7)
-    flex-shrink: 0
-
-    &.open
-        transform: rotate(180deg)
-
-.disclaimerContent
-    max-height: 0
-    overflow: hidden
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
-    background: rgba(255, 255, 255, 0.02)
-    opacity: 0
-    transform: translateY(-10px)
-    
-    &.open
-        max-height: 500px
-        padding: 20px
-        opacity: 1
-        transform: translateY(0)
-
-.disclaimerText
-    color: rgba(255, 255, 255, 0.7)
-    font-size: 14px
-    line-height: 1.6
-
-    p
-        margin: 16px 0
-        padding-left: 24px
-        position: relative
-        
-        &:first-child
-            margin-top: 0
-            padding-left: 0
-        
-        &:last-child
-            margin-bottom: 0
-        
-        &:not(:first-child)
-            &:before
-                content: ''
-                position: absolute
-                left: 0
-                top: 8px
-                width: 6px
-                height: 6px
-                background: rgba(255, 255, 255, 0.3)
-                border-radius: 50%
-
-.acceptanceRow
-    display: flex
-    align-items: center
-    padding: 16px
-    background: rgba(255, 255, 255, 0.02)
-    border-top: 1px solid rgba(255, 255, 255, 0.05)
-    cursor: pointer
-    transition: all 0.3s ease
-    gap: 0
-        opacity: 0.5
-    pointer-events: none
-    
-    &:hover
+    .disclaimerHeader
+        display: flex
+        align-items: center
+        justify-content: space-between
+        padding: 16px
         background: rgba(255, 255, 255, 0.03)
-
-    &.enabled
-        opacity: 1
-        pointer-events: auto
+        transition: all 0.3s ease
         cursor: pointer
+        margin: 0
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+        
+        &:hover
+            background: rgba(255, 255, 255, 0.05)
+
+    .disclaimerTitle
+        font-size: 16px
+        font-weight: 600
+        color: rgba(255, 255, 255, 0.9)
+        margin: 0
+        display: flex
+        align-items: center
+        gap: 12px
+
+        .requiredBadge
+            font-size: 12px
+            font-weight: 500
+            color: #FF453A
+            background: rgba(255, 69, 58, 0.1)
+            padding: 4px 8px
+            border-radius: 12px
+            border: 1px solid rgba(255, 69, 58, 0.3)
+
+    .disclaimerContent
+        max-height: 0
+        overflow: hidden
+        transition: all 0.3s ease-out
+        background: rgba(255, 255, 255, 0.02)
+        opacity: 0
+        
+        &.open
+            max-height: 500px
+            padding: 20px
+            opacity: 1
+
+    .disclaimerText
+        color: rgba(255, 255, 255, 0.7)
+        font-size: 14px
+        line-height: 1.6
+
+        p
+            margin: 16px 0
+            padding-left: 24px
+            position: relative
+            
+            &:first-child
+                margin-top: 0
+                padding-left: 0
+            
+            &:last-child
+                margin-bottom: 0
+            
+            &:not(:first-child)
+                &:before
+                    content: ''
+                    position: absolute
+                    left: 0
+                    top: 8px
+                    width: 6px
+                    height: 6px
+                    background: rgba(255, 255, 255, 0.3)
+                    border-radius: 50%
+
+    .acceptanceRow
+        display: flex
+        align-items: center
+        padding: 16px
+        background: rgba(255, 255, 255, 0.02)
+        border-top: 1px solid rgba(255, 255, 255, 0.05)
+        cursor: pointer
+        transition: all 0.3s ease
+        gap: 0
+        opacity: 0.5
+        pointer-events: none
+        
+        &:hover
+            background: rgba(255, 255, 255, 0.03)
+
+        &.enabled
+            opacity: 1
+            pointer-events: auto
+            cursor: pointer
+
+            .checkbox
+                cursor: pointer
+                pointer-events: auto
+
+                input
+                    cursor: pointer
+                    pointer-events: auto
+
+                .checkmark
+                    cursor: pointer
+                    pointer-events: auto
 
         .checkbox
-            cursor: pointer
-            pointer-events: auto
-
-            input
-                cursor: pointer
-                pointer-events: auto
-
-            .checkmark
-                cursor: pointer
-                pointer-events: auto
-
-    .checkbox
-        position: relative
-        width: 20px
-        height: 20px
-        margin-right: 0
-        cursor: not-allowed
-        pointer-events: none
-        z-index: 1
-
-        input
-            position: absolute
-            opacity: 0
-            cursor: not-allowed
-            pointer-events: none
-            height: 20px
-            width: 20px
-            z-index: 2
-
-        .checkmark
-            position: absolute
-            top: 0
-            left: 0
+            position: relative
+            display: inline-block
             width: 20px
             height: 20px
-            background: rgba(255, 255, 255, 0.1)
-            border: 1px solid rgba(255, 255, 255, 0.2)
-            border-radius: 4px
-            transition: all 0.2s ease
+            margin-right: 0
             cursor: not-allowed
             pointer-events: none
             z-index: 1
 
-            &:after
-                content: ""
+            input
                 position: absolute
-                display: none
-                left: 6px
-                top: 2px
-                width: 5px
-                height: 10px
-                border: solid white
-                border-width: 0 2px 2px 0
-                transform: rotate(45deg)
+                opacity: 0
+                cursor: not-allowed
+                pointer-events: none
+                height: 20px
+                width: 20px
+                z-index: 2
 
-        input:checked ~ .checkmark
-            background: #8A30FF
-            border-color: #8A30FF
+            .checkmark
+                position: absolute
+                top: 0
+                left: 0
+                width: 20px
+                height: 20px
+                background: rgba(255, 255, 255, 0.1)
+                border: 1px solid rgba(255, 255, 255, 0.2)
+                border-radius: 4px
+                transition: all 0.2s ease
+                cursor: not-allowed
+                pointer-events: none
+                z-index: 1
 
-        input:checked ~ .checkmark:after
-            display: block
+                &:after
+                    content: ""
+                    position: absolute
+                    display: none
+                    left: 6px
+                    top: 2px
+                    width: 5px
+                    height: 10px
+                    border: solid white
+                    border-width: 0 2px 2px 0
+                    transform: rotate(45deg)
 
-        &:hover .checkmark
-            background: rgba(255, 255, 255, 0.15)
+            input:checked ~ .checkmark
+                background: #8A30FF
+                border-color: #8A30FF
 
-        input:checked:hover ~ .checkmark
-            background: #7929E9
+            input:checked ~ .checkmark:after
+                display: block
 
-    .acceptanceLabel
-        font-size: 14px
-        color: rgba(255, 255, 255, 0.9)
-        cursor: pointer
-        margin-left: -4px
+            &:hover .checkmark
+                background: rgba(255, 255, 255, 0.15)
 
-    .acceptanceStatus
-        font-size: 12px
-        font-weight: 500
-        padding: 4px 8px
-        border-radius: 12px
-        transition: all 0.3s ease
-        
-        &.pending
-            color: #FFD700
-            background: rgba(255, 215, 0, 0.1)
-            border: 1px solid rgba(255, 215, 0, 0.3)
+            input:checked:hover ~ .checkmark
+                background: #7929E9
+
+        .acceptanceLabel
+            font-size: 14px
+            color: rgba(255, 255, 255, 0.9)
+            cursor: pointer
+            margin-left: -4px
+
+        .acceptanceStatus
+            font-size: 12px
+            font-weight: 500
+            padding: 4px 8px
+            border-radius: 12px
+            transition: all 0.3s ease
             
-        &.accepted
-            color: #32CD32
-            background: rgba(50, 205, 50, 0.1)
-            border: 1px solid rgba(50, 205, 50, 0.3)
+            &.pending
+                color: #FFD700
+                background: rgba(255, 215, 0, 0.1)
+                border: 1px solid rgba(255, 215, 0, 0.3)
+                
+            &.accepted
+                color: #32CD32
+                background: rgba(50, 205, 50, 0.1)
+                border: 1px solid rgba(50, 205, 50, 0.3)
 
 .analysisContent
     width: 100%
@@ -1410,12 +1418,27 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
             border-radius: 4px 
 
 .disclaimerSection
+    width: 100%
+    background: rgba(0, 0, 0, 0.2)
+    border: 1px solid rgba(255, 255, 255, 0.15)
+    border-radius: 16px
+    overflow: hidden
+    transition: all 0.3s ease
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2)
+
     .disclaimerHeader
+        width: 100%
+        background: none
+        border: none
+        padding: 0
+        cursor: pointer
+        text-align: left
+
         .headerContent
             display: flex
             align-items: center
             justify-content: space-between
-            padding: 20px
+    padding: 20px
             background: rgba(255, 255, 255, 0.03)
             transition: all 0.3s ease
             border-bottom: 1px solid rgba(255, 255, 255, 0.1)
@@ -1427,19 +1450,19 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
         font-size: 16px
         font-weight: 600
         color: rgba(255, 255, 255, 0.9)
-        margin: 0
-        display: flex
-        align-items: center
-        gap: 12px
+            margin: 0
+            display: flex
+            align-items: center
+            gap: 12px
 
-        .requiredBadge
-            font-size: 12px
-            font-weight: 500
-            color: #FF453A
-            background: rgba(255, 69, 58, 0.1)
-            padding: 4px 8px
-            border-radius: 12px
-            border: 1px solid rgba(255, 69, 58, 0.3)
+            .requiredBadge
+                font-size: 12px
+                font-weight: 500
+                color: #FF453A
+                background: rgba(255, 69, 58, 0.1)
+                padding: 4px 8px
+                border-radius: 12px
+                border: 1px solid rgba(255, 69, 58, 0.3)
 
         .chevron
             transition: transform 0.3s ease
@@ -1500,18 +1523,55 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
 
 .checkbox
     position: relative
-    width: 20px
-    height: 20px
-    margin-right: 0
-    cursor: not-allowed
-    pointer-events: none
-    z-index: 1
-
+    display: inline-block
+    width: 24px
+    height: 24px
+    margin-right: 12px
+    cursor: pointer
+    
     input
         position: absolute
         opacity: 0
-        cursor: not-allowed
-        pointer-events: none
+        cursor: pointer
+        width: 24px
+        height: 24px
+        left: 0
+        top: 0
+        margin: 0
+        z-index: 2
+    
+    .checkmark
+        position: absolute
+        top: 0
+        left: 0
+        height: 24px
+        width: 24px
+        background: rgba(255, 255, 255, 0.1)
+        border-radius: 6px
+        transition: all 0.2s ease
+        border: 1px solid rgba(255, 255, 255, 0.2)
+        
+        &:after
+            content: ""
+            position: absolute
+            display: none
+            left: 8px
+            top: 3px
+            width: 6px
+            height: 12px
+            border: solid white
+            border-width: 0 2px 2px 0
+            transform: rotate(45deg)
+    
+    input:checked ~ .checkmark
+        background: #FF5CAA
+        border-color: #FF5CAA
+    
+    input:checked ~ .checkmark:after
+        display: block
+    
+    &:hover .checkmark
+        background: rgba(255, 255, 255, 0.2)
 
 .acceptanceLabel
     font-size: 14px

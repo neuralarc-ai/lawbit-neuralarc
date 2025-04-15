@@ -1,71 +1,104 @@
-import { useState } from 'react'
-import cn from 'classnames'
+import React, { useEffect } from 'react'
 import styles from './LegalDisclaimer.module.sass'
-import Image from '@/components/Image'
 
 interface LegalDisclaimerProps {
-    onAccept: (accepted: boolean) => void
     isAccepted: boolean
+    onAccept: () => void
+    isOpen: boolean
+    onToggle: () => void
 }
 
-const LegalDisclaimer = ({ onAccept, isAccepted }: LegalDisclaimerProps) => {
-    const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false)
+const LegalDisclaimer: React.FC<LegalDisclaimerProps> = ({
+    isAccepted,
+    onAccept,
+    isOpen,
+    onToggle
+}) => {
+    // Auto-open the disclaimer if not accepted
+    useEffect(() => {
+        if (!isAccepted && !isOpen) {
+            onToggle()
+        }
+    }, [isAccepted, isOpen, onToggle])
 
     return (
         <div className={styles.legalDisclaimer}>
             <div className={styles.disclaimerAccordion}>
                 <button 
                     className={styles.disclaimerHeader} 
-                    onClick={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
+                    onClick={onToggle}
+                    aria-expanded={isOpen}
+                    aria-controls="disclaimer-content"
                 >
                     <div className={styles.headerContent}>
-                        <h3 className={styles.disclaimerTitle}>Legal Disclaimer</h3>
-                        <Image 
-                            src="/images/chevron-down.svg"
-                            width={24}
-                            height={24}
-                            alt="Toggle"
-                            className={cn(styles.chevron, {
-                                [styles.open]: isDisclaimerOpen
-                            })}
-                        />
+                        <div className={styles.disclaimerTitle}>
+                            Legal Disclaimer
+                            {!isAccepted && 
+                                <span className={styles.requiredBadge} role="status">Required</span>
+                            }
+                        </div>
+                        <svg
+                            className={`${styles.chevron} ${isOpen ? styles.open : ''}`}
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M6 9L12 15L18 9"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
                     </div>
                 </button>
                 
-                <div className={cn(styles.disclaimerContent, {
-                    [styles.open]: isDisclaimerOpen
-                })}>
+                <div 
+                    id="disclaimer-content"
+                    className={`${styles.disclaimerContent} ${isOpen ? styles.open : ''}`}
+                    role="region"
+                    aria-labelledby="disclaimer-title"
+                >
                     <div className={styles.disclaimerText}>
                         <p>
-                            This AI-powered legal document generator is designed to provide general legal document templates and assistance. While we strive for accuracy and completeness, please note the following important points:
+                            This service is provided for informational purposes only and does not constitute legal advice.
+                            The generated documents are templates and should be reviewed by a qualified legal professional
+                            before use.
                         </p>
                         <p>
-                            1. Not Legal Advice: The generated documents and information provided are not substitutes for professional legal advice. Consult with a qualified legal professional for specific legal matters.
+                            By using this service, you acknowledge that you understand the limitations of AI-generated
+                            legal documents and agree to consult with a legal professional for specific legal advice.
                         </p>
                         <p>
-                            2. No Attorney-Client Relationship: Use of this service does not create an attorney-client relationship between you and our platform or any affiliated parties.
+                            The creators of this service are not responsible for any legal consequences resulting from
+                            the use of these documents.
                         </p>
-                        <p>
-                            3. Accuracy & Completeness: While we make efforts to keep information up-to-date and accurate, we cannot guarantee the completeness, accuracy, or adequacy of the generated documents for your specific needs.
-                        </p>
-                        <p>
-                            4. Review Requirement: All generated documents should be thoroughly reviewed by a qualified legal professional before use or implementation.
-                        </p>
+                    </div>
+                    <div 
+                        className={`${styles.acceptanceRow} ${isOpen ? styles.enabled : ''}`}
+                        role="group"
+                        aria-label="Disclaimer acceptance"
+                    >
+                        <label className={styles.checkbox}>
+                            <input 
+                                type="checkbox"
+                                checked={isAccepted}
+                                onChange={onAccept}
+                                disabled={!isOpen}
+                                aria-label="I accept the legal disclaimer"
+                            />
+                            <span className={`${styles.checkmark} ${isAccepted ? styles.checked : ''}`} />
+                        </label>
+                        <span className={styles.acceptanceLabel}>
+                            I have read and understand the legal disclaimer
+                        </span>
                     </div>
                 </div>
             </div>
-            
-            <label className={cn(styles.checkbox, styles.acceptanceRow)}>
-                <input 
-                    type="checkbox"
-                    checked={isAccepted}
-                    onChange={(e) => onAccept(e.target.checked)}
-                />
-                <span className={styles.checkmark}></span>
-                <span className={styles.label}>
-                    I understand and accept the legal disclaimer
-                </span>
-            </label>
         </div>
     )
 }

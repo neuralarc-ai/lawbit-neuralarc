@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import AddressAutocomplete from '../AddressAutocomplete';
 import Script from 'next/script';
+import LegalDisclaimer from '../LegalDisclaimer'
 
 const contractSchema = z.object({
     contractType: z.string().min(1, 'Agreement type is required'),
@@ -666,8 +667,8 @@ const CreateContract = () => {
     const [showTooltip, setShowTooltip] = useState(false);
     const [tooltipText, setTooltipText] = useState('');
     const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-    const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
-    const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false);
+    const [disclaimerAccepted, setDisclaimerAccepted] = useState(false)
+    const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false)
 
     // Generation steps descriptions
     const generationSteps = [
@@ -900,7 +901,7 @@ const CreateContract = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        if (!isDisclaimerAccepted) {
+        if (!disclaimerAccepted) {
             showToast('Please accept the legal disclaimer to continue');
             return;
         }
@@ -1850,68 +1851,13 @@ const CreateContract = () => {
                         </div>
                     </div>
                     
-                    <div className={styles.legalDisclaimer}>
-                        <button
-                            type="button"
-                            className={styles.disclaimerHeader}
-                            onClick={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
-                        >
-                            <div className={styles.headerContent}>
-                                <h3 className={styles.disclaimerTitle}>Legal Disclaimer</h3>
-                                <svg 
-                                    width="20" 
-                                    height="20" 
-                                    viewBox="0 0 24 24" 
-                                    fill="none" 
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className={cn(styles.chevron, {
-                                        [styles.open]: isDisclaimerOpen
-                                    })}
-                                >
-                                    <path 
-                                        d="M6 9L12 15L18 9" 
-                                        stroke="#FFFFFF" 
-                                        strokeWidth="2" 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                            </div>
-                        </button>
-                        
-                        <div className={cn(styles.disclaimerContent, {
-                            [styles.open]: isDisclaimerOpen
-                        })}>
-                            <div className={styles.disclaimerText}>
-                                <p>
-                                    This AI-powered legal document generator is designed to provide general legal document templates and assistance. While we strive for accuracy and completeness, please note the following important points:
-                                </p>
-                                <p>
-                                    1. Not Legal Advice: The generated documents and information provided are not substitutes for professional legal advice. Consult with a qualified legal professional for specific legal matters.
-                                </p>
-                                <p>
-                                    2. No Attorney-Client Relationship: Use of this service does not create an attorney-client relationship between you and our platform or any affiliated parties.
-                                </p>
-                                <p>
-                                    3. Accuracy & Completeness: While we make efforts to keep information up-to-date and accurate, we cannot guarantee the completeness, accuracy, or adequacy of the generated documents for your specific needs.
-                                </p>
-                                <p>
-                                    4. Review Requirement: All generated documents should be thoroughly reviewed by a qualified legal professional before use or implementation.
-                                </p>
-                        </div>
-                        </div>
-                        
-                        <label className={cn(styles.checkbox, styles.acceptanceRow)}>
-                            <input 
-                                type="checkbox"
-                                checked={isDisclaimerAccepted}
-                                onChange={(e) => setIsDisclaimerAccepted(e.target.checked)}
-                            />
-                            <span className={styles.checkmark}></span>
-                            <span className={styles.label}>
-                                I understand and accept the legal disclaimer
-                            </span>
-                        </label>
+                    <div className={styles.legalDisclaimerContainer}>
+                        <LegalDisclaimer 
+                            onAccept={() => setDisclaimerAccepted(true)}
+                            isAccepted={disclaimerAccepted}
+                            isOpen={isDisclaimerOpen}
+                            onToggle={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
+                        />
                     </div>
                     
                     <button type="submit" className={styles.submitButton} disabled={isLoading}>
