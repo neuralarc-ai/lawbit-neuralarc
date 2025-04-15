@@ -115,8 +115,18 @@ const pricing = [
 
 export default function Home() {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const router = useRouter();
     
+    useEffect(() => {
+        const checkAuth = async () => {
+            const supabase = createClient();
+            const { data: { user } } = await supabase.auth.getUser();
+            setIsLoggedIn(!!user);
+        };
+        checkAuth();
+    }, []);
+
     const handlePricingButtonClick = async (planTitle: string) => {
         // Check if user is logged in
         const supabase = createClient();
@@ -129,6 +139,16 @@ export default function Home() {
             // If logged in, open subscription modal
             setIsModalOpen(true);
         }
+    };
+
+    const handleLegalDraftClick = () => {
+        router.push('/generate-legal-draft');
+    };
+
+    const handleLogout = async () => {
+        const supabase = createClient();
+        await supabase.auth.signOut();
+        router.push('/');
     };
 
     const starfieldVariants = {
@@ -227,21 +247,37 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.3 }}
                     >
-                        <button 
-                            className={styles.tryNowButton}
-                            onClick={() => router.push('/auth/signup')}
-                        >
-                            <span>Try Now</span>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                        </button>
-                        <button 
-                            className={styles.loginButton}
-                            onClick={() => router.push('/auth/signin')}
-                        >
-                            Explore
-                        </button>
+                        {isLoggedIn ? (
+                            <>
+                                <button 
+                                    className={styles.tryNowButton}
+                                    onClick={handleLegalDraftClick}
+                                >
+                                    <span>Generate Draft</span>
+                                </button>
+                                <button 
+                                    className={styles.loginButton}
+                                    onClick={handleLogout}
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button 
+                                    className={styles.tryNowButton}
+                                    onClick={() => router.push('/auth/signup')}
+                                >
+                                    <span>Sign Up</span>
+                                </button>
+                                <button 
+                                    className={styles.loginButton}
+                                    onClick={() => router.push('/auth/signin')}
+                                >
+                                    Sign In
+                                </button>
+                            </>
+                        )}
                     </motion.div>
                 </div>
             </section>

@@ -79,21 +79,52 @@
     gap: 16px
 
 .button
-    padding: 20px 24px
-    border: none
+    padding: 20px 32px
     border-radius: 12px
-    font-size: 16px
     font-weight: 600
-    cursor: pointer
+    font-size: 16px
     transition: all 0.3s ease
     position: relative
     overflow: hidden
-    display: flex
-    align-items: center
-    justify-content: center
-    gap: 8px
+    background: linear-gradient(to right, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 50%, rgba(248, 91, 66, 1) 100%)
     color: white
-    min-width: 140px
+    border: none
+    cursor: pointer
+    z-index: 1
+    box-shadow: 0 8px 16px -4px rgba(18, 18, 18, 0.2), 0 8px 20px 3px rgba(254, 83, 185, 0.25), inset 0 4px 4px rgba(255, 255, 255, 0.05)
+
+    &:hover
+        transform: translateY(-2px)
+        box-shadow: 0 12px 24px -4px rgba(18, 18, 18, 0.3), 0 12px 24px 3px rgba(254, 83, 185, 0.3), inset 0 4px 4px rgba(255, 255, 255, 0.1)
+        
+        &::before
+            opacity: 1
+            transform: scale(1.05)
+
+        &::after
+            transform: translateX(4px)
+
+    &::before
+        content: ''
+        position: absolute
+        inset: 0
+        background: linear-gradient(to right, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 50%, rgba(248, 91, 66, 1) 100%)
+        opacity: 0
+        transition: all 0.3s ease
+        z-index: -1
+
+    &::after
+        content: '→'
+        margin-left: 8px
+        display: inline-block
+        transition: transform 0.3s ease
+        position: relative
+        z-index: 1
+
+    span
+        position: relative
+        z-index: 1
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.2)
 
 .loginButton
     background: rgba(255, 255, 255, 0.07)
