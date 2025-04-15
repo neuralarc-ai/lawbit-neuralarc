@@ -1,46 +1,15 @@
-'use client'
-
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import styles from './LandingNavbar.module.sass'
 import Logo from '../Logo'
-import { createClient } from '@/lib/supabase'
-import { User } from '@supabase/supabase-js'
-import { useRouter } from 'next/navigation'
 
 const LandingNavbar = () => {
-    const [user, setUser] = useState<User | null>(null);
-    const router = useRouter();
-    const supabase = createClient();
-
-    useEffect(() => {
-        const checkUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setUser(user);
-        };
-        
-        checkUser();
-        
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
-        });
-        
-        return () => {
-            subscription.unsubscribe();
-        };
-    }, [supabase.auth]);
-
     const scrollToSection = (sectionId: string) => {
         const element = document.getElementById(sectionId)
         if (element) {
             element.scrollIntoView({ behavior: 'smooth' })
         }
-    }
-
-    const handleLogout = async () => {
-        await supabase.auth.signOut();
-        router.push('/');
     }
 
     return (
@@ -64,25 +33,12 @@ const LandingNavbar = () => {
                 </div>
 
                 <div className={styles.buttons}>
-                    {user ? (
-                        <>
-                            <Link href="/contracts" className={`${styles.button} ${styles.legalDraftButton}`}>
-                                <span>Legal Draft</span>
-                            </Link>
-                            <button onClick={handleLogout} className={`${styles.button} ${styles.loginButton}`}>
-                                Log Out
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            <Link href="/auth/signin" className={`${styles.button} ${styles.loginButton}`}>
-                                Log In
-                            </Link>
-                            <Link href="/auth/signup" className={styles.button}>
-                                Sign Up
-                            </Link>
-                        </>
-                    )}
+                    <Link href="/auth/signin" className={`${styles.button} ${styles.loginButton}`}>
+                        Log In
+                    </Link>
+                    <Link href="/auth/signup" className={styles.button}>
+                        Sign Up
+                    </Link>
                 </div>
             </div>
         </motion.nav>
