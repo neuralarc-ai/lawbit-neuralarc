@@ -266,7 +266,7 @@ const GenerateLegalDraft = () => {
                         
                         <div className={styles.legalDisclaimerContainer}>
                             <LegalDisclaimer 
-                                onAccept={() => setDisclaimerAccepted(true)}
+                                onAccept={(value) => setDisclaimerAccepted(value)}
                                 isAccepted={disclaimerAccepted}
                                 isOpen={isDisclaimerOpen}
                                 onToggle={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
@@ -332,29 +332,52 @@ const GenerateLegalDraft = () => {
                                 <div className={styles.previewActions}>
                                 <button 
                                     className={styles.actionButton}
+                                    onClick={() => setShowPreview(false)}
+                                >
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                </button>
+                                <div className={styles.actions}>
+                                    <button 
+                                        className={cn(styles.actionButton, { [styles.disabled]: !generatedContract })}
                                         onClick={handleDownloadDOCX}
+                                        disabled={!generatedContract}
                                     >
-                                        Download DOCX
-                                </button>
-                                <button 
-                                    className={styles.actionButton}
+                                        <Image src="/icons/word.svg" alt="Word" width={24} height={24} />
+                                    </button>
+                                    <button 
+                                        className={cn(styles.actionButton, { [styles.disabled]: !generatedContract })}
                                         onClick={handleDownloadPDF}
+                                        disabled={!generatedContract}
                                     >
-                                        Download PDF
-                                </button>
-                                <button 
-                                        className={styles.actionButton}
-                                    onClick={handleCopyText}
+                                        <Image src="/icons/pdf.svg" alt="PDF" width={24} height={24} />
+                                    </button>
+                                    <button 
+                                        className={cn(styles.actionButton, { [styles.disabled]: !generatedContract })}
+                                        onClick={handleCopyText}
+                                        disabled={!generatedContract}
                                     >
-                                    {copySuccess ? 'Copied!' : 'Copy Text'}
-                                </button>
-                            <button 
-                                        className={styles.actionButton}
-                                        onClick={() => setShowPreview(false)}
-                                    >
-                                        Back to Input
-                            </button>
-                        </div>
+                                        {copySuccess ? (
+                                            <Image 
+                                                src="/icons/tick.svg" 
+                                                alt="Copied" 
+                                                width={24} 
+                                                height={24} 
+                                                className={styles.success}
+                                                priority
+                                            />
+                                        ) : (
+                                            <Image 
+                                                src="/icons/copy.svg" 
+                                                alt="Copy" 
+                                                width={24} 
+                                                height={24}
+                                            />
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
                     </motion.div>
                 )}
             </AnimatePresence>

@@ -114,16 +114,6 @@ $p1: #FF5CAA // Primary color variable
     border-top: 1px solid rgba(255, 255, 255, 0.1)
     background: rgba(18, 18, 18, 0.2)
     transition: all 0.3s ease
-    cursor: default
-
-    &.enabled
-        opacity: 1
-        pointer-events: auto
-        background: rgba(18, 18, 18, 0.3)
-
-    &:not(.enabled)
-        opacity: 0.5
-        pointer-events: none
 
 .checkbox
     position: relative
@@ -146,6 +136,7 @@ $p1: #FF5CAA // Primary color variable
         cursor: pointer
         width: 100%
         height: 100%
+        z-index: 2
 
     .checkmark
         position: absolute
@@ -165,20 +156,10 @@ $p1: #FF5CAA // Primary color variable
             transform: scale(1)
             animation: checkmarkPop 0.3s cubic-bezier(0.4, 0, 0.2, 1)
 
-@keyframes checkmarkPop
-    0%
-        transform: scale(0.8)
-        opacity: 0
-    50%
-        transform: scale(1.2)
-    100%
-        transform: scale(1)
-        opacity: 1
-
 .acceptanceLabel
     font-size: 14px
     color: rgba(255, 255, 255, 0.8)
-    cursor: default
+    cursor: pointer
     transition: color 0.2s ease
 
     &:hover

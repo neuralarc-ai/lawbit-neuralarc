@@ -580,44 +580,56 @@ $p1: #FF5CAA // Primary color variable
   margin-top: 24px
   flex-wrap: wrap
 
-.actionButton
-  display: flex
-  align-items: center
-  justify-content: center
-  gap: 8px
-  padding: 12px 24px
-  font-size: 14px
-  font-weight: 600
-  color: $n1
-  background: rgba(255, 255, 255, 0.1)
-  border: 1px solid rgba(255, 255, 255, 0.2)
-  border-radius: 30px
-  cursor: pointer
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
-  transform-style: preserve-3d
-  position: relative
-  overflow: hidden
-  min-width: 160px
-  
-  &::after
-    content: ''
-    position: absolute
-    inset: 0
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent)
-    transform: translateX(-100%) skewX(-15deg)
-    transition: transform 0.4s ease
-  
-  &:hover
-    transform: translateY(-4px) translateZ(20px)
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3)
-    
-    &::after
-      transform: translateX(100%) skewX(-15deg)
+.previewActions
+    display: flex
+    justify-content: space-between
+    align-items: center
+    width: 100%
+    margin-top: 16px
 
-  &.success
-    background: rgba(39, 174, 96, 0.2)
-    border-color: rgba(39, 174, 96, 0.3)
-    color: #2ecc71
+.actions
+    display: flex
+    gap: 12px
+    align-items: center
+    justify-content: flex-end
+
+.actionButton
+    width: 72px
+    height: 72px
+    background: rgba(255, 255, 255, 0.03)
+    border-radius: 12px
+    padding: 14px
+    backdrop-filter: blur(10px)
+    -webkit-backdrop-filter: blur(10px)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    transition: all 0.3s ease
+    color: white
+
+    &:hover:not(:disabled)
+        background: rgba(255, 255, 255, 0.05)
+        border-color: rgba(255, 255, 255, 0.2)
+        transform: translateY(-2px)
+
+    &:active:not(:disabled)
+        transform: translateY(0)
+        background: rgba(255, 255, 255, 0.07)
+
+    &:disabled
+        opacity: 0.5
+        cursor: not-allowed
+        background: rgba(255, 255, 255, 0.02)
+
+    svg
+        width: 24px
+        height: 24px
+        transition: transform 0.3s ease
+
+    &:hover:not(:disabled) svg
+        transform: scale(1.1)
 
 .newDraftButton
   display: flex
@@ -720,12 +732,6 @@ $p1: #FF5CAA // Primary color variable
 
   &::first-line
     font-weight: bold
-
-.previewActions
-  display: flex
-  gap: 12px
-  justify-content: flex-end
-  margin-top: 16px
 
 .progressText
   position: absolute

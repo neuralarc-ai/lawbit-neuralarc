@@ -267,7 +267,6 @@
             background: rgba(255, 255, 255, 0.1)
 
 .submitButton
-    margin-top: 24px
     width: 100%
     padding: 16px 24px
     background: linear-gradient(135deg, #8A30FF 0%, #F842B2 100%)
@@ -278,20 +277,63 @@
     font-weight: 600
     cursor: pointer
     transition: all 0.3s ease
+    margin-top: 24px
+    position: relative
+    overflow: hidden
     display: flex
     align-items: center
     justify-content: center
     gap: 8px
 
-    &:hover
+    &:hover:not(:disabled)
         transform: translateY(-2px)
-        box-shadow: 0 8px 24px rgba(138, 48, 255, 0.3)
+        box-shadow: 0 8px 32px rgba(138, 48, 255, 0.3)
+
+    &:active:not(:disabled)
+        transform: translateY(0)
+        box-shadow: 0 4px 16px rgba(138, 48, 255, 0.2)
 
     &:disabled
-        opacity: 0.7
+        opacity: 0.5
         cursor: not-allowed
-            transform: none
-        box-shadow: none
+        background: linear-gradient(135deg, rgba(138, 48, 255, 0.5) 0%, rgba(248, 66, 178, 0.5) 100%)
+
+    .loadingText
+        display: flex
+        align-items: center
+        gap: 8px
+        color: white
+        font-weight: 600
+
+    .arrowIcon
+        transition: transform 0.3s ease
+        margin-left: 8px
+
+        &:hover:not(:disabled) &
+            transform: translateX(4px)
+
+        &:disabled &
+            opacity: 0.7
+
+.loadingText
+    position: relative
+    z-index: 1
+    color: white
+
+.progressBar
+    position: absolute
+    bottom: 0
+    left: 0
+    width: 100%
+    height: 4px
+    background: rgba(255, 255, 255, 0.2)
+    border-radius: 0 0 12px 12px
+    overflow: hidden
+
+.progressFill
+    height: 100%
+    background: rgba(255, 255, 255, 0.8)
+    transition: width 0.3s ease
 
 .previewSection
     flex: 1

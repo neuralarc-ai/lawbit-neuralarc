@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react'
 import styles from './LegalDisclaimer.module.sass'
+import { toast } from 'react-hot-toast'
 
 interface LegalDisclaimerProps {
     isAccepted: boolean
-    onAccept: () => void
+    onAccept: (value: boolean) => void
     isOpen: boolean
     onToggle: () => void
 }
@@ -14,13 +15,6 @@ const LegalDisclaimer: React.FC<LegalDisclaimerProps> = ({
     isOpen,
     onToggle
 }) => {
-    // Auto-open the disclaimer if not accepted
-    useEffect(() => {
-        if (!isAccepted && !isOpen) {
-            onToggle()
-        }
-    }, [isAccepted, isOpen, onToggle])
-
     return (
         <div className={styles.legalDisclaimer}>
             <div className={styles.disclaimerAccordion}>
@@ -79,7 +73,7 @@ const LegalDisclaimer: React.FC<LegalDisclaimerProps> = ({
                         </p>
                     </div>
                     <div 
-                        className={`${styles.acceptanceRow} ${isOpen ? styles.enabled : ''}`}
+                        className={styles.acceptanceRow}
                         role="group"
                         aria-label="Disclaimer acceptance"
                     >
@@ -87,8 +81,7 @@ const LegalDisclaimer: React.FC<LegalDisclaimerProps> = ({
                             <input 
                                 type="checkbox"
                                 checked={isAccepted}
-                                onChange={onAccept}
-                                disabled={!isOpen}
+                                onChange={(e) => onAccept(e.target.checked)}
                                 aria-label="I accept the legal disclaimer"
                             />
                             <span className={`${styles.checkmark} ${isAccepted ? styles.checked : ''}`} />

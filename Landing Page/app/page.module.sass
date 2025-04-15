@@ -212,6 +212,7 @@
     transition: all 0.3s ease
     backdrop-filter: blur(50px)
     box-shadow: 0 5px 1.5px -4px rgba(5, 5, 5, 0.25), 0 6px 4px -4px rgba(5, 5, 5, 0.1)
+    text-align: left
     &:before
         content: ''
         position: absolute
@@ -227,6 +228,7 @@
     h3
         font-size: 24px
         margin: 24px 0 16px
+        text-align: left
     p
         color: rgba(255, 255, 255, 0.7)
         line-height: 1.6
@@ -857,3 +859,63 @@
     transition: all 0.3s ease
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))
     object-fit: contain
+
+.navbar
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    z-index: 1000
+    background: rgba(32, 32, 32, 0.8)
+    backdrop-filter: blur(10px)
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+    padding: 16px 0
+
+.navbarContent
+    display: flex
+    align-items: center
+    justify-content: space-between
+    max-width: 1440px
+    margin: 0 auto
+    padding: 0 48px
+    @media (max-width: 768px)
+        padding: 0 24px
+
+.logo
+    display: flex
+    align-items: center
+    gap: 8px
+    color: white
+    text-decoration: none
+    font-size: 24px
+    font-weight: 600
+    img
+        height: 32px
+        width: auto
+
+.navLinks
+    display: flex
+    align-items: center
+    gap: 32px
+    @media (max-width: 1024px)
+        display: none
+    a
+        color: rgba(255, 255, 255, 0.7)
+        text-decoration: none
+        transition: color 0.3s ease
+        &:hover
+            color: white
+
+.navButton
+    padding: 12px 24px
+    border-radius: 12px
+    font-size: 16px
+    font-weight: 600
+    cursor: pointer
+    transition: all 0.3s ease
+    background: linear-gradient(to right, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 50%, rgba(248, 91, 66, 1) 100%)
+    color: white
+    border: none
+    &:hover
+        transform: translateY(-2px)
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2)

@@ -85,7 +85,7 @@ const LandingNavbar = () => {
                                     Log In
                                 </Link>
                                 <Link href="/auth/signup" className={styles.button}>
-                                    Sign Up
+                                    Try Now
                                 </Link>
                             </>
                         )}

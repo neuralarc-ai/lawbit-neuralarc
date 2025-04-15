@@ -383,28 +383,26 @@ const AnalyzeContract = () => {
 
     // Handle download PDF report
     const handleDownloadPDF = async () => {
-        if (!analysisData) return;
+        if (!analysisData) {
+            showToast('No analysis data available to download');
+            return;
+        }
 
         try {
             const pdfDoc = await PDFDocument.create();
-            
-            // Embed Times New Roman font (or closest available)
             const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
             const boldFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
-            
-            // Add a new page
-            let page = pdfDoc.addPage([595.28, 841.89]); // A4 size
+            let page = pdfDoc.addPage([595.28, 841.89]);
             let { width, height } = page.getSize();
-            
-            // Set initial position
             let y = height - 50;
             const margin = 50;
             const lineHeight = 20;
-            const maxWidth = width - (margin * 2); // Maximum width for text content
-            
+            const maxWidth = width - (margin * 2);
+
             // Helper function to wrap text
             const wrapText = (text: string, fontSize: number, maxWidth: number, font: any) => {
-                const words = text.split(' ');
+                const normalizedText = text.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+                const words = normalizedText.split(' ');
                 const lines: string[] = [];
                 let currentLine = words[0];
 
@@ -422,7 +420,7 @@ const AnalyzeContract = () => {
             };
 
             // Helper function to add text with wrapping
-            const addText = (text: string, x: number, fontSize: number, isBold: boolean = false, color = rgb(0, 0, 0)) => {
+            const addText = (text: string, x: number, fontSize: number, isBold: boolean = false, color = rgb(0, 0, 0), lineSpacing: number = 1) => {
                 const currentFont = isBold ? boldFont : timesRomanFont;
                 const lines = wrapText(text, fontSize, maxWidth - (x - margin), currentFont);
                 
@@ -433,31 +431,32 @@ const AnalyzeContract = () => {
                     }
                     
                     page.drawText(line, {
-                    x,
-                    y,
-                    size: fontSize,
-                    font: currentFont,
-                    color,
-                });
-                y -= lineHeight;
+                        x,
+                        y,
+                        size: fontSize,
+                        font: currentFont,
+                        color,
+                    });
+                    y -= lineHeight * lineSpacing;
                 });
             };
             
             // Helper function to add section with proper spacing
             const addSection = (title: string, content: string, indent: number = 0) => {
-                addText(title, margin + indent, 12, true);
-            y -= lineHeight;
-                addText(content, margin + indent + 20, 12);
-                y -= lineHeight * 2;
+                addText(title, margin + indent, 12, true, undefined, 1.2);
+                addText(content, margin + indent + 20, 12, false, undefined, 1.2);
+                y -= lineHeight * 0.5;
             };
 
             // Document Info Section
-            addText('Document Analysis Report', margin, 24, true);
+            addText('Contract Analysis Report', margin, 24, true, undefined, 1.5);
             y -= lineHeight * 2;
             
             // Document Information
-            addText('Document Information', margin, 18, true);
+            addText('Document Information', margin, 18, true, undefined, 1.5);
             y -= lineHeight;
+            
+            // Document details
             addSection('Document Name:', analysisData.documentInfo.title || "Untitled Document");
             addSection('Date and Time:', formatDate(new Date(analysisData.documentInfo.dateTime)));
             
@@ -468,47 +467,30 @@ const AnalyzeContract = () => {
                     ? rgb(0.9, 0.5, 0.1)
                     : rgb(0.9, 0.8, 0.2);
             
-            addText('Risk Assessment:', margin + 20, 12, true);
-            y += lineHeight;
-            
-            addText(`Risk Assessment: `, margin + 20, 12);
-            y += lineHeight; // Move back up to add color text on same line
-            addText(analysisData.documentInfo.riskAssessment, margin + 140, 12, true, riskColor);
-            
+            addText('Risk Assessment', margin, 18, true, undefined, 1.5);
             y -= lineHeight;
+            addText(analysisData.documentInfo.riskAssessment, margin + 20, 14, true, riskColor);
+            y -= lineHeight * 2;
             
             // Key Statistics
-            addText('Key Statistics', margin, 18, true);
+            addText('Key Statistics', margin, 18, true, undefined, 1.5);
             y -= lineHeight;
+            
             const riskCounts = handleRiskCounts(analysisData.clauses);
             addSection('High Risk Items:', riskCounts.high.toString());
             addSection('Medium Risk Items:', riskCounts.medium.toString());
             addSection('Low Risk Items:', riskCounts.low.toString());
             addSection('Total Clauses:', (analysisData.documentInfo.keyStatistics.clausesIdentified || analysisData.clauses.length).toString());
+            
             if (analysisData.documentInfo.jurisdiction) {
                 addSection('Jurisdiction:', analysisData.documentInfo.jurisdiction);
-            addText(`Jurisdiction: ${analysisData.documentInfo.jurisdiction}`, margin + 20, 12);
             }
+            
             addSection('Risk Score:', `${analysisData.documentInfo.keyStatistics.riskScore}/100`);
             y -= lineHeight * 2;
 
-            addText(`Risk Score: `, margin + 20, 12);
-            y += lineHeight; // Move back up to add color text on same line
-            const riskScoreColor = analysisData.documentInfo.keyStatistics.riskScore > 70 
-                ? rgb(0.9, 0.2, 0.2)  // High risk - red
-                : analysisData.documentInfo.keyStatistics.riskScore > 40 
-                    ? rgb(0.9, 0.5, 0.1)  // Medium risk - orange
-                    : rgb(0.9, 0.8, 0.2);  // Low risk - yellow
-            addText(analysisData.documentInfo.keyStatistics.riskScore.toString(), margin + 140, 12, true, riskScoreColor);
-
-            y -= lineHeight;
-            const previewText = analysisData.documentInfo.previewText || 
-                (analysisData.clauses.length > 0 ? analysisData.clauses[0].extractedText : '');
-            addText(previewText, margin + 20, 12);
-            y -= lineHeight * 2;
-
             // Clauses Analysis
-            addText('Clauses Analysis', margin, 18, true);
+            addText('Clauses Analysis', margin, 18, true, undefined, 1.5);
             y -= lineHeight;
 
             // Sort clauses by risk level
@@ -525,21 +507,21 @@ const AnalyzeContract = () => {
                 }
                 
                 // Clause header
-                addText(clause.title || 'Untitled Clause', margin, 16, true);
+                addText(clause.title || 'Untitled Clause', margin, 16, true, undefined, 1.5);
                 addText(`Risk Level: ${clause.riskLevel}`, margin + 20, 12);
-                y -= lineHeight * 2;
+                y -= lineHeight * 1.5;
 
                 // Original text
                 if (clause.text) {
                     addText('Original Text:', margin + 20, 12, true);
                     addText(clause.text, margin + 40, 12);
-                    y -= lineHeight * 2;
+                    y -= lineHeight * 1.5;
                 }
 
                 // Extracted text
                 addText('Extracted Text:', margin + 20, 12, true);
                 addText(clause.extractedText, margin + 40, 12);
-                y -= lineHeight * 2;
+                y -= lineHeight * 1.5;
 
                 // Suggested alternatives
                 if (clause.suggestedAlternatives && clause.suggestedAlternatives.length > 0) {
@@ -558,7 +540,7 @@ const AnalyzeContract = () => {
                             addText('Description:', margin + 60, 12, true);
                             addText(alt.description, margin + 80, 12);
                         }
-                        y -= lineHeight * 2;
+                        y -= lineHeight * 1.5;
                     }
                 }
                 y -= lineHeight * 2;
@@ -569,7 +551,7 @@ const AnalyzeContract = () => {
                 const p = pdfDoc.getPage(i);
                 const { width, height } = p.getSize();
                 p.drawText(`Page ${i + 1} of ${pdfDoc.getPageCount()}`, {
-                    x: width - 150,
+                    x: width - 100,
                     y: 30,
                     size: 10,
                     font: timesRomanFont,
@@ -582,14 +564,16 @@ const AnalyzeContract = () => {
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `analysis_${analysisData.documentInfo.title || 'document'}_${new Date().toISOString().split('T')[0]}.pdf`;
+            link.download = `Contract_Analysis_Report_${formatDate(new Date())}.pdf`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
+            
+            showToast('Analysis report downloaded successfully');
         } catch (error) {
             console.error('Error generating PDF:', error);
-            setError('Failed to generate PDF report');
+            showToast('Failed to generate PDF report');
         }
     };
 
@@ -618,9 +602,6 @@ const AnalyzeContract = () => {
     };
 
     const handleDisclaimerToggle = () => {
-        if (!disclaimerAccepted) {
-            showToast('Please accept the legal disclaimer before proceeding');
-        }
         setIsDisclaimerOpen(!isDisclaimerOpen);
     };
 
@@ -755,7 +736,7 @@ const AnalyzeContract = () => {
                     
                     <div className={styles.legalDisclaimerContainer}>
                         <LegalDisclaimer
-                            onAccept={() => setDisclaimerAccepted(true)}
+                            onAccept={(value) => setDisclaimerAccepted(value)}
                             isAccepted={disclaimerAccepted}
                             isOpen={isDisclaimerOpen}
                             onToggle={handleDisclaimerToggle}

@@ -1598,6 +1598,16 @@ const CreateContract = () => {
         setShowTooltip(false);
     };
 
+    // Add function to check if all required fields are filled
+    const isFormValid = () => {
+        try {
+            contractSchema.parse(contractData);
+            return disclaimerAccepted;
+        } catch {
+            return false;
+        }
+    };
+
     return (
         <div className={styles.container}>
             <AnimatePresence mode="wait">
@@ -1620,13 +1630,6 @@ const CreateContract = () => {
                             />
                         </div>
                         <h2 className={styles.loadingText}>Generating Your Contract</h2>
-                        <p className={styles.loadingDescription}>{generationSteps[generationStep]}</p>
-                        <div className={styles.progressBarContainer}>
-                            <div 
-                                className={styles.progressBar} 
-                                style={{ width: `${generationProgress}%` }}
-                            ></div>
-                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -1853,18 +1856,40 @@ const CreateContract = () => {
                     
                     <div className={styles.legalDisclaimerContainer}>
                         <LegalDisclaimer 
-                            onAccept={() => setDisclaimerAccepted(true)}
+                            onAccept={(value) => setDisclaimerAccepted(value)}
                             isAccepted={disclaimerAccepted}
                             isOpen={isDisclaimerOpen}
                             onToggle={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
                         />
                     </div>
                     
-                    <button type="submit" className={styles.submitButton} disabled={isLoading}>
-                        <span>{isLoading ? 'Generating...' : 'Legal Draft Template'}</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
+                    <button
+                        className={cn(styles.submitButton, {
+                            [styles.disabled]: !isFormValid() || isLoading
+                        })}
+                        onClick={handleSubmit}
+                        disabled={!isFormValid() || isLoading}
+                    >
+                        {isLoading ? (
+                            <>
+                                <span className={styles.loadingText}>
+                                    {generationSteps[generationStep]}
+                                </span>
+                                <div className={styles.progressBar}>
+                                    <div 
+                                        className={styles.progressFill}
+                                        style={{ width: `${generationProgress}%` }}
+                                    />
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                Generate Legal Draft Template
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            </>
+                        )}
                     </button>
                 </form>
             </div>
