@@ -39,11 +39,15 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // Refresh the session if it exists
+  // Get the current session
   const { data: { session } } = await supabase.auth.getSession()
   
-  // If there's no session and we're not on an auth page, redirect to sign in
-  if (!session && !request.nextUrl.pathname.startsWith('/auth')) {
+  // Define public paths that don't require authentication
+  const publicPaths = ['/', '/auth/signin', '/auth/signup', '/auth/reset-password', '/auth/callback']
+  const isPublicPath = publicPaths.includes(request.nextUrl.pathname)
+  
+  // If the path is not public and there's no session, redirect to sign in
+  if (!isPublicPath && !session) {
     const redirectUrl = new URL('/auth/signin', request.url)
     redirectUrl.searchParams.set('redirectedFrom', request.nextUrl.pathname)
     return NextResponse.redirect(redirectUrl)

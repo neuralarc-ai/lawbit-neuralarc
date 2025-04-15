@@ -586,18 +586,15 @@
         display: inline-block
 
 .footerBottom
-    margin-top: 2rem
-    text-align: center
-    color: #666
-    font-size: 0.9rem
     p
+        color: rgba(255, 255, 255, 0.6)
+        font-size: 14px
+        margin: 0
         display: flex
         align-items: center
-        justify-content: center
-        margin: 0
-        padding: 0
-        line-height: 1.5
-        gap: 0
+        flex-wrap: wrap
+        @media (max-width: 768px)
+            justify-content: center
 
 // Pricing buttons
 .pricingButton

@@ -1,29 +1,34 @@
+'use client'
+
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import styles from './LandingNavbar.module.sass'
 import Logo from '../Logo'
 import { createClient } from '@/lib/supabase'
+import { User } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 
 const LandingNavbar = () => {
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
     const supabase = createClient();
 
     useEffect(() => {
-        const getUser = async () => {
+        const checkUser = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             setUser(user);
         };
-
-        getUser();
-
+        
+        checkUser();
+        
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null);
         });
-
-        return () => subscription.unsubscribe();
+        
+        return () => {
+            subscription.unsubscribe();
+        };
     }, [supabase.auth]);
 
     const scrollToSection = (sectionId: string) => {
@@ -61,10 +66,10 @@ const LandingNavbar = () => {
                 <div className={styles.buttons}>
                     {user ? (
                         <>
-                            <Link href="/contracts" className={`${styles.button} ${styles.loginButton}`}>
-                                Generate Legal Draft
+                            <Link href="/contracts" className={`${styles.button} ${styles.legalDraftButton}`}>
+                                <span>Legal Draft</span>
                             </Link>
-                            <button onClick={handleLogout} className={styles.button}>
+                            <button onClick={handleLogout} className={`${styles.button} ${styles.loginButton}`}>
                                 Log Out
                             </button>
                         </>

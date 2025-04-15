@@ -11,6 +11,7 @@ import SubscriptionModal from '@/components/SubscriptionModal'
 import StarField from '@/components/StarField'
 import TestimonialCarousel from '../components/TestimonialCarousel'
 import { createClient } from '@/lib/supabase'
+import { User } from '@supabase/supabase-js'
 
 const features = [
     {
@@ -115,29 +116,29 @@ const pricing = [
 
 export default function Home() {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
     const supabase = createClient();
-
+    
     useEffect(() => {
-        const getUser = async () => {
+        const checkUser = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             setUser(user);
         };
-
-        getUser();
-
+        
+        checkUser();
+        
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null);
         });
-
-        return () => subscription.unsubscribe();
+        
+        return () => {
+            subscription.unsubscribe();
+        };
     }, [supabase.auth]);
-
+    
     const handlePricingButtonClick = async (planTitle: string) => {
         // Check if user is logged in
-        const { data: { user } } = await supabase.auth.getUser();
-        
         if (!user) {
             // Redirect to login page if not logged in
             router.push('/auth/signin');
@@ -248,10 +249,7 @@ export default function Home() {
                                 className={styles.tryNowButton}
                                 onClick={() => router.push('/contracts')}
                             >
-                                <span>Generate Legal Draft</span>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
+                                <span>Legal Draft</span>
                             </button>
                         ) : (
                             <>
@@ -260,15 +258,12 @@ export default function Home() {
                                     onClick={() => router.push('/auth/signup')}
                                 >
                                     <span>Try Now</span>
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
                                 </button>
                                 <button 
                                     className={styles.loginButton}
                                     onClick={() => router.push('/auth/signin')}
                                 >
-                                    Explore
+                                    <span>Login</span>
                                 </button>
                             </>
                         )}
@@ -474,7 +469,7 @@ export default function Home() {
                             
                             <div className={styles.footerBottom}>
                                 <p>
-                                    Copyright 2025. All rights reserved. Lawbit AI, A thing by
+                                    Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by&nbsp;
                                     <Image 
                                         src="/neuralpath.svg" 
                                         alt="Neural Paths" 
