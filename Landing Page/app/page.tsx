@@ -115,11 +115,27 @@ const pricing = [
 
 export default function Home() {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [user, setUser] = useState<any>(null);
     const router = useRouter();
-    
+    const supabase = createClient();
+
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        };
+
+        getUser();
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, [supabase.auth]);
+
     const handlePricingButtonClick = async (planTitle: string) => {
         // Check if user is logged in
-        const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
         
         if (!user) {
@@ -227,21 +243,35 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.3 }}
                     >
-                        <button 
-                            className={styles.tryNowButton}
-                            onClick={() => router.push('/auth/signup')}
-                        >
-                            <span>Try Now</span>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                        </button>
-                        <button 
-                            className={styles.loginButton}
-                            onClick={() => router.push('/auth/signin')}
-                        >
-                            Explore
-                        </button>
+                        {user ? (
+                            <button 
+                                className={styles.tryNowButton}
+                                onClick={() => router.push('/contracts')}
+                            >
+                                <span>Generate Legal Draft</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                            </button>
+                        ) : (
+                            <>
+                                <button 
+                                    className={styles.tryNowButton}
+                                    onClick={() => router.push('/auth/signup')}
+                                >
+                                    <span>Try Now</span>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                </button>
+                                <button 
+                                    className={styles.loginButton}
+                                    onClick={() => router.push('/auth/signin')}
+                                >
+                                    Explore
+                                </button>
+                            </>
+                        )}
                     </motion.div>
                 </div>
             </section>
@@ -369,37 +399,17 @@ export default function Home() {
                                 </ul>
                                 {plan.title === 'Free' ? (
                                     <Button 
-                                        title={
-                                            <div className={styles.btnContent}>
-                                                <span>{plan.buttonText}</span>
-                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M13 5l7 7-7 7M5 12h15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                </svg>
-                                            </div>
-                                        }
+                                        title={plan.buttonText}
                                         className={`${styles.pricingButton} ${styles.freeButton}`}
                                         onClick={() => router.push('/auth/signup')}
                                     />
-                                ) : (
+                                ) :
                                     <Button 
-                                        title={
-                                            <div className={styles.btnContent}>
-                                                <span>Purchase Now</span>
-                                                {plan.popular ? (
-                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                    </svg>
-                                                ) : (
-                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M8 3H5a2 2 0 00-2 2v14a2 2 0 002 2h3m4-9l5-5-5-5m5 5H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                    </svg>
-                                                )}
-                                            </div>
-                                        }
+                                        title="Purchase Now"
                                         className={`${styles.pricingButton} ${plan.popular ? styles.popularButton : styles.standardButton}`}
                                         onClick={() => handlePricingButtonClick(plan.title)}
                                     />
-                                )}
+                                }
                             </motion.div>
                         ))}
                     </div>
@@ -464,7 +474,7 @@ export default function Home() {
                             
                             <div className={styles.footerBottom}>
                                 <p>
-                                    Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by&nbsp;
+                                    Copyright 2025. All rights reserved. Lawbit AI, A thing by
                                     <Image 
                                         src="/neuralpath.svg" 
                                         alt="Neural Paths" 

@@ -290,7 +290,7 @@
     &:disabled
         opacity: 0.7
         cursor: not-allowed
-        transform: none
+            transform: none
 
 .previewSection
     flex: 1
@@ -607,11 +607,11 @@
 
             &:hover
                 background: rgba(255, 255, 255, 0.05)
-
-        .disclaimerTitle
-            font-size: 16px
-            font-weight: 600
-            color: rgba(255, 255, 255, 0.9)
+    
+    .disclaimerTitle
+        font-size: 16px
+        font-weight: 600
+        color: rgba(255, 255, 255, 0.9)
             margin: 0
 
         .chevron
@@ -635,7 +635,7 @@
         &.open
             max-height: 500px
             padding: 20px
-
+    
     .disclaimerText
         color: rgba(255, 255, 255, 0.7)
         font-size: 14px
@@ -656,7 +656,7 @@
         border-top: 1px solid rgba(255, 255, 255, 0.05)
         cursor: pointer
         transition: all 0.3s ease
-
+            
         &:hover
             background: rgba(255, 255, 255, 0.03)
 
@@ -665,7 +665,8 @@
             display: inline-block
             width: 20px
             height: 20px
-            margin-right: 12px
+            margin-right: 1px
+            cursor: pointer
 
             input
                 position: absolute
@@ -678,11 +679,13 @@
                 position: absolute
                 top: 0
                 left: 0
-                height: 20px
                 width: 20px
+                height: 20px
                 background: rgba(255, 255, 255, 0.1)
+                border: 1px solid rgba(255, 255, 255, 0.2)
                 border-radius: 4px
                 transition: all 0.2s ease
+                cursor: pointer
 
                 &:after
                     content: ""
@@ -698,9 +701,18 @@
 
             input:checked ~ .checkmark
                 background: #4CAF50
+                border-color: #4CAF50
 
             input:checked ~ .checkmark:after
                 display: block
+
+            &:hover .checkmark
+                background: rgba(255, 255, 255, 0.15)
+                cursor: pointer
+
+            input:checked:hover ~ .checkmark
+                background: darken(#4CAF50, 5%)
+                cursor: pointer
 
         .label
             color: rgba(255, 255, 255, 0.7)

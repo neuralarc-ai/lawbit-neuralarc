@@ -21,6 +21,10 @@ export async function middleware(request: NextRequest) {
             name,
             value,
             ...options,
+            // Set secure cookie options
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/',
           })
         },
         remove(name: string, options: CookieOptions) {
@@ -28,22 +32,36 @@ export async function middleware(request: NextRequest) {
             name,
             value: '',
             ...options,
+            maxAge: 0,
           })
         },
       },
     }
   )
 
-  await supabase.auth.getSession()
+  // Refresh the session if it exists
+  const { data: { session } } = await supabase.auth.getSession()
+  
+  // If there's no session and we're not on an auth page, redirect to sign in
+  if (!session && !request.nextUrl.pathname.startsWith('/auth')) {
+    const redirectUrl = new URL('/auth/signin', request.url)
+    redirectUrl.searchParams.set('redirectedFrom', request.nextUrl.pathname)
+    return NextResponse.redirect(redirectUrl)
+  }
 
   return response
 }
 
-// Specify which routes should be protected
+// Specify which routes to run middleware on
 export const config = {
   matcher: [
-    '/contracts/:path*',
-    '/history/:path*',
-    '/profile/:path*',
+    /*
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    '/((?!_next/static|_next/image|favicon.ico|public).*)',
   ],
 } 

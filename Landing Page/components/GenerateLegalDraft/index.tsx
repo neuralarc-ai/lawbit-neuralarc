@@ -29,11 +29,11 @@ const GenerateLegalDraft = () => {
     const [showPreview, setShowPreview] = useState(false);
 
     const generationSteps = [
-        "Analyzing your requirements...",
-        "Structuring the legal document...",
-        "Applying legal terminology...",
-        "Formatting the document...",
-        "Finalizing your draft..."
+        "Generating...",
+        "Structuring...",
+        "Applying...",
+        "Formatting...",
+        "Finalizing..."
     ];
 
     useEffect(() => {
