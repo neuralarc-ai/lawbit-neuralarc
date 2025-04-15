@@ -241,44 +241,6 @@ export default function Home() {
                     >
                         LawBit helps startups and individuals create legal documents and analyze agreements to identify risks instantly
                     </motion.p>
-                    <motion.div 
-                        className={styles.buttons}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.3 }}
-                    >
-                        {isLoggedIn ? (
-                            <>
-                                <button 
-                                    className={styles.tryNowButton}
-                                    onClick={handleLegalDraftClick}
-                                >
-                                    <span>Generate Draft</span>
-                                </button>
-                                <button 
-                                    className={styles.loginButton}
-                                    onClick={handleLogout}
-                                >
-                                    Logout
-                                </button>
-                            </>
-                        ) : (
-                            <>
-                                <button 
-                                    className={styles.tryNowButton}
-                                    onClick={() => router.push('/auth/signup')}
-                                >
-                                    <span>Sign Up</span>
-                                </button>
-                                <button 
-                                    className={styles.loginButton}
-                                    onClick={() => router.push('/auth/signin')}
-                                >
-                                    Sign In
-                                </button>
-                            </>
-                        )}
-                    </motion.div>
                 </div>
             </section>
 
