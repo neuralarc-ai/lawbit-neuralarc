@@ -56,7 +56,7 @@ const LandingNavbar = () => {
                 <div className={styles.buttons}>
                     {isLoggedIn ? (
                         <>
-                            <Link href="/generate-legal-draft" className={styles.button}>
+                            <Link href="/contracts" className={styles.button}>
                                 Generate Draft
                             </Link>
                             <button onClick={handleLogout} className={`${styles.button} ${styles.loginButton}`}>
