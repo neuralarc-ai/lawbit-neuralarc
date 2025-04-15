@@ -20,6 +20,12 @@
     max-width: 1440px
     margin: 0 auto
     padding: 0px 48px
+    display: flex
+    flex-direction: column
+    align-items: center
+    text-align: center
+    width: 100%
+    position: relative
     @media (max-width: 768px)
         padding: 0 24px
 
@@ -174,6 +180,18 @@
 // Features Section
 .features
     padding: 60px 0
+    width: 100%
+    display: flex
+    justify-content: center
+    align-items: center
+    .container
+        display: flex
+        flex-direction: column
+        align-items: center
+        text-align: center
+        max-width: 1200px
+        margin: 0 auto
+        padding: 0 24px
 
 .featureGrid
     display: grid
@@ -267,22 +285,44 @@
 // Benefits Section
 .benefits
     padding: 60px 0
-    scroll-margin-top: 80px
+    width: 100%
+    display: flex
+    justify-content: center
+    align-items: center
+    .container
+        display: flex
+        flex-direction: column
+        align-items: center
+        text-align: center
+        max-width: 1200px
+        margin: 0 auto
+        padding: 0 24px
 
 .sectionTitle
     font-size: 48px
+    line-height: 1.2
+    margin-bottom: 24px
     text-align: center
-    margin-bottom: 16px
+    width: 100%
+    display: flex
+    justify-content: center
     span
         +gradient-text
     @media (max-width: 768px)
         font-size: 32px
 
 .sectionSubtitle
-    font-size: 24px
-    text-align: center
+    font-size: 20px
+    line-height: 1.5
     color: rgba(255, 255, 255, 0.7)
-    margin-bottom: 32px
+    margin-bottom: 48px
+    text-align: center
+    max-width: 600px
+    width: 100%
+    display: flex
+    justify-content: center
+    margin-left: auto
+    margin-right: auto
     @media (max-width: 768px)
         font-size: 16px
 
@@ -307,9 +347,19 @@
 
 // Testimonials Section
 .testimonials
+    padding: 60px 0
     width: 100%
-    position: relative
-    overflow: hidden
+    display: flex
+    justify-content: center
+    align-items: center
+    .container
+        display: flex
+        flex-direction: column
+        align-items: center
+        text-align: center
+        max-width: 1200px
+        margin: 0 auto
+        padding: 0 24px
 
 .testimonialImage
     width: 100%
@@ -351,9 +401,19 @@
 
 // Pricing Section
 .pricing
-    padding: 20px 0 70px 0px
-    scroll-margin-top: 80px
-    
+    padding: 60px 0
+    width: 100%
+    display: flex
+    justify-content: center
+    align-items: center
+    .container
+        display: flex
+        flex-direction: column
+        align-items: center
+        text-align: center
+        max-width: 1200px
+        margin: 0 auto
+        padding: 0 24px
 
 .pricingGrid
     padding-top: 24px
