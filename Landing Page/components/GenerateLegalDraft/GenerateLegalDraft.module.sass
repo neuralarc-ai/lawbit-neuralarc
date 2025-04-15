@@ -292,35 +292,66 @@ $p1: #FF5CAA // Primary color variable
 .actionsRow
   display: flex
   justify-content: center
+  align-items: center
   margin-top: 24px
+  width: 100%
+  position: relative
 
 .generateButton
-  display: inline-flex
+  display: flex
   align-items: center
-  height: 48px
-  padding: 0 32px
-  border-radius: 12px
-  background: linear-gradient(135deg, $p1 0%, darken($p1, 15%) 100%)
+  justify-content: center
+  width: auto
+  padding: 12px 24px
+  border-radius: 8px
+  background: linear-gradient(135deg, $p1 0%, #6950FB 100%)
   color: $n1
-  font-size: 16px
+  font-size: 14px
   font-weight: 600
-  transition: all .2s
+  transition: all 0.3s ease
+  border: none
+  cursor: pointer
+  position: relative
+  overflow: hidden
+  min-width: 120px
+  text-align: center
+  left: 50%
+  transform: translateX(-50%)
+
   &:hover
-    transform: translateY(-2px)
-    box-shadow: 0 8px 24px rgba($p1, 0.25)
-  &.generating
+    transform: translateX(-50%) translateY(-2px)
+    box-shadow: 0 4px 12px rgba($p1, 0.3)
+
+  &:disabled
     opacity: 0.7
     cursor: not-allowed
-    transform: none
+    transform: translateX(-50%)
     box-shadow: none
-  &.disabled
-    opacity: 0.5
-    cursor: not-allowed
-    transform: none
-    box-shadow: none
-    &:hover
-      transform: none
-      box-shadow: none
+
+  &:active
+    transform: translateX(-50%) scale(0.98)
+    transition-duration: 0.1s
+
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%)
+    opacity: 0
+    transition: opacity 0.3s ease
+
+  &:after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)
+    animation: shimmer 1.5s infinite
 
 .generatingOverlay
   position: fixed
@@ -601,30 +632,6 @@ $p1: #FF5CAA // Primary color variable
   height: 100%
   background: linear-gradient(135deg, rgba($p1, 0.8) 0%, rgba(#6950FB, 0.8) 100%)
   transition: width 0.3s ease
-
-.generateButton
-  width: 100%
-  padding: 16px
-  border-radius: 12px
-  background: linear-gradient(135deg, $p1 0%, #6950FB 100%)
-  color: $n1
-  font-size: 16px
-  font-weight: 600
-  transition: all 0.3s ease
-  border: none
-  cursor: pointer
-  position: relative
-  overflow: hidden
-
-  &:hover
-    transform: translateY(-2px)
-    box-shadow: 0 4px 12px rgba($p1, 0.3)
-
-  &:disabled
-    opacity: 0.7
-    cursor: not-allowed
-    transform: none
-    box-shadow: none
 
 .progressText
   position: absolute

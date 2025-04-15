@@ -994,61 +994,173 @@ const CreateContract = () => {
 
     // Process content to detect formatting
     const processContent = (text: string): FormattedContentItem[] => {
-        // Split by newlines to preserve paragraph structure
-        const paragraphs = text.split('\n\n');
+        // Split by newlines to preserve paragraph structure - using regex to handle different line break patterns
+        const paragraphs = text.split(/\n{2,}/);
         
-        return paragraphs.map(paragraph => {
+        const items: FormattedContentItem[] = [];
+        
+        // Process each paragraph for formatting
+        paragraphs.forEach(paragraph => {
             // Trim whitespace
             const trimmedParagraph = paragraph.trim();
             
             // Skip empty paragraphs
             if (!trimmedParagraph) {
-                return { type: 'paragraph', text: '' };
+                return;
+            }
+            
+            // Handle multi-line content with single line breaks
+            const lines = trimmedParagraph.split(/\n/);
+            
+            if (lines.length > 1) {
+                // Check if this is a multi-line section that should be handled as a unit
+                const isNumberedHeader = /^\d+\.\s[A-Z]/.test(lines[0]);
+                
+                if (isNumberedHeader) {
+                    // This is a numbered section with sub-content
+                    const sectionHeader = lines[0].trim();
+                    const match = sectionHeader.match(/^(\d+)\.\s(.*)/);
+                    
+                    if (match) {
+                        const number = match[1];
+                        const text = match[2];
+                        
+                        // Add the section header
+                        items.push({ 
+                            type: 'numberedSection', 
+                            text, 
+                            number, 
+                            level: 1 
+                        });
+                        
+                        // Process the remaining lines as sub-content with increased indentation
+                        lines.slice(1).forEach(line => {
+                            const trimmedLine = line.trim();
+                            if (!trimmedLine) return;
+                            
+                            // Check if it's a subsection
+                            const subMatch = trimmedLine.match(/^(\d+\.\d+)\.\s(.*)/);
+                            if (subMatch) {
+                                items.push({ 
+                                    type: 'numberedSection', 
+                                    text: subMatch[2], 
+                                    number: subMatch[1], 
+                                    level: 2 
+                                });
+                            } else if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
+                                // It's a list item
+                                items.push({ 
+                                    type: 'listItem', 
+                                    text: trimmedLine.substring(2) 
+                                });
+                            } else {
+                                // Regular paragraph under the section
+                                items.push({ 
+                                    type: 'paragraph', 
+                                    text: trimmedLine
+                                });
+                            }
+                        });
+                        
+                        return;
+                    }
+                }
+                
+                // Process each line separately
+                lines.forEach(line => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return;
+                    
+                    // Process the line individually
+                    const lineItem = processLine(trimmedLine);
+                    if (lineItem) {
+                        items.push(lineItem);
+                    }
+                });
+                
+                return;
+            }
+            
+            // Single line - process normally
+            const item = processLine(trimmedParagraph);
+            if (item) {
+                items.push(item);
+            }
+        });
+        
+        return items;
+    };
+
+    // Helper function to process a single line of text
+    const processLine = (line: string): FormattedContentItem | null => {
+        if (!line.trim()) {
+            return null;
             }
             
             // Check if this is a heading (starts with # or ##)
-            if (trimmedParagraph.startsWith('# ')) {
-                return { type: 'heading1', text: trimmedParagraph.substring(2) };
-            } else if (trimmedParagraph.startsWith('## ')) {
-                return { type: 'heading2', text: trimmedParagraph.substring(3) };
+        if (line.startsWith('# ')) {
+            return { type: 'heading1', text: line.substring(2) };
+        } else if (line.startsWith('## ')) {
+            return { type: 'heading2', text: line.substring(3) };
             } 
             // Check if this is a list item
-            else if (trimmedParagraph.startsWith('- ') || trimmedParagraph.startsWith('* ')) {
-                return { type: 'listItem', text: trimmedParagraph.substring(2) };
+        else if (line.startsWith('- ') || line.startsWith('* ')) {
+            return { type: 'listItem', text: line.substring(2) };
             }
             // Check if this is a key-value pair (e.g., "Key: Value")
-            else if (trimmedParagraph.includes(': ')) {
-                const [key, value] = trimmedParagraph.split(': ');
+        else if (line.includes(': ') && !line.startsWith(' ')) {
+            const [key, ...valueParts] = line.split(': ');
+            const value = valueParts.join(': '); // Rejoin in case the value itself contains colons
                 return { type: 'keyValue', key, value };
             }
-            // Check for numbered sections (e.g., "1.1. Position", "1.2. Duties")
-            else if (/^\d+(\.\d+)*\.\s/.test(trimmedParagraph)) {
-                const match = trimmedParagraph.match(/^(\d+(\.\d+)*)\.\s(.*)/);
+        // Check for numbered sections with different formats
+        // Main sections like "1. DEFINITIONS"
+        else if (/^\d+\.\s[A-Z]/.test(line)) {
+            const match = line.match(/^(\d+)\.\s(.*)/);
                 if (match) {
-                    const number = match[1];
-                    const text = match[3];
-                    // Calculate level based on number of dots
-                    const level = number.split('.').length;
                     return { 
                         type: 'numberedSection', 
-                        text, 
-                        number, 
-                        level 
+                    text: match[2], 
+                    number: match[1], 
+                    level: 1 
+                };
+            }
+        }
+        // Subsections like "1.1. Position"
+        else if (/^\d+\.\d+\.\s/.test(line)) {
+            const match = line.match(/^(\d+\.\d+)\.\s(.*)/);
+            if (match) {
+                return { 
+                    type: 'numberedSection', 
+                    text: match[2], 
+                    number: match[1], 
+                    level: 2 
+                };
+            }
+        }
+        // Sub-subsections like "1.1.1. Responsibilities"
+        else if (/^\d+\.\d+\.\d+\.\s/.test(line)) {
+            const match = line.match(/^(\d+\.\d+\.\d+)\.\s(.*)/);
+            if (match) {
+                return { 
+                    type: 'numberedSection', 
+                    text: match[2], 
+                    number: match[1], 
+                    level: 3 
                     };
                 }
             }
             // Check for section headers (all caps)
-            else if (/^[A-Z\s]+$/.test(trimmedParagraph) && trimmedParagraph.length > 3) {
-                return { type: 'heading1', text: trimmedParagraph };
+        else if (/^[A-Z\s]+$/.test(line) && line.length > 3) {
+            return { type: 'heading1', text: line };
             }
             // Regular paragraph
             else {
-                return { type: 'paragraph', text: trimmedParagraph };
+            return { type: 'paragraph', text: line };
             }
             
-            // Default case - should never reach here, but TypeScript needs it
-            return { type: 'paragraph', text: trimmedParagraph };
-        });
+        // Default fallback (though shouldn't be needed due to else case above)
+        return { type: 'paragraph', text: line };
     };
 
     // Function to generate a descriptive contract title
@@ -1880,12 +1992,13 @@ const CreateContract = () => {
                                                             key={index} 
                                                             className={styles.numberedSection}
                                                             style={{ 
-                                                                marginLeft: `${(item.level || 1) * 20}px`,
-                                                                paddingLeft: '10px'
+                                                                marginLeft: `${((item.level || 1) - 1) * 20}px`,
+                                                                marginBottom: item.level === 1 ? '16px' : '8px',
+                                                                marginTop: item.level === 1 ? '16px' : '0'
                                                             }}
                                                         >
                                                             <span className={styles.number}>{item.number}.</span>
-                                                            <span>{item.text}</span>
+                                                            <span className={styles.sectionText}>{item.text}</span>
                                                         </div>
                                                     );
                                                 case 'keyValue':
