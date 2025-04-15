@@ -287,7 +287,7 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        Why Choose <span>LawBit</span>
+                        Why Choose&nbsp;<span>LawBit</span>
                     </motion.h2>
                     <motion.p 
                         className={styles.sectionSubtitle}
@@ -334,7 +334,7 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        Transparent Pricing, <span>Built for Businesses </span>
+                        Transparent Pricing,&nbsp;<span>Built for Businesses</span>
                     </motion.h2>
                     <motion.p 
                         className={styles.sectionSubtitle}

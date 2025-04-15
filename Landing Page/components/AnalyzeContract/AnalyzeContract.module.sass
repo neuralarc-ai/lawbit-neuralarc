@@ -1584,6 +1584,62 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     align-items: center
     justify-content: center
     z-index: 1000
-    border-radius: 32px 
+    border-radius: 32px
+
+.loadingIcon
+    position: relative
+    width: 120px
+    height: 120px
+    display: flex
+    align-items: center
+    justify-content: center
+
+.spinner
+    position: absolute
+    width: 120px
+    height: 120px
+    border-radius: 50%
+    border: 3px solid transparent
+    border-top: 3px solid rgba(138, 48, 255, 1)
+    border-right: 3px solid rgba(248, 66, 178, 1)
+    border-bottom: 3px solid rgba(248, 91, 66, 1)
+    animation: spin 1.5s linear infinite
+
+.logo
+    width: 70px
+    height: 70px
+    animation: pulse 2s ease-in-out infinite
+
+.loadingText
+    font-size: 28px
+    font-weight: 600
+    background: linear-gradient(to right, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 50%, rgba(248, 91, 66, 1) 100%)
+    background-size: 200% auto
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+    animation: gradient 3s ease infinite
+    margin-top: 24px
+
+@keyframes spin
+    0%
+        transform: rotate(0deg)
+    100%
+        transform: rotate(360deg)
+
+@keyframes pulse
+    0%
+        transform: scale(1)
+    50%
+        transform: scale(1.1)
+    100%
+        transform: scale(1)
+
+@keyframes gradient
+    0%
+        background-position: 0% 50%
+    50%
+        background-position: 100% 50%
+    100%
+        background-position: 0% 50%
 
 // Duplicate legalDisclaimer section removed for standardization 

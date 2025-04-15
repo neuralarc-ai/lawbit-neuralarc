@@ -242,9 +242,31 @@ const GenerateLegalDraft = () => {
 
     return (
         <div className={styles.container}>
+            <AnimatePresence>
+                {isGenerating && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className={styles.generatingOverlay}
+                    >
+                        <div className={styles.loadingIcon}>
+                            <div className={styles.spinner} />
+                            <Image
+                                src="/icons/lawbit-preview.svg"
+                                alt="Lawbit preview"
+                                width={70}
+                                height={70}
+                                className={styles.logo}
+                            />
+                        </div>
+                        <div className={styles.loadingText}>Generating your legal draft...</div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
             <div className={styles.innerContainer}>
                 <div className={styles.content}>
-                    <h2 className={styles.title}>Generate Legal Draft</h2>
+                    <h2 className={styles.title}>{showPreview ? 'Generated Legal Draft' : 'Generate Legal Draft'}</h2>
                     
             <AnimatePresence mode="wait">
                         {!showPreview ? (

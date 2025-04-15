@@ -31,6 +31,7 @@ const AnalyzeContract = () => {
     const [analysisProgress, setAnalysisProgress] = useState(0);
     const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
     const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     // Analysis steps descriptions
     const analysisSteps = [
@@ -607,6 +608,28 @@ const AnalyzeContract = () => {
 
     return (
         <div className={styles.container}>
+            <AnimatePresence>
+                {isGenerating && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className={styles.generatingOverlay}
+                    >
+                        <div className={styles.loadingIcon}>
+                            <div className={styles.spinner} />
+                            <Image
+                                src="/icons/logo.svg"
+                                alt="Lawbit Logo"
+                                width={70}
+                                height={70}
+                                className={styles.logo}
+                            />
+                        </div>
+                        <div className={styles.loadingText}>Analyzing your contract...</div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
             <AnimatePresence mode="wait">
                 {isAnalyzing && (
                     <motion.div 
@@ -721,7 +744,7 @@ const AnalyzeContract = () => {
                                 <div className={styles.pastePlaceholder}>
                                     <Image 
                                         src="/icons/lawbit-preview.svg" 
-                                        alt="Lawbit Logo" 
+                                        alt="Lawbit preview" 
                                         width={120} 
                                         height={120}
                                         className={styles.pasteIcon} 
