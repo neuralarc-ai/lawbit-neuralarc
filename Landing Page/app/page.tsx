@@ -442,17 +442,17 @@ export default function Home() {
                             
                             <div className={styles.footerBottom}>
                                 <p>
-                                    Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by&nbsp;
+                                    Copyright 2025. 
+                                    <span className={styles.separator}>•</span>
+                                    All rights reserved.
+                                    <span className={styles.separator}>•</span>
+                                    A product by
                                     <Image 
                                         src="/neuralpath.svg" 
                                         alt="Neural Paths" 
                                         width={115} 
                                         height={30} 
-                                        style={{ 
-                                            display: 'inline-block', 
-                                            verticalAlign: 'middle', 
-                                            marginLeft: '8px' 
-                                        }}
+                                        className={styles.neuralPathLogo}
                                     />
                                 </p>
                             </div>

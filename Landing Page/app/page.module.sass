@@ -668,8 +668,23 @@
         display: flex
         align-items: center
         flex-wrap: wrap
+        gap: 8px
         @media (max-width: 768px)
             justify-content: center
+            flex-direction: column
+            gap: 4px
+
+    .separator
+        color: rgba(255, 255, 255, 0.3)
+        margin: 0 8px
+
+    .neuralPathLogo
+        display: inline-block
+        vertical-align: middle
+        margin-left: 8px
+        transition: opacity 0.3s ease
+        &:hover
+            opacity: 0.8
 
 // Pricing buttons
 .pricingButton

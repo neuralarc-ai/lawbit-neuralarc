@@ -27,7 +27,7 @@ interface ContractData {
     description: string;
     intensity: 'Simple' | 'Moderate' | 'Watertight';
     preference: 'Option A' | 'Option B';
-    agreementDate?: string;
+    agreementDate: string; // Changed from optional to required
 }
 
 const contractSchema = z.object({
@@ -41,7 +41,7 @@ const contractSchema = z.object({
     description: z.string().min(1, 'Agreement description is required'),
     intensity: z.enum(['Simple', 'Moderate', 'Watertight']),
     preference: z.enum(['Option A', 'Option B']),
-    agreementDate: z.string().optional()
+    agreementDate: z.string() // Changed from optional to required
 });
 
 const contractTypes = [
@@ -660,7 +660,7 @@ const CreateContract = () => {
         description: '',
         intensity: 'Simple',
         preference: 'Option A',
-        agreementDate: new Date().toISOString().split('T')[0]
+        agreementDate: new Date().toISOString().split('T')[0] // Automatically set to today's date
     });
     const [isTemplateGenerated, setIsTemplateGenerated] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -929,10 +929,11 @@ const CreateContract = () => {
         }
         
         try {
-            // Ensure agreementDate is set to current date if not provided
+            // Always use today's date
+            const today = new Date().toISOString().split('T')[0];
             const dataToSubmit = {
                 ...contractData,
-                agreementDate: new Date().toISOString().split('T')[0]
+                agreementDate: today
             };
             
             contractSchema.parse(dataToSubmit);
@@ -967,21 +968,21 @@ const CreateContract = () => {
             }
 
             // Generate contract for current option
-            const response = await generateContract(contractData);
+            const response = await generateContract(dataToSubmit);
             setGeneratedContract(response);
             storeContract(contractData.preference, response);
             
             // Save current option to database
-            await saveContractToDatabase(contractData, response.content, contractData.preference);
+            await saveContractToDatabase(dataToSubmit, response.content, contractData.preference);
 
             // Generate and save the other option
             const otherOption = contractData.preference === 'Option A' ? 'Option B' : 'Option A';
             const otherResponse = await generateContract({
-                ...contractData,
+                ...dataToSubmit,
                 preference: otherOption
             });
             storeContract(otherOption, otherResponse);
-            await saveContractToDatabase(contractData, otherResponse.content, otherOption);
+            await saveContractToDatabase(dataToSubmit, otherResponse.content, otherOption);
             
             // Update token usage after successful generation
             const { error: updateError } = await supabase.rpc('update_token_usage', {
@@ -1233,33 +1234,37 @@ const CreateContract = () => {
         const doc = new jsPDF();
         
         // Set margins and page dimensions
-        const margin = 20;
+        const margin = 30;
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         const contentWidth = pageWidth - (margin * 2);
         
         // Add title with proper formatting
-        doc.setFontSize(18);
+        doc.setFontSize(14);
         doc.setFont('times', 'bold');
         const title = generateContractTitle();
         const titleLines = doc.splitTextToSize(title, contentWidth);
         doc.text(titleLines, pageWidth / 2, margin, { align: 'center' });
         
-        // Add date below title
-        doc.setFontSize(12);
+        // Add date below title with improved formatting
+        doc.setFontSize(11);
         doc.setFont('times', 'normal');
         const date = new Date().toLocaleDateString('en-US', { 
             year: 'numeric', 
             month: 'long', 
             day: 'numeric' 
         });
-        doc.text(date, pageWidth / 2, margin + (titleLines.length * 7) + 5, { align: 'center' });
+        doc.text(date, pageWidth / 2, margin + (titleLines.length * 7) + 10, { align: 'center' });
+        
+        // Add a decorative line under the title
+        doc.setDrawColor(0, 0, 0);
+        doc.line(margin, margin + (titleLines.length * 7) + 20, pageWidth - margin, margin + (titleLines.length * 7) + 20);
         
         // Process content for formatting
         const formattedContent = processContent(generatedContract.content);
         
         // Calculate starting Y position after title and date
-        let yPosition = margin + (titleLines.length * 7) + 20;
+        let yPosition = margin + (titleLines.length * 7) + 30;
         
         // Helper function to check if a field is missing
         const isFieldMissing = (text: string) => {
@@ -1278,15 +1283,15 @@ const CreateContract = () => {
         const addPageNumber = (pageNum: number) => {
             doc.setFontSize(10);
             doc.setFont('times', 'normal');
-            doc.setTextColor(100, 100, 100);
-            doc.text(`Page ${pageNum}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Page ${pageNum}`, pageWidth / 2, pageHeight - 20, { align: 'center' });
         };
         
         let pageNum = 1;
         
         formattedContent.forEach(item => {
             // Check if we need a new page
-            if (yPosition > pageHeight - margin - 20) {
+            if (yPosition > pageHeight - margin - 30) {
                 doc.addPage();
                 yPosition = margin;
                 pageNum++;
@@ -1297,22 +1302,22 @@ const CreateContract = () => {
                 case 'heading1':
                     // Add extra space before main heading
                     yPosition += 15;
-                    doc.setFontSize(16);
+                    doc.setFontSize(12);
                     doc.setFont('times', 'bold');
                     const [h1r, h1g, h1b] = getFieldColor(item.text || '');
                     doc.setTextColor(h1r, h1g, h1b);
                     const heading1Lines = doc.splitTextToSize(item.text || '', contentWidth);
                     heading1Lines.forEach((line: string) => {
                         doc.text(line, margin, yPosition);
-                        yPosition += 8;
+                        yPosition += 7;
                     });
-                    yPosition += 8; // Extra space after heading
+                    yPosition += 7;
                     break;
                     
                 case 'heading2':
                     // Add space before subheading
                     yPosition += 10;
-                    doc.setFontSize(14);
+                    doc.setFontSize(11);
                     doc.setFont('times', 'bold');
                     const [h2r, h2g, h2b] = getFieldColor(item.text || '');
                     doc.setTextColor(h2r, h2g, h2b);
@@ -1321,31 +1326,31 @@ const CreateContract = () => {
                         doc.text(line, margin, yPosition);
                         yPosition += 7;
                     });
-                    yPosition += 5; // Extra space after subheading
+                    yPosition += 7;
                     break;
                     
                 case 'listItem':
-                    doc.setFontSize(12);
+                    doc.setFontSize(11);
                     doc.setFont('times', 'normal');
                     const listText = '• ' + (item.text || '');
                     const [r, g, b] = getFieldColor(listText);
                     doc.setTextColor(r, g, b);
-                    const listLines = doc.splitTextToSize(listText, contentWidth - 15);
+                    const listLines = doc.splitTextToSize(listText, contentWidth - 20);
                     listLines.forEach((line: string, index: number) => {
-                        if (yPosition > pageHeight - margin - 20) {
+                        if (yPosition > pageHeight - margin - 30) {
                             doc.addPage();
                             yPosition = margin;
                             pageNum++;
                             addPageNumber(pageNum);
                         }
-                        doc.text(line, margin + 15, yPosition);
+                        doc.text(line, margin + 20, yPosition);
                         yPosition += 7;
                     });
-                    yPosition += 3;
+                    yPosition += 5;
                     break;
                     
                 case 'keyValue':
-                    doc.setFontSize(12);
+                    doc.setFontSize(11);
                     doc.setFont('times', 'bold');
                     const keyText = (item.key || '') + ':';
                     const [kr, kg, kb] = getFieldColor(keyText);
@@ -1355,22 +1360,22 @@ const CreateContract = () => {
                     doc.setFont('times', 'normal');
                     const [r2, g2, b2] = getFieldColor(item.value || '');
                     doc.setTextColor(r2, g2, b2);
-                    const valueLines = doc.splitTextToSize(item.value || '', contentWidth - 50);
+                    const valueLines = doc.splitTextToSize(item.value || '', contentWidth - 60);
                     valueLines.forEach((line: string, index: number) => {
-                        if (yPosition > pageHeight - margin - 20) {
+                        if (yPosition > pageHeight - margin - 30) {
                             doc.addPage();
                             yPosition = margin;
                             pageNum++;
                             addPageNumber(pageNum);
                         }
-                        doc.text(line, margin + 50, yPosition);
+                        doc.text(line, margin + 60, yPosition);
                         yPosition += 7;
                     });
-                    yPosition += 5;
+                    yPosition += 7;
                     break;
                     
                 case 'numberedSection':
-                    doc.setFontSize(12);
+                    doc.setFontSize(11);
                     doc.setFont('times', 'bold');
                     const sectionText = (item.number || '') + '. ' + (item.text || '');
                     const [r3, g3, b3] = getFieldColor(sectionText);
@@ -1378,7 +1383,7 @@ const CreateContract = () => {
                     const indent = item.level ? (item.level - 1) * 20 : 0;
                     const sectionLines = doc.splitTextToSize(sectionText, contentWidth - indent);
                     sectionLines.forEach((line: string, index: number) => {
-                        if (yPosition > pageHeight - margin - 20) {
+                        if (yPosition > pageHeight - margin - 30) {
                             doc.addPage();
                             yPosition = margin;
                             pageNum++;
@@ -1387,18 +1392,18 @@ const CreateContract = () => {
                         doc.text(line, margin + indent, yPosition);
                         yPosition += 7;
                     });
-                    yPosition += 5;
+                    yPosition += 7;
                     break;
                     
                 case 'paragraph':
                 default:
-                    doc.setFontSize(12);
+                    doc.setFontSize(11);
                     doc.setFont('times', 'normal');
                     const [r4, g4, b4] = getFieldColor(item.text || '');
                     doc.setTextColor(r4, g4, b4);
                     const lines = doc.splitTextToSize(item.text || '', contentWidth);
                     lines.forEach((line: string) => {
-                        if (yPosition > pageHeight - margin - 20) {
+                        if (yPosition > pageHeight - margin - 30) {
                             doc.addPage();
                             yPosition = margin;
                             pageNum++;
@@ -1407,7 +1412,7 @@ const CreateContract = () => {
                         doc.text(line, margin, yPosition);
                         yPosition += 7;
                     });
-                    yPosition += 5;
+                    yPosition += 7;
                     break;
             }
         });
@@ -1425,7 +1430,7 @@ const CreateContract = () => {
         });
         
         if (hasMissingFields) {
-            if (yPosition > pageHeight - margin - 20) {
+            if (yPosition > pageHeight - margin - 30) {
                 doc.addPage();
                 yPosition = margin;
                 pageNum++;
@@ -1433,7 +1438,7 @@ const CreateContract = () => {
             }
             
             // Add a horizontal line before the warning
-            doc.setDrawColor(200, 200, 200);
+            doc.setDrawColor(0, 0, 0);
             doc.line(margin, yPosition - 5, pageWidth - margin, yPosition - 5);
             yPosition += 10;
             
@@ -1441,7 +1446,7 @@ const CreateContract = () => {
             doc.setFont('times', 'italic');
             doc.setTextColor(255, 0, 0);
             doc.text('Note: Fields marked in red are missing and need to be filled in.', margin, yPosition);
-            yPosition += 5;
+            yPosition += 7;
             doc.text('Please review and update these fields before finalizing the contract.', margin, yPosition);
         }
         
@@ -1993,17 +1998,6 @@ const CreateContract = () => {
                         />
                     </div>
                     <div className={styles.field}>
-                        <label>Agreement Date</label>
-                        <input
-                            type="date"
-                            name="agreementDate" 
-                            value={contractData.agreementDate || ''}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            className={cn({ [styles.error]: errors.agreementDate })}
-                        />
-                    </div>
-                    <div className={styles.field}>
                         <label>Contract Intensity</label>
                         <div className={styles.tabSelector}>
                             <button
@@ -2118,6 +2112,14 @@ const CreateContract = () => {
                                 >
                                     <div className={styles.contractContent}>
                                         <h1 className={styles.heading1}>{generateContractTitle()}</h1>
+                                        <p className={styles.date}>
+                                            {new Date().toLocaleDateString('en-US', { 
+                                                year: 'numeric', 
+                                                month: 'long', 
+                                                day: 'numeric' 
+                                            })}
+                                        </p>
+                                        <div className={styles.divider} />
                                         {processContent(generatedContract.content).map((item, index) => {
                                             switch (item.type) {
                                                 case 'heading1':
@@ -2145,9 +2147,9 @@ const CreateContract = () => {
                                                             key={index} 
                                                             className={styles.numberedSection}
                                                             style={{ 
-                                                                marginLeft: `${((item.level || 1) - 1) * 20}px`,
-                                                                marginBottom: item.level === 1 ? '16px' : '8px',
-                                                                marginTop: item.level === 1 ? '16px' : '0'
+                                                                marginLeft: `${((item.level || 1) - 1) * 25}px`,
+                                                                marginBottom: item.level === 1 ? '20px' : '10px',
+                                                                marginTop: item.level === 1 ? '20px' : '0'
                                                             }}
                                                         >
                                                             <span className={styles.number}>{item.number}.</span>
