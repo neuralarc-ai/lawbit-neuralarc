@@ -1188,145 +1188,225 @@ const CreateContract = () => {
 
         const doc = new jsPDF();
         
-        // Set margins
+        // Set margins and page dimensions
         const margin = 20;
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         const contentWidth = pageWidth - (margin * 2);
         
-        // Add title
-        doc.setFontSize(16);
+        // Add title with proper formatting
+        doc.setFontSize(18);
         doc.setFont('times', 'bold');
         const title = generateContractTitle();
         const titleLines = doc.splitTextToSize(title, contentWidth);
         doc.text(titleLines, pageWidth / 2, margin, { align: 'center' });
         
+        // Add date below title
+        doc.setFontSize(12);
+        doc.setFont('times', 'normal');
+        const date = new Date().toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        doc.text(date, pageWidth / 2, margin + (titleLines.length * 7) + 5, { align: 'center' });
+        
         // Process content for formatting
         const formattedContent = processContent(generatedContract.content);
         
-        // Calculate starting Y position after title
-        let yPosition = margin + (titleLines.length * 7) + 10;
+        // Calculate starting Y position after title and date
+        let yPosition = margin + (titleLines.length * 7) + 20;
         
-        // Add each paragraph with proper formatting
+        // Helper function to check if a field is missing
+        const isFieldMissing = (text: string) => {
+            return text.includes('[') && text.includes(']');
+        };
+        
+        // Helper function to get color based on field status
+        const getFieldColor = (text: string): [number, number, number] => {
+            if (isFieldMissing(text)) {
+                return [255, 0, 0]; // Red for missing fields
+            }
+            return [0, 0, 0]; // Black for filled fields
+        };
+        
+        // Helper function to add page number
+        const addPageNumber = (pageNum: number) => {
+            doc.setFontSize(10);
+            doc.setFont('times', 'normal');
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Page ${pageNum}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+        };
+        
+        let pageNum = 1;
+        
         formattedContent.forEach(item => {
             // Check if we need a new page
-            if (yPosition > pageHeight - margin) {
+            if (yPosition > pageHeight - margin - 20) {
                 doc.addPage();
                 yPosition = margin;
+                pageNum++;
+                addPageNumber(pageNum);
             }
             
             switch (item.type) {
                 case 'heading1':
+                    // Add extra space before main heading
+                    yPosition += 15;
                     doc.setFontSize(16);
                     doc.setFont('times', 'bold');
+                    const [h1r, h1g, h1b] = getFieldColor(item.text || '');
+                    doc.setTextColor(h1r, h1g, h1b);
                     const heading1Lines = doc.splitTextToSize(item.text || '', contentWidth);
-                    doc.text(heading1Lines, margin, yPosition);
-                    yPosition += (heading1Lines.length * 7) + 5;
+                    heading1Lines.forEach((line: string) => {
+                        doc.text(line, margin, yPosition);
+                        yPosition += 8;
+                    });
+                    yPosition += 8; // Extra space after heading
                     break;
                     
                 case 'heading2':
+                    // Add space before subheading
+                    yPosition += 10;
                     doc.setFontSize(14);
                     doc.setFont('times', 'bold');
+                    const [h2r, h2g, h2b] = getFieldColor(item.text || '');
+                    doc.setTextColor(h2r, h2g, h2b);
                     const heading2Lines = doc.splitTextToSize(item.text || '', contentWidth);
-                    doc.text(heading2Lines, margin, yPosition);
-                    yPosition += (heading2Lines.length * 7) + 5;
+                    heading2Lines.forEach((line: string) => {
+                        doc.text(line, margin, yPosition);
+                        yPosition += 7;
+                    });
+                    yPosition += 5; // Extra space after subheading
                     break;
                     
                 case 'listItem':
                     doc.setFontSize(12);
                     doc.setFont('times', 'normal');
-                    const listItemText = '• ' + (item.text || '');
-                    const listItemLines = doc.splitTextToSize(listItemText, contentWidth - 5);
-                    doc.text(listItemLines, margin + 5, yPosition);
-                    yPosition += (listItemLines.length * 7) + 3;
-                    break;
-                    
-                case 'numberedSection':
-                    doc.setFontSize(12);
-                    doc.setFont('times', 'normal');
-                    
-                    // Calculate indentation based on level
-                    const indent = item.level ? (item.level - 1) * 10 : 0;
-                    const availableWidth = contentWidth - indent;
-                    
-                    // Add the number and text
-                    const numberText = (item.number || '') + '. ';
-                    const sectionText = item.text || '';
-                    const fullText = numberText + sectionText;
-                    
-                    // Split text to fit within available width
-                    const sectionLines = doc.splitTextToSize(fullText, availableWidth);
-                    
-                    // If the number is long, we might need to handle it differently
-                    if (numberText.length > 5) {
-                        // First line: number
-                        doc.text(numberText, margin + indent, yPosition);
-                        
-                        // Remaining lines: text with proper indentation
-                        const remainingText = sectionText;
-                        const remainingLines = doc.splitTextToSize(remainingText, availableWidth - 10);
-                        doc.text(remainingLines, margin + indent + 10, yPosition + 7);
-                        yPosition += 7 + (remainingLines.length * 7) + 3;
-                    } else {
-                        // Simple case: just add the text with the number
-                        doc.text(sectionLines, margin + indent, yPosition);
-                        yPosition += (sectionLines.length * 7) + 3;
-                    }
+                    const listText = '• ' + (item.text || '');
+                    const [r, g, b] = getFieldColor(listText);
+                    doc.setTextColor(r, g, b);
+                    const listLines = doc.splitTextToSize(listText, contentWidth - 15);
+                    listLines.forEach((line: string, index: number) => {
+                        if (yPosition > pageHeight - margin - 20) {
+                            doc.addPage();
+                            yPosition = margin;
+                            pageNum++;
+                            addPageNumber(pageNum);
+                        }
+                        doc.text(line, margin + 15, yPosition);
+                        yPosition += 7;
+                    });
+                    yPosition += 3;
                     break;
                     
                 case 'keyValue':
                     doc.setFontSize(12);
                     doc.setFont('times', 'bold');
-                    const keyText = (item.key || '') + ': ';
-                    const valueText = item.value || '';
+                    const keyText = (item.key || '') + ':';
+                    const [kr, kg, kb] = getFieldColor(keyText);
+                    doc.setTextColor(kr, kg, kb);
+                    doc.text(keyText, margin, yPosition);
                     
-                    // Check if key is too long to fit on one line
-                    const keyWidth = doc.getStringUnitWidth(keyText) * 12;
-                    if (keyWidth > contentWidth / 2) {
-                        // Key is too long, put it on its own line
-                        const keyLines = doc.splitTextToSize(keyText, contentWidth);
-                        doc.text(keyLines, margin, yPosition);
-                        yPosition += (keyLines.length * 7);
-                        
-                        // Then add the value on the next line
-                        doc.setFont('times', 'normal');
-                        const valueLines = doc.splitTextToSize(valueText, contentWidth);
-                        doc.text(valueLines, margin, yPosition);
-                        yPosition += (valueLines.length * 7) + 3;
-                    } else {
-                        // Key fits on one line, use the original approach
-                        doc.text(keyText, margin, yPosition);
-                        doc.setFont('times', 'normal');
-                        const valueLines = doc.splitTextToSize(valueText, contentWidth - keyWidth - 10);
-                        doc.text(valueLines, margin + keyWidth + 10, yPosition);
-                        yPosition += Math.max(7, valueLines.length * 7) + 3;
-                    }
+                    doc.setFont('times', 'normal');
+                    const [r2, g2, b2] = getFieldColor(item.value || '');
+                    doc.setTextColor(r2, g2, b2);
+                    const valueLines = doc.splitTextToSize(item.value || '', contentWidth - 50);
+                    valueLines.forEach((line: string, index: number) => {
+                        if (yPosition > pageHeight - margin - 20) {
+                            doc.addPage();
+                            yPosition = margin;
+                            pageNum++;
+                            addPageNumber(pageNum);
+                        }
+                        doc.text(line, margin + 50, yPosition);
+                        yPosition += 7;
+                    });
+                    yPosition += 5;
+                    break;
+                    
+                case 'numberedSection':
+                    doc.setFontSize(12);
+                    doc.setFont('times', 'bold');
+                    const sectionText = (item.number || '') + '. ' + (item.text || '');
+                    const [r3, g3, b3] = getFieldColor(sectionText);
+                    doc.setTextColor(r3, g3, b3);
+                    const indent = item.level ? (item.level - 1) * 20 : 0;
+                    const sectionLines = doc.splitTextToSize(sectionText, contentWidth - indent);
+                    sectionLines.forEach((line: string, index: number) => {
+                        if (yPosition > pageHeight - margin - 20) {
+                            doc.addPage();
+                            yPosition = margin;
+                            pageNum++;
+                            addPageNumber(pageNum);
+                        }
+                        doc.text(line, margin + indent, yPosition);
+                        yPosition += 7;
+                    });
+                    yPosition += 5;
                     break;
                     
                 case 'paragraph':
                 default:
-        doc.setFontSize(12);
+                    doc.setFontSize(12);
                     doc.setFont('times', 'normal');
+                    const [r4, g4, b4] = getFieldColor(item.text || '');
+                    doc.setTextColor(r4, g4, b4);
                     const lines = doc.splitTextToSize(item.text || '', contentWidth);
                     lines.forEach((line: string) => {
-                        if (yPosition > pageHeight - margin) {
+                        if (yPosition > pageHeight - margin - 20) {
                             doc.addPage();
                             yPosition = margin;
+                            pageNum++;
+                            addPageNumber(pageNum);
                         }
                         doc.text(line, margin, yPosition);
                         yPosition += 7;
                     });
-                    yPosition += 3; // Add extra space after paragraphs
+                    yPosition += 5;
                     break;
             }
         });
         
+        // Add page numbers to all pages
+        for (let i = 1; i <= pageNum; i++) {
+            doc.setPage(i);
+            addPageNumber(i);
+        }
+        
+        // Add a footer with missing fields warning if any are present
+        const hasMissingFields = formattedContent.some(item => {
+            const text = item.text || '';
+            return isFieldMissing(text);
+        });
+        
+        if (hasMissingFields) {
+            if (yPosition > pageHeight - margin - 20) {
+                doc.addPage();
+                yPosition = margin;
+                pageNum++;
+                addPageNumber(pageNum);
+            }
+            
+            // Add a horizontal line before the warning
+            doc.setDrawColor(200, 200, 200);
+            doc.line(margin, yPosition - 5, pageWidth - margin, yPosition - 5);
+            yPosition += 10;
+            
+            doc.setFontSize(10);
+            doc.setFont('times', 'italic');
+            doc.setTextColor(255, 0, 0);
+            doc.text('Note: Fields marked in red are missing and need to be filled in.', margin, yPosition);
+            yPosition += 5;
+            doc.text('Please review and update these fields before finalizing the contract.', margin, yPosition);
+        }
+        
         // Format the filename with agreement type, date and time
         const now = new Date();
-        const date = now.toISOString().split('T')[0]; // YYYY-MM-DD
-        const time = now.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
+        const dateStr = now.toISOString().split('T')[0];
+        const timeStr = now.toTimeString().split(' ')[0].replace(/:/g, '-');
         const agreementType = contractData.contractType.toLowerCase().replace(/[^a-zA-Z0-9]/g, '_');
-        const filename = `${agreementType}-${date}-${time}.pdf`;
+        const filename = `${agreementType}-${dateStr}-${timeStr}.pdf`;
         
         doc.save(filename);
         showToast('Contract downloaded as PDF');
@@ -1358,47 +1438,105 @@ const CreateContract = () => {
                     }
                 },
                 children: [
+                    // Title
                     new Paragraph({
-                        text: generateContractTitle(),
-                        heading: HeadingLevel.HEADING_1,
+                        children: [
+                            new TextRun({
+                                text: generateContractTitle(),
+                                bold: true,
+                                size: 36, // 18pt
+                                font: "Times New Roman",
+                                color: "000000"
+                            })
+                        ],
+                        alignment: AlignmentType.CENTER,
+                        spacing: {
+                            after: 400
+                        }
+                    }),
+                    // Date
+                    new Paragraph({
+                        children: [
+                            new TextRun({
+                                text: new Date().toLocaleDateString('en-US', { 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric' 
+                                }),
+                                size: 24, // 12pt
+                                font: "Times New Roman",
+                                color: "000000"
+                            })
+                        ],
                         alignment: AlignmentType.CENTER,
                         spacing: {
                             after: 400
                         }
                     }),
                     ...formattedContent.map(item => {
+                        // Helper function to check if a field is missing
+                        const isFieldMissing = (text: string) => {
+                            return text.includes('[') && text.includes(']');
+                        };
+
+                        // Helper function to split text into runs with proper coloring
+                        const createTextRuns = (text: string) => {
+                            const runs: TextRun[] = [];
+                            let currentText = '';
+                            let inBrackets = false;
+                            
+                            for (let i = 0; i < text.length; i++) {
+                                if (text[i] === '[') {
+                                    if (currentText) {
+                                        runs.push(new TextRun({
+                                            text: currentText,
+                                            font: "Times New Roman",
+                                            color: inBrackets ? "FF0000" : "000000"
+                                        }));
+                                    }
+                                    currentText = '[';
+                                    inBrackets = true;
+                                } else if (text[i] === ']') {
+                                    currentText += ']';
+                                    runs.push(new TextRun({
+                                        text: currentText,
+                                        font: "Times New Roman",
+                                        color: "FF0000"
+                                    }));
+                                    currentText = '';
+                                    inBrackets = false;
+                                } else {
+                                    currentText += text[i];
+                                }
+                            }
+                            
+                            if (currentText) {
+                                runs.push(new TextRun({
+                                    text: currentText,
+                                    font: "Times New Roman",
+                                    color: inBrackets ? "FF0000" : "000000"
+                                }));
+                            }
+                            
+                            return runs;
+                        };
+
                         switch (item.type) {
                             case 'heading1':
                                 return new Paragraph({
-                                    children: [
-                                        new TextRun({
-                                            text: item.text || '',
-                                            bold: true,
-                                            size: 32, // 16pt
-                                            font: "Times New Roman",
-                                            color: "000000" // Black color
-                                        })
-                                    ],
+                                    children: createTextRuns(item.text || ''),
                                     spacing: {
-                                        before: 240,
-                                        after: 120
+                                        before: 400,
+                                        after: 200
                                     }
                                 });
                                 
                             case 'heading2':
                                 return new Paragraph({
-                                    children: [
-                                        new TextRun({
-                                            text: item.text || '',
-                                            bold: true,
-                                            size: 28, // 14pt
-                                            font: "Times New Roman",
-                                            color: "000000" // Black color
-                                        })
-                                    ],
+                                    children: createTextRuns(item.text || ''),
                                     spacing: {
-                                        before: 240,
-                                        after: 120
+                                        before: 300,
+                                        after: 150
                                     }
                                 });
                                 
@@ -1409,20 +1547,16 @@ const CreateContract = () => {
                                             text: "• ",
                                             bold: true,
                                             font: "Times New Roman",
-                                            color: "000000" // Black color
+                                            color: "000000"
                                         }),
-                                        new TextRun({
-                                            text: item.text || '',
-                                            font: "Times New Roman",
-                                            color: "000000" // Black color
-                                        })
+                                        ...createTextRuns(item.text || '')
                                     ],
                                     indent: {
                                         left: 720 // 0.5 inch
                                     },
                                     spacing: {
-                                        before: 120,
-                                        after: 120
+                                        before: 100,
+                                        after: 100
                                     }
                                 });
                                 
@@ -1433,20 +1567,16 @@ const CreateContract = () => {
                                             text: (item.number || '') + '. ',
                                             bold: true,
                                             font: "Times New Roman",
-                                            color: "000000" // Black color
+                                            color: "000000"
                                         }),
-                                        new TextRun({
-                                            text: item.text || '',
-                                            font: "Times New Roman",
-                                            color: "000000" // Black color
-                                        })
+                                        ...createTextRuns(item.text || '')
                                     ],
                                     indent: {
                                         left: item.level ? (item.level - 1) * 720 : 0 // 0.5 inch per level
                                     },
                                     spacing: {
-                                        before: 120,
-                                        after: 120
+                                        before: 150,
+                                        after: 100
                                     }
                                 });
                                 
@@ -1457,35 +1587,24 @@ const CreateContract = () => {
                                             text: (item.key || '') + ": ",
                                             bold: true,
                                             font: "Times New Roman",
-                                            color: "000000" // Black color
+                                            color: "000000"
                                         }),
-                                        new TextRun({
-                                            text: item.value || '',
-                                            font: "Times New Roman",
-                                            color: "000000" // Black color
-                                        })
+                                        ...createTextRuns(item.value || '')
                                     ],
                                     spacing: {
-                                        before: 120,
-                                        after: 120
+                                        before: 100,
+                                        after: 100
                                     }
                                 });
                                 
                             case 'paragraph':
                             default:
                                 return new Paragraph({
-                                    children: [
-                                        new TextRun({
-                                            text: item.text || '',
-                                            size: 24, // 12pt
-                                            font: "Times New Roman",
-                                            color: "000000" // Black color
-                                        })
-                                    ],
+                                    children: createTextRuns(item.text || ''),
                                     spacing: {
                                         line: 360, // 1.5 line spacing
-                                        before: 120,
-                                        after: 120
+                                        before: 100,
+                                        after: 100
                                     }
                                 });
                         }
@@ -1499,10 +1618,10 @@ const CreateContract = () => {
         
         // Format the filename with agreement type, date and time
         const now = new Date();
-        const date = now.toISOString().split('T')[0]; // YYYY-MM-DD
-        const time = now.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
+        const dateStr = now.toISOString().split('T')[0];
+        const timeStr = now.toTimeString().split(' ')[0].replace(/:/g, '-');
         const agreementType = contractData.contractType.toLowerCase().replace(/[^a-zA-Z0-9]/g, '_');
-        const filename = `${agreementType}-${date}-${time}.docx`;
+        const filename = `${agreementType}-${dateStr}-${timeStr}.docx`;
         
         saveAs(blob, filename);
         showToast('Contract downloaded as DOCX');
