@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import styles from './LegalDisclaimer.module.sass'
 import { toast } from 'react-hot-toast'
+import cn from 'classnames'
 
 interface LegalDisclaimerProps {
     isAccepted: boolean
@@ -19,10 +20,14 @@ const LegalDisclaimer: React.FC<LegalDisclaimerProps> = ({
         <div className={styles.legalDisclaimer}>
             <div className={styles.disclaimerAccordion}>
                 <button 
-                    className={styles.disclaimerHeader} 
-                    onClick={onToggle}
+                    className={cn(styles.disclaimerButton, {
+                        [styles.open]: isOpen
+                    })}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onToggle();
+                    }}
                     aria-expanded={isOpen}
-                    aria-controls="disclaimer-content"
                 >
                     <div className={styles.headerContent}>
                         <div className={styles.disclaimerTitle}>

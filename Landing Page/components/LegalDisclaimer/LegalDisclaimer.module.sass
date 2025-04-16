@@ -14,7 +14,7 @@ $p1: #FF5CAA // Primary color variable
     overflow: hidden
     transition: all 0.3s ease
 
-.disclaimerHeader
+.disclaimerButton
     width: 100%
     padding: 16px
     background: rgba(255, 255, 255, 0.03)
@@ -29,11 +29,15 @@ $p1: #FF5CAA // Primary color variable
     &:hover
         background: rgba(255, 255, 255, 0.05)
 
+    &.open
+        background: rgba(255, 255, 255, 0.05)
+
 .headerContent
     display: flex
     align-items: center
     justify-content: space-between
     width: 100%
+    gap: 12px
 
 .disclaimerTitle
     font-size: 16px
@@ -43,6 +47,10 @@ $p1: #FF5CAA // Primary color variable
     display: flex
     align-items: center
     gap: 12px
+    flex: 1
+    min-width: 0
+    overflow: hidden
+    text-overflow: ellipsis
 
 .requiredBadge
     background: rgba(255, 92, 170, 0.1)

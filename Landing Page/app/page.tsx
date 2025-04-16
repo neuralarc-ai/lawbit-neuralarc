@@ -321,7 +321,7 @@ export default function Home() {
             </section>
 
             {/* Testimonials Section */}
-            <section className={styles.testimonials}>
+            <section id="testimonials" className={styles.testimonials}>
                 <TestimonialCarousel />
             </section>
 

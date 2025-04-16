@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import cn from 'classnames';
 import styles from './CreateContract.module.sass';
-import { generateContract, ContractData, ContractResponse, saveContractToDatabase } from '@/services/contractService';
+import { generateContract, ContractResponse, saveContractToDatabase } from '@/services/contractService';
 import { jsPDF } from 'jspdf';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from 'docx';
@@ -16,6 +16,20 @@ import AddressAutocomplete from '../AddressAutocomplete';
 import Script from 'next/script';
 import LegalDisclaimer from '../LegalDisclaimer'
 
+interface ContractData {
+    contractType: string;
+    firstPartyName: string;
+    firstPartyAddress: string;
+    secondPartyName: string;
+    secondPartyAddress: string;
+    jurisdiction: string;
+    keyTerms: string;
+    description: string;
+    intensity: 'Simple' | 'Moderate' | 'Watertight';
+    preference: 'Option A' | 'Option B';
+    agreementDate?: string;
+}
+
 const contractSchema = z.object({
     contractType: z.string().min(1, 'Agreement type is required'),
     firstPartyName: z.string().min(1, 'First party name is required'),
@@ -26,7 +40,8 @@ const contractSchema = z.object({
     keyTerms: z.string().optional(),
     description: z.string().min(1, 'Agreement description is required'),
     intensity: z.enum(['Simple', 'Moderate', 'Watertight']),
-    preference: z.enum(['Option A', 'Option B'])
+    preference: z.enum(['Option A', 'Option B']),
+    agreementDate: z.string().optional()
 });
 
 const contractTypes = [
@@ -644,7 +659,8 @@ const CreateContract = () => {
         keyTerms: '',
         description: '',
         intensity: 'Simple',
-        preference: 'Option A'
+        preference: 'Option A',
+        agreementDate: new Date().toISOString().split('T')[0]
     });
     const [isTemplateGenerated, setIsTemplateGenerated] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -913,7 +929,13 @@ const CreateContract = () => {
         }
         
         try {
-            contractSchema.parse(contractData);
+            // Ensure agreementDate is set to current date if not provided
+            const dataToSubmit = {
+                ...contractData,
+                agreementDate: new Date().toISOString().split('T')[0]
+            };
+            
+            contractSchema.parse(dataToSubmit);
             setIsLoading(true);
             setError(null);
             setIsTemplateGenerated(true);
@@ -1002,8 +1024,8 @@ const CreateContract = () => {
         
         // Process each paragraph for formatting
         paragraphs.forEach(paragraph => {
-            // Trim whitespace
-            const trimmedParagraph = paragraph.trim();
+            // Trim whitespace and remove asterisks
+            const trimmedParagraph = paragraph.trim().replace(/\*/g, '');
             
             // Skip empty paragraphs
             if (!trimmedParagraph) {
@@ -1029,14 +1051,14 @@ const CreateContract = () => {
                         // Add the section header
                         items.push({ 
                             type: 'numberedSection', 
-                            text, 
+                            text: text.charAt(0).toUpperCase() + text.slice(1).toLowerCase(), 
                             number, 
                             level: 1 
                         });
                         
                         // Process the remaining lines as sub-content with increased indentation
                         lines.slice(1).forEach(line => {
-                            const trimmedLine = line.trim();
+                            const trimmedLine = line.trim().replace(/\*/g, '');
                             if (!trimmedLine) return;
                             
                             // Check if it's a subsection
@@ -1044,21 +1066,21 @@ const CreateContract = () => {
                             if (subMatch) {
                                 items.push({ 
                                     type: 'numberedSection', 
-                                    text: subMatch[2], 
+                                    text: subMatch[2].charAt(0).toUpperCase() + subMatch[2].slice(1).toLowerCase(), 
                                     number: subMatch[1], 
                                     level: 2 
                                 });
-                            } else if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
+                            } else if (trimmedLine.startsWith('- ')) {
                                 // It's a list item
                                 items.push({ 
                                     type: 'listItem', 
-                                    text: trimmedLine.substring(2) 
+                                    text: trimmedLine.substring(2).charAt(0).toUpperCase() + trimmedLine.substring(2).slice(1).toLowerCase()
                                 });
                             } else {
                                 // Regular paragraph under the section
                                 items.push({ 
                                     type: 'paragraph', 
-                                    text: trimmedLine
+                                    text: trimmedLine.charAt(0).toUpperCase() + trimmedLine.slice(1).toLowerCase()
                                 });
                             }
                         });
@@ -1069,7 +1091,7 @@ const CreateContract = () => {
                 
                 // Process each line separately
                 lines.forEach(line => {
-                    const trimmedLine = line.trim();
+                    const trimmedLine = line.trim().replace(/\*/g, '');
                     if (!trimmedLine) return;
                     
                     // Process the line individually
@@ -1097,71 +1119,93 @@ const CreateContract = () => {
         if (!line.trim()) {
             return null;
             }
+        
+        // Remove asterisks and trim
+        const cleanLine = line.replace(/\*/g, '').trim();
             
             // Check if this is a heading (starts with # or ##)
-        if (line.startsWith('# ')) {
-            return { type: 'heading1', text: line.substring(2) };
-        } else if (line.startsWith('## ')) {
-            return { type: 'heading2', text: line.substring(3) };
+        if (cleanLine.startsWith('# ')) {
+            return { 
+                type: 'heading1', 
+                text: cleanLine.substring(2).charAt(0).toUpperCase() + cleanLine.substring(2).slice(1).toLowerCase() 
+            };
+        } else if (cleanLine.startsWith('## ')) {
+            return { 
+                type: 'heading2', 
+                text: cleanLine.substring(3).charAt(0).toUpperCase() + cleanLine.substring(3).slice(1).toLowerCase() 
+            };
             } 
             // Check if this is a list item
-        else if (line.startsWith('- ') || line.startsWith('* ')) {
-            return { type: 'listItem', text: line.substring(2) };
+        else if (cleanLine.startsWith('- ')) {
+            return { 
+                type: 'listItem', 
+                text: cleanLine.substring(2).charAt(0).toUpperCase() + cleanLine.substring(2).slice(1).toLowerCase() 
+            };
             }
             // Check if this is a key-value pair (e.g., "Key: Value")
-        else if (line.includes(': ') && !line.startsWith(' ')) {
-            const [key, ...valueParts] = line.split(': ');
+        else if (cleanLine.includes(': ') && !cleanLine.startsWith(' ')) {
+            const [key, ...valueParts] = cleanLine.split(': ');
             const value = valueParts.join(': '); // Rejoin in case the value itself contains colons
-                return { type: 'keyValue', key, value };
+            return { 
+                type: 'keyValue', 
+                key: key.charAt(0).toUpperCase() + key.slice(1).toLowerCase(), 
+                value: value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() 
+            };
             }
         // Check for numbered sections with different formats
         // Main sections like "1. DEFINITIONS"
-        else if (/^\d+\.\s[A-Z]/.test(line)) {
-            const match = line.match(/^(\d+)\.\s(.*)/);
+        else if (/^\d+\.\s[A-Z]/.test(cleanLine)) {
+            const match = cleanLine.match(/^(\d+)\.\s(.*)/);
                 if (match) {
                     return { 
                         type: 'numberedSection', 
-                    text: match[2], 
+                    text: match[2].charAt(0).toUpperCase() + match[2].slice(1).toLowerCase(), 
                     number: match[1], 
                     level: 1 
                 };
             }
         }
         // Subsections like "1.1. Position"
-        else if (/^\d+\.\d+\.\s/.test(line)) {
-            const match = line.match(/^(\d+\.\d+)\.\s(.*)/);
+        else if (/^\d+\.\d+\.\s/.test(cleanLine)) {
+            const match = cleanLine.match(/^(\d+\.\d+)\.\s(.*)/);
             if (match) {
                 return { 
                     type: 'numberedSection', 
-                    text: match[2], 
+                    text: match[2].charAt(0).toUpperCase() + match[2].slice(1).toLowerCase(), 
                     number: match[1], 
                     level: 2 
                 };
             }
         }
         // Sub-subsections like "1.1.1. Responsibilities"
-        else if (/^\d+\.\d+\.\d+\.\s/.test(line)) {
-            const match = line.match(/^(\d+\.\d+\.\d+)\.\s(.*)/);
+        else if (/^\d+\.\d+\.\d+\.\s/.test(cleanLine)) {
+            const match = cleanLine.match(/^(\d+\.\d+\.\d+)\.\s(.*)/);
             if (match) {
                 return { 
                     type: 'numberedSection', 
-                    text: match[2], 
+                    text: match[2].charAt(0).toUpperCase() + match[2].slice(1).toLowerCase(), 
                     number: match[1], 
                     level: 3 
                     };
                 }
             }
             // Check for section headers (all caps)
-        else if (/^[A-Z\s]+$/.test(line) && line.length > 3) {
-            return { type: 'heading1', text: line };
+        else if (/^[A-Z\s]+$/.test(cleanLine) && cleanLine.length > 3) {
+            return { 
+                type: 'heading1', 
+                text: cleanLine.charAt(0).toUpperCase() + cleanLine.slice(1).toLowerCase() 
+            };
             }
             // Regular paragraph
             else {
-            return { type: 'paragraph', text: line };
+            return { 
+                type: 'paragraph', 
+                text: cleanLine.charAt(0).toUpperCase() + cleanLine.slice(1).toLowerCase() 
+            };
             }
             
         // Default fallback (though shouldn't be needed due to else case above)
-        return { type: 'paragraph', text: line };
+        return { type: 'paragraph', text: cleanLine };
     };
 
     // Function to generate a descriptive contract title
@@ -1754,7 +1798,15 @@ const CreateContract = () => {
             </AnimatePresence>
             
             <div className={styles.formSection}>
-                <form onSubmit={handleSubmit}>
+                <form 
+                    className={styles.form}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        if (!isDisclaimerOpen) {
+                            handleSubmit(e);
+                        }
+                    }}
+                >
                     <div className={styles.field}>
                         <label>Agreement type</label>
                         <div className={styles.selectWrapper}>
@@ -1938,6 +1990,17 @@ const CreateContract = () => {
                             onBlur={handleBlur}
                             placeholder={errors.description || "Describe what this contract should cover"}
                             className={cn({ [styles.error]: errors.description })}
+                        />
+                    </div>
+                    <div className={styles.field}>
+                        <label>Agreement Date</label>
+                        <input
+                            type="date"
+                            name="agreementDate" 
+                            value={contractData.agreementDate || ''}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={cn({ [styles.error]: errors.agreementDate })}
                         />
                     </div>
                     <div className={styles.field}>
