@@ -217,6 +217,7 @@
 
 .tabSelector
     display: flex
+    display: -webkit-flex // Added for older Safari compatibility
     gap: 8px
     padding: 6px
     background: rgba(0, 0, 0, 0.2)
@@ -224,9 +225,13 @@
     backdrop-filter: blur(10px)
     border: 1px solid rgba(255, 255, 255, 0.1)
     width: 100%
+    box-sizing: border-box // Ensure consistent box model
+    width: 100%
 
 .tabButton
-    flex: 1
+    flex: 1 0 auto // Modified to prevent shrinking and ensure equal width
+    min-width: 100px // Added to lock minimum width
+    height: 40px // Added to lock height
     padding: 10px 20px
     background: transparent
     border: none
@@ -234,7 +239,8 @@
     color: rgba(121, 134, 130, 1)
     font-size: 14px
     font-weight: 500
-    transition: all 0.3s ease
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif // Added for consistent font rendering
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease // Modified to avoid transitioning layout properties
     cursor: pointer
     display: flex
     align-items: center
@@ -242,6 +248,7 @@
     gap: 8px
     position: relative
     white-space: nowrap
+    box-sizing: border-box // Added to ensure padding doesn’t affect size
     &.active
         background: rgba(255, 255, 255, 0.1)
         color: white
@@ -253,8 +260,10 @@
             border-radius: 8px
             border: 1px solid transparent
             background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
-            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
-            -webkit-mask-composite: destination-out
+            // Simplified mask to avoid Safari rendering issues
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+            -webkit-mask-composite: xor // Changed to 'xor' for broader Safari support
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
             mask-composite: exclude
         &:hover
             color: white
@@ -382,12 +391,14 @@
     align-items: flex-start
     justify-content: space-between
     gap: 24px
-
+    width: 100% // Ensure full width for consistent layout
 .preferenceSelector
     display: flex
     flex-direction: column
     align-items: flex-start
     gap: 16px
+    width: 100% // Added to ensure consistent container width
+    max-width: 300px // Added to constrain button sizes
     label
         color: rgba(247, 248, 248, 1)
         font-size: 14px
