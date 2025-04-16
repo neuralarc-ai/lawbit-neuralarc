@@ -241,6 +241,27 @@ export default function Home() {
                     >
                         LawBit helps startups and individuals create legal documents and analyze agreements to identify risks instantly
                     </motion.p>
+                    
+                    {/* Mobile/Tablet Buttons */}
+                    <motion.div 
+                        className={styles.mobileButtons}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                    >
+                        <button 
+                            className={styles.mobileLoginButton}
+                            onClick={() => router.push('/auth/signin')}
+                        >
+                            Log In
+                        </button>
+                        <button 
+                            className={styles.mobileTryNowButton}
+                            onClick={() => router.push('/auth/signup')}
+                        >
+                            Try Now <span className={styles.arrow}>→</span>
+                        </button>
+                    </motion.div>
                 </div>
             </section>
 
@@ -311,9 +332,10 @@ export default function Home() {
                                     alt={benefit.title}
                                     width={72}
                                     height={72}
+                                    className={styles.benefitIcon}
                                 />
-                                <h3 style={{fontSize: '40px', fontWeight: 'bold'}}>{benefit.title}</h3>
-                                <p style={{fontSize: '20px'}}>{benefit.description}</p>
+                                <h3 className={styles.benefitTitle}>{benefit.title}</h3>
+                                <p className={styles.benefitDescription}>{benefit.description}</p>
                             </motion.div>
                         ))}
                     </div>
@@ -322,7 +344,27 @@ export default function Home() {
 
             {/* Testimonials Section */}
             <section id="testimonials" className={styles.testimonials}>
-                <TestimonialCarousel />
+                <div className={styles.container}>
+                    <motion.h2 
+                        className={styles.sectionTitle}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        What Our Users&nbsp;<span>Say About Us</span>
+                    </motion.h2>
+                    <motion.p 
+                        className={styles.sectionSubtitle}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                    >
+                        Join thousands of satisfied customers who trust LawBit
+                    </motion.p>
+                    <div className={styles.testimonialWrapper}>
+                        <TestimonialCarousel />
+                    </div>
+                </div>
             </section>
 
             {/* Pricing Section */}
