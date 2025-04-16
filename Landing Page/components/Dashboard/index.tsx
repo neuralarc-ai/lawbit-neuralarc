@@ -81,7 +81,8 @@ const Dashboard = () => {
                                 height={28}
                                 className={styles.tabIcon}
                             />
-                            Generate Legal Draft
+                            <span className={styles.desktopText}>Generate Legal Draft</span>
+                            <span className={styles.mobileText}>Generate</span>
                         </button>
                         <button 
                             className={cn(styles.tab, { [styles.active]: activeTab === 'create' })}
@@ -94,7 +95,8 @@ const Dashboard = () => {
                                 height={28}
                                 className={styles.tabIcon}
                             />
-                            Legal Draft Template
+                            <span className={styles.desktopText}>Legal Draft Template</span>
+                            <span className={styles.mobileText}>Template</span>
                         </button>
                         <button 
                             className={cn(styles.tab, { [styles.active]: activeTab === 'analyze' })}
@@ -107,7 +109,8 @@ const Dashboard = () => {
                                 height={28}
                                 className={styles.tabIcon}
                             />
-                            Analyze Legal Draft
+                            <span className={styles.desktopText}>Analyze Legal Draft</span>
+                            <span className={styles.mobileText}>Analyze</span>
                         </button>
                     </div>
                 </motion.div>

@@ -11,23 +11,33 @@
     box-shadow: 0 5px 1.5px -4px rgba(5, 5, 5, 0.25), 0 6px 4px -4px rgba(5, 5, 5, 0.1), 0 6px 13px 0 rgba(5, 5, 5, 0.1), 0 24px 24px -16px rgba(5, 5, 5, 0.1), inset 2px 4px 16px 0 rgba(248, 248, 248, 0.06)
     @media (max-width: 768px)
         padding: 24px
-        display: grid
+        display: flex
+        flex-direction: column
+        gap: 24px
+        height: auto
+        min-height: 100vh
 
 .formSection
     flex: 1
     max-width: 500px
     @media (max-width: 768px)
         max-width: 100%
+        width: 100%
 
 .field
     margin-bottom: 24px
     position: relative
+    @media (max-width: 1000px)
+        margin-bottom: 20px
     label
         display: block
         margin-bottom: 8px
         color: rgba(247, 248, 248, 1)
         font-size: 14px
         font-weight: light
+        @media (max-width: 1000px)
+            font-size: 13px
+            margin-bottom: 6px
     input, textarea, select
         width: 100%
         padding: 16px 20px
@@ -39,6 +49,10 @@
         transition: all 0.3s ease
         backdrop-filter: blur(10px)
         box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02)
+        @media (max-width: 1000px)
+            padding: 14px 16px
+            font-size: 15px
+            border-radius: 10px
         &::placeholder
             color: rgba(255, 255, 255, 0.3)
         &:focus
@@ -214,6 +228,9 @@
     flex-direction: column
     gap: 24px
     max-height: 1618px
+    @media (max-width: 1000px)
+        max-height: none
+        gap: 20px
 
 .tabSelector
     display: flex
@@ -224,6 +241,10 @@
     backdrop-filter: blur(10px)
     border: 1px solid rgba(255, 255, 255, 0.1)
     width: 100%
+    @media (max-width: 1000px)
+        padding: 4px
+        gap: 4px
+        border-radius: 10px
 
 .tabButton
     flex: 1
@@ -242,6 +263,10 @@
     gap: 8px
     position: relative
     white-space: nowrap
+    @media (max-width: 1000px)
+        padding: 8px 12px
+        font-size: 13px
+        gap: 6px
     &.active
         background: rgba(255, 255, 255, 0.1)
         color: white
@@ -284,6 +309,11 @@
     align-items: center
     justify-content: center
     gap: 8px
+    @media (max-width: 1000px)
+        padding: 14px 20px
+        font-size: 15px
+        margin-top: 20px
+        border-radius: 10px
 
     &:hover:not(:disabled)
         transform: translateY(-2px)
@@ -345,18 +375,23 @@
     overflow: hidden
     display: flex
     flex-direction: column
+    @media (max-width: 1000px)
+        border-radius: 12px
+        min-height: 300px
 
 .previewContent
     flex: 1
     overflow-y: auto
     padding: 24px
     color: #FFFFFF
-    position: relative
+    position: fixed
     display: flex
     flex-direction: column
     justify-content: flex-start
     align-items: center
     height: 100%
+    @media (max-width: 1000px)
+        padding: 16px
 
 .previewPlaceholder
     display: flex
@@ -382,22 +417,20 @@
     align-items: flex-start
     justify-content: space-between
     gap: 24px
-
-.preferenceSelector
-    display: flex
-    flex-direction: column
-    align-items: flex-start
-    gap: 16px
-    label
-        color: rgba(247, 248, 248, 1)
-        font-size: 14px
-        white-space: nowrap
+    @media (max-width: 1000px)
+        flex-direction: row
+        gap: 16px
+        align-items: center
 
 .downloadButtons
     display: flex
     gap: 12px
     align-items: flex-end
     height: 100%
+    @media (max-width: 1000px)
+        width: auto
+        justify-content: flex-end
+        margin-left: auto
 
 .buttonWrapper
     width: 72px
@@ -407,6 +440,16 @@
     padding: 14px
     backdrop-filter: blur(10px)
     border: 1px solid rgba(255, 255, 255, 0.1)
+    @media (max-width: 1000px)
+        width: 60px
+        height: 60px
+        padding: 12px
+        border-radius: 10px
+    @media (max-width: 768px)
+        width: 50px
+        height: 50px
+        padding: 10px
+        border-radius: 8px
 
 .buttonInner
     width: 100%
@@ -566,9 +609,15 @@
     -webkit-text-size-adjust: 100%
     box-sizing: border-box
     max-width: 100%
+    @media (max-width: 1000px)
+        padding: 16px
+        font-size: 13px
+        line-height: 1.5
     
     h1
         font-size: 16px
+        @media (max-width: 1000px)
+            font-size: 15px
         font-weight: bold
         margin-bottom: 15px
         color: #FFFFFF
@@ -580,6 +629,8 @@
     
     h2
         font-size: 14px
+        @media (max-width: 1000px)
+            font-size: 13px
         font-weight: bold
         margin-bottom: 10px
         color: #FFFFFF
@@ -591,6 +642,8 @@
     
     p
         font-size: 12px
+        @media (max-width: 1000px)
+            font-size: 11px
         margin-bottom: 10px
         text-align: justify
         word-break: break-word
@@ -630,7 +683,6 @@
             max-width: 100%
     
     .keyValue
-
         margin-bottom: 8px
         max-width: 100%
         .key
@@ -667,6 +719,10 @@
     overflow: hidden
     transition: all 0.3s ease
     position: relative
+    @media (max-width: 1000px)
+        margin-top: 20px
+        margin-bottom: 20px
+        border-radius: 12px
     
     &::before
         content: ""
@@ -692,12 +748,16 @@
         cursor: pointer
         margin: 0
         border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+        @media (max-width: 1000px)
+            padding: 12px
 
         &:hover
             background: rgba(255, 255, 255, 0.05)
     
     .disclaimerTitle
         font-size: 16px
+        @media (max-width: 1000px)
+            font-size: 15px
         font-weight: 600
         color: rgba(255, 255, 255, 0.9)
         margin: 0
@@ -757,6 +817,8 @@
         color: rgba(255, 255, 255, 0.7)
         font-size: 14px
         line-height: 1.6
+        @media (max-width: 1000px)
+            font-size: 13px
 
         p
             margin: 12px 0
@@ -905,6 +967,8 @@
     justify-content: center
     z-index: 1000
     border-radius: 32px
+    @media (max-width: 1000px)
+        border-radius: 0
 
 .loadingIcon
     position: relative
@@ -913,6 +977,9 @@
     display: flex
     align-items: center
     justify-content: center
+    @media (max-width: 1000px)
+        width: 100px
+        height: 100px
 
 .spinner
     position: absolute
@@ -932,6 +999,8 @@
 
 .loadingText
     font-size: 28px
+    @media (max-width: 1000px)
+        font-size: 24px
     font-weight: 600
     background: linear-gradient(to right, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 50%, rgba(248, 91, 66, 1) 100%)
     background-size: 200% auto
@@ -942,6 +1011,9 @@
 
 .loadingDescription
     font-size: 16px
+    @media (max-width: 1000px)
+        font-size: 14px
+        padding: 0 20px
     color: rgba(255, 255, 255, 0.7)
     text-align: center
     max-width: 500px

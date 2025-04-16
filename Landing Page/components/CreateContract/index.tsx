@@ -2029,45 +2029,45 @@ const CreateContract = () => {
                             </button>
                         </div>
                     </div>
-                    
-                    <div className={styles.legalDisclaimerContainer}>
-                        <LegalDisclaimer 
-                            onAccept={(value) => setDisclaimerAccepted(value)}
-                            isAccepted={disclaimerAccepted}
-                            isOpen={isDisclaimerOpen}
-                            onToggle={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
-                        />
-                    </div>
-                    
-                    <button
-                        className={cn(styles.submitButton, {
-                            [styles.disabled]: !isFormValid() || isLoading
-                        })}
-                        onClick={handleSubmit}
-                        disabled={!isFormValid() || isLoading}
-                    >
-                        {isLoading ? (
-                            <>
-                                <span className={styles.loadingText}>
-                                    {generationSteps[generationStep]}
-                                </span>
-                                <div className={styles.progressBar}>
-                                    <div 
-                                        className={styles.progressFill}
-                                        style={{ width: `${generationProgress}%` }}
-                                    />
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                Generate Legal Draft Template
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                            </>
-                        )}
-                    </button>
                 </form>
+                
+                <div className={styles.legalDisclaimerContainer}>
+                    <LegalDisclaimer 
+                        onAccept={(value) => setDisclaimerAccepted(value)}
+                        isAccepted={disclaimerAccepted}
+                        isOpen={isDisclaimerOpen}
+                        onToggle={() => setIsDisclaimerOpen(!isDisclaimerOpen)}
+                    />
+                </div>
+                
+                <button
+                    className={cn(styles.submitButton, {
+                        [styles.disabled]: !isFormValid() || isLoading
+                    })}
+                    onClick={handleSubmit}
+                    disabled={!isFormValid() || isLoading}
+                >
+                    {isLoading ? (
+                        <>
+                            <span className={styles.loadingText}>
+                                {generationSteps[generationStep]}
+                            </span>
+                            <div className={styles.progressBar}>
+                                <div 
+                                    className={styles.progressFill}
+                                    style={{ width: `${generationProgress}%` }}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            Generate Legal Draft Template
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        </>
+                    )}
+                </button>
             </div>
             <div className={styles.rightSection}>
                 <div className={styles.previewSection}>

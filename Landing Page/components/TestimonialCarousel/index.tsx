@@ -128,8 +128,6 @@ const TestimonialCarousel = () => {
             <div className={styles.starfieldWrapper}>
                 <StarField />
             </div>
-            <h2 className={styles.title}>What Our Clients Say</h2>
-            <p className={styles.subtitle}>See how LawBit is transforming legal workflows for businesses</p>
             
             <div className={styles.carouselContainer}>
                 <AnimatePresence initial={false}>

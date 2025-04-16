@@ -307,6 +307,7 @@ export default function Home() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
+                        data-text="Why Choose LawBit"
                     >
                         Why Choose&nbsp;<span>LawBit</span>
                     </motion.h2>
@@ -350,8 +351,9 @@ export default function Home() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
+                        data-text="What Our Clients Say"
                     >
-                        What Our Users&nbsp;<span>Say About Us</span>
+                        What Our Clients&nbsp;<span>Say</span>
                     </motion.h2>
                     <motion.p 
                         className={styles.sectionSubtitle}
@@ -359,11 +361,14 @@ export default function Home() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
                     >
-                        Join thousands of satisfied customers who trust LawBit
+                        See how LawBit is transforming legal workflow for businesses
                     </motion.p>
                     <div className={styles.testimonialWrapper}>
                         <TestimonialCarousel />
                     </div>
+                    <p className={styles.testimonialText}>
+                        &quot;LawBit&apos;s AI-powered contract generation is a game-changer. It saved us countless hours of legal drafting and helped us create watertight agreements with confidence.&quot;
+                    </p>
                 </div>
             </section>
 
@@ -375,6 +380,7 @@ export default function Home() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
+                        data-text="Transparent Pricing, Built for Businesses"
                     >
                         Transparent Pricing,&nbsp;<span>Built for Businesses</span>
                     </motion.h2>
@@ -430,12 +436,23 @@ export default function Home() {
             <section className={styles.productHunt}>
                 <div className={styles.container}>
                     <div className={styles.productHuntContent}>
-                        <h2 className={styles.sectionTitle}>
-                            <span>Join the AI Legal Revolution</span>
-                        </h2>
-                        <p className={styles.sectionSubtitle}>
-                        From Hours to Seconds: Analyze Legal Docs with LawBit&apos;s Cutting-Edge AI
-                        </p>
+                        <motion.h2 
+                            className={styles.sectionTitle}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            data-text="Join the AI Legal Revolution"
+                        >
+                            Join the AI Legal&nbsp;<span>Revolution</span>
+                        </motion.h2>
+                        <motion.p 
+                            className={styles.sectionSubtitle}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                        >
+                            From Hours to Seconds: Analyze Legal Docs with LawBit&apos;s Cutting-Edge AI
+                        </motion.p>
                         <div className={styles.productHuntBadge}>
                             <a 
                                 href="https://www.producthunt.com/products/lawbit/reviews?utm_source=badge-product_review&utm_medium=badge&utm_souce=badge-lawbit" 

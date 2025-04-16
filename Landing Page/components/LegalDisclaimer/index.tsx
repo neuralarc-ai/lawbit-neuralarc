@@ -24,9 +24,11 @@ const LegalDisclaimer: React.FC<LegalDisclaimerProps> = ({
                         [styles.open]: isOpen
                     })}
                     onClick={(e) => {
+                        e.preventDefault();
                         e.stopPropagation();
                         onToggle();
                     }}
+                    type="button"
                     aria-expanded={isOpen}
                 >
                     <div className={styles.headerContent}>
@@ -44,6 +46,11 @@ const LegalDisclaimer: React.FC<LegalDisclaimerProps> = ({
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                             aria-hidden="true"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onToggle();
+                            }}
                         >
                             <path
                                 d="M6 9L12 15L18 9"
