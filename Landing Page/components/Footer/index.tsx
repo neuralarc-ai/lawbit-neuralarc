@@ -21,15 +21,15 @@ const Footer = () => {
                         <p>
                             Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by&nbsp;
                         </p>
-                        
-                    </div>
-                    <Image 
+                        <Image 
                                 src="/neuralpath.svg" 
                                 alt="Neural Paths" 
                                 width={140} 
                                 height={60} 
                                 style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '0px' }}
-                            /> 
+                            />
+                    </div>
+                     
                 </div>
             </div>
         </footer>

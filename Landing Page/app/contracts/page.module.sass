@@ -3,3 +3,38 @@
     display: flex
     flex-direction: column
     background: #202020 
+
+.mobileMessage
+    display: none
+    position: fixed
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    padding: 32px
+    text-align: center
+    background: rgba(18, 18, 18, 0.3)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    border-radius: 16px
+    color: rgba(255, 255, 255, 0.9)
+    font-size: 16px
+    font-weight: 500
+    width: 80%
+    max-width: 320px
+    backdrop-filter: blur(20px)
+    box-shadow: 0 8px 16px -4px rgba(18, 18, 18, 0.2), 0 8px 20px 3px rgba(254, 83, 185, 0.25), inset 0 4px 4px rgba(255, 255, 255, 0.05)
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 16px
+        background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
+        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: destination-out
+        mask-composite: exclude
+        pointer-events: none
+
+@media screen and (max-width: 768px)
+    .mobileMessage
+        display: block
+    .container
+        display: none 
