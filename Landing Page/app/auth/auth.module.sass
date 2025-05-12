@@ -114,7 +114,7 @@
 
 .form
     width: 100%
-    background: linear-gradient(169.29deg, rgba(32, 32, 32, 0.4) 0%, rgba(32, 32, 32, 0.2) 100%)
+    background: linear-gradient(169.29deg, rgb(53, 53, 53) 0%, rgb(32, 32, 32) 100%)
     backdrop-filter: blur(24px)
     border-radius: 32px
     padding: 48px
@@ -128,7 +128,6 @@
         position: absolute
         inset: 0px
         padding: 14px
-        background: url('/images/login-gradient.png') no-repeat center center
         background-size: cover
         border-radius: 34px
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
@@ -168,7 +167,7 @@
     display: block
     width: 100%
     text-align: right
-    color: #FF3B77
+    color:rgb(255, 255, 255)
     font-size: 14px
     margin-top: 16px
     margin-bottom: 16px
@@ -185,7 +184,7 @@
     padding: 16px 32px
     border: none
     border-radius: 12px
-    background: radial-gradient(circle at center, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 60%, rgba(248, 91, 66, 1) 100%)
+    background: #1c1c1c
     color: white
     font-size: 16px
     font-weight: 600
@@ -198,12 +197,12 @@
     justify-content: center
     gap: 8px
     min-width: 310px
-    box-shadow: 0 8px 16px -4px rgba(18, 18, 18, 0.2), 0 8px 20px 3px rgba(254, 83, 185, 0.25), inset 0 4px 4px rgba(255, 255, 255, 0.05)
+    box-shadow: 0 8px 16px -4px rgba(18, 18, 18, 0.2), 0 8px 20px 3px rgba(255, 255, 255, 0.25), inset 0 4px 4px rgba(255, 255, 255, 0.05)
     &:before
         content: ''
         position: absolute
         inset: 0
-        background: radial-gradient(circle at center, rgba(138, 48, 255, 0.8) 0%, rgba(248, 66, 178, 0.8) 60%, rgba(248, 91, 66, 0.8) 100%)
+        background: #FFFFFF
         opacity: 0
         transition: opacity 0.3s ease
     &:after
@@ -245,7 +244,7 @@
     border: none
     padding: 4px
     cursor: pointer
-    color: rgba(138, 48, 255, 1)
+    color: rgb(255, 255, 255)
     transition: all 0.2s ease
     display: flex
     align-items: center

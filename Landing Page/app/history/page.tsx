@@ -154,7 +154,7 @@ const HistoryPage = () => {
                 initial="hidden"
                 animate="visible"
             >
-                <StarField />
+                
             </motion.div>
             <motion.div 
                 className={styles.ellipse}

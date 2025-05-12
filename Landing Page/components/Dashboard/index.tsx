@@ -46,7 +46,7 @@ const Dashboard = () => {
                 initial="hidden"
                 animate="visible"
             >
-                <StarField />
+                
             </motion.div>
             <motion.div 
                 className={styles.ellipse}
@@ -54,13 +54,7 @@ const Dashboard = () => {
                 initial="hidden"
                 animate="visible"
             >
-                <Image 
-                    src="/images/white-radial.svg"
-                    alt="Radial gradient"
-                    width={1000}
-                    height={1000}
-                    priority
-                />
+                
             </motion.div>
             <div className={styles.container}>
                 <motion.div 

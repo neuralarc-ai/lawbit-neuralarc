@@ -5,9 +5,9 @@
 <path d="M36 31.75V36L38.75 38.75M45.25 36C45.25 41.1086 41.1086 45.25 36 45.25C30.8914 45.25 26.75 41.1086 26.75 36C26.75 30.8914 30.8914 26.75 36 26.75C41.1086 26.75 45.25 30.8914 45.25 36Z" stroke="#F8F8F8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 <defs>
 <linearGradient id="paint0_linear_3513_410" x1="9" y1="6" x2="36" y2="72" gradientUnits="userSpaceOnUse">
-<stop stop-color="#F85B42"/>
-<stop offset="0.5" stop-color="#F842B2"/>
-<stop offset="1" stop-color="#9747FF"/>
+<stop stop-color="#1c1c1c"/>
+<stop offset="0.5" stop-color="#1c1c1c"/>
+<stop offset="1" stop-color="#1c1c1c"/>
 </linearGradient>
 <linearGradient id="paint1_linear_3513_410" x1="19" y1="3.01878e-07" x2="65.0154" y2="73.2438" gradientUnits="userSpaceOnUse">
 <stop stop-color="white" stop-opacity="0.62"/>

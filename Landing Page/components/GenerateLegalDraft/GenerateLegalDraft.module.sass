@@ -10,7 +10,7 @@ $p1: #FF5CAA // Primary color variable
   color: $n1
   position: relative
   border-radius: 48px
-  background: rgba(18, 18, 18, 0.3)
+  background: rgba(70, 70, 70, 0.7)
   border: 1px solid rgba(255, 255, 255, 0.1)
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1)
   &:before
@@ -63,7 +63,7 @@ $p1: #FF5CAA // Primary color variable
     content: ''
     position: absolute
     inset: 0px
-    background: linear-gradient(169.29deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)
+    background: linear-gradient(169.29deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.34) 100%)
     border-radius: 32px
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
     -webkit-mask-composite: xor
@@ -346,8 +346,8 @@ $p1: #FF5CAA // Primary color variable
   width: auto
   padding: 16px 24px
   border-radius: 12px
-  background: linear-gradient(135deg, #8A30FF 0%, #F842B2 100%)
-  color: $n1
+  background: #FFFFFF
+  color: #000000
   font-size: 16px
   font-weight: 600
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
@@ -366,8 +366,6 @@ $p1: #FF5CAA // Primary color variable
     position: absolute
     inset: 0
     background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent)
-    transform: translateX(-100%) skewX(-15deg)
-    animation: buttonShine 2s infinite
   
   &:hover:not(:disabled)
     transform: translateY(-4px) translateZ(20px) scale(1.02)
@@ -476,9 +474,9 @@ $p1: #FF5CAA // Primary color variable
     height: 120px
     border-radius: 50%
     border: 3px solid transparent
-    border-top: 3px solid rgba(138, 48, 255, 1)
-    border-right: 3px solid rgba(248, 66, 178, 1)
-    border-bottom: 3px solid rgba(248, 91, 66, 1)
+    border-top: 3px solid rgba(255, 255, 255, 0.87)
+    border-right: 3px solid rgba(255, 255, 255, 0.61)
+    border-bottom: 3px solid rgba(255, 255, 255, 0.23)
     animation: spin 1.5s linear infinite
     z-index: 1
 
@@ -498,9 +496,9 @@ $p1: #FF5CAA // Primary color variable
   height: 120px
   border-radius: 50%
   border: 3px solid transparent
-  border-top: 3px solid rgba(138, 48, 255, 1)
-  border-right: 3px solid rgba(248, 66, 178, 1)
-  border-bottom: 3px solid rgba(248, 91, 66, 1)
+  border-top: 3px solid rgb(243, 243, 243)
+  border-right: 3px solid rgba(253, 253, 253, 0.71)
+  border-bottom: 3px solid rgba(255, 255, 255, 0.49)
   animation: spin 1.5s linear infinite
 
 .logo
@@ -666,8 +664,8 @@ $p1: #FF5CAA // Primary color variable
   padding: 12px 24px
   font-size: 14px
   font-weight: 600
-  color: $n1
-  background: linear-gradient(90deg, #FF5CAA 0%, #6950FB 100%)
+  color: #1c1c1c
+  background: #FFFFFF
   border: none
   border-radius: 30px
   cursor: pointer

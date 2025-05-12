@@ -38,16 +38,10 @@ export default function AuthLayout({
                     initial="hidden"
                     animate="visible"
                 >
-                    <StarField />
+                    
                 </motion.div>
                 <div className={styles.ellipse}>
-                    <Image
-                        src="/images/white-radial.svg"
-                        width={1000}
-                        height={1080}
-                        alt=""
-                        priority
-                    />
+                    
                 </div>
             </div>
             

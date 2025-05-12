@@ -183,7 +183,7 @@ export default function Home() {
                     initial="hidden"
                     animate="visible"
                 >
-                    <StarField />
+                    
                 </motion.div>
                 <motion.div 
                     className={styles.ellipse}

@@ -126,7 +126,7 @@ const TestimonialCarousel = () => {
     return (
         <div className={styles.container}>
             <div className={styles.starfieldWrapper}>
-                <StarField />
+                
             </div>
             
             <div className={styles.carouselContainer}>
