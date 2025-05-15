@@ -7,6 +7,7 @@ import styles from '../auth.module.sass'
 import { signUp, signInWithGoogle } from '@/services/authService'
 import { useToast } from '@/components/Toast/Toaster'
 import PasswordStrength from '@/components/PasswordStrength/PasswordStrength'
+import Image from 'next/image'
 
 export default function SignUp() {
     const router = useRouter()
@@ -210,9 +211,11 @@ export default function SignUp() {
                 className={styles.googleButton}
                 disabled={googleLoading || loading}
             >
-                <img
+                <Image
                     src="/google-icon.svg"
                     alt="Google"
+                    width={28}
+                    height={28}
                     className={styles.googleIcon}
                 />
                 {googleLoading ? 'Signing up...' : 'Sign up with Google'}

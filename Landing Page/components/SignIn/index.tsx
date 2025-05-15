@@ -6,6 +6,7 @@ import { useToast } from '@/components/Toast/Toaster';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
 import styles from './SignIn.module.sass';
+import Image from 'next/image';
 
 const SignIn = () => {
     const router = useRouter();
@@ -51,10 +52,7 @@ const SignIn = () => {
                 email: error.message.includes('email') ? error.message : '',
                 password: error.message.includes('password') ? error.message : ''
             });
-            showToast({
-                type: 'error',
-                message: error.message || 'Failed to sign in'
-            });
+            showToast(error.message || 'Failed to sign in');
         } finally {
             setIsLoading(false);
         }
@@ -68,10 +66,7 @@ const SignIn = () => {
                 throw new Error(error.message);
             }
         } catch (error: any) {
-            showToast({
-                type: 'error',
-                message: error.message || 'Failed to sign in with Google'
-            });
+            showToast(error.message || 'Failed to sign in with Google');
         } finally {
             setIsLoading(false);
         }
@@ -133,9 +128,11 @@ const SignIn = () => {
                         className={styles.googleButton}
                         disabled={isLoading}
                     >
-                        <img 
+                        <Image 
                             src="/google-icon.svg" 
                             alt="Google" 
+                            width={28}
+                            height={28}
                             className={styles.googleIcon}
                         />
                         Sign in with Google
@@ -146,7 +143,7 @@ const SignIn = () => {
                             Forgot Password?
                         </a>
                         <a href="/auth/signup" className={styles.signUp}>
-                            Don't have an account? Sign Up
+                            Don&apos;t have an account? Sign Up
                         </a>
                     </div>
                 </motion.div>
