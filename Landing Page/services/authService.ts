@@ -113,4 +113,38 @@ export const updatePassword = async (password: string) => {
         password: password
     })
     return { error }
+}
+
+export const signInWithGoogle = async () => {
+    const supabase = createClient()
+    try {
+        console.log('Attempting Google signin')
+        
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: `${window.location.origin}/auth/callback`,
+                queryParams: {
+                    access_type: 'offline',
+                    prompt: 'consent',
+                },
+            },
+        })
+
+        if (error) {
+            console.error('Google signin error:', error)
+            throw error
+        }
+
+        console.log('Google signin initiated:', data)
+        return { data, error: null }
+    } catch (error: any) {
+        console.error('Google signin caught error:', error)
+        return { 
+            data: null, 
+            error: {
+                message: error.message || 'An unexpected error occurred during Google signin'
+            }
+        }
+    }
 } 

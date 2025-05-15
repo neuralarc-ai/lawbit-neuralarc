@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import styles from '../auth.module.sass'
-import { signUp } from '@/services/authService'
+import { signUp, signInWithGoogle } from '@/services/authService'
 import { useToast } from '@/components/Toast/Toaster'
 import PasswordStrength from '@/components/PasswordStrength/PasswordStrength'
 
@@ -20,6 +20,7 @@ export default function SignUp() {
         confirmPassword: '',
         mobile: ''
     })
+    const [googleLoading, setGoogleLoading] = useState(false)
 
     const validatePassword = (password: string): boolean => {
         const hasMinLength = password.length >= 8;
@@ -69,6 +70,20 @@ export default function SignUp() {
             showToast(error.message || 'An unexpected error occurred. Please try again.')
         } finally {
             setLoading(false)
+        }
+    }
+
+    const handleGoogleSignIn = async () => {
+        setGoogleLoading(true)
+        try {
+            const { error } = await signInWithGoogle();
+            if (error) {
+                throw new Error(error.message);
+            }
+        } catch (error: any) {
+            showToast(error.message || 'Failed to sign up with Google')
+        } finally {
+            setGoogleLoading(false)
         }
     }
 
@@ -183,6 +198,24 @@ export default function SignUp() {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
+            </button>
+
+            <div className={styles.divider}>
+                <span>or</span>
+            </div>
+
+            <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                className={styles.googleButton}
+                disabled={googleLoading || loading}
+            >
+                <img
+                    src="/google-icon.svg"
+                    alt="Google"
+                    className={styles.googleIcon}
+                />
+                {googleLoading ? 'Signing up...' : 'Sign up with Google'}
             </button>
         </form>
     )

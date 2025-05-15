@@ -149,12 +149,12 @@
 
 .input
     width: 100%
-    padding: 16px 20px
+    padding: 18px 20px
     background: rgba(18, 18, 18, 0.3)
     border: 1px solid rgba(255, 255, 255, 0.1)
-    border-radius: 12px
+    border-radius: 10px
     color: white
-    font-size: 15px
+    font-size: 16px
     transition: all 0.3s ease
     &::placeholder
         color: rgba(255, 255, 255, 0.3)
@@ -181,12 +181,12 @@
 
 .button
     width: 100%
-    padding: 16px 32px
+    padding: 16px 0
     border: none
-    border-radius: 12px
+    border-radius: 10px
     background: #1c1c1c
     color: white
-    font-size: 16px
+    font-size: 17px
     font-weight: 600
     cursor: pointer
     transition: all 0.3s ease
@@ -202,7 +202,7 @@
         content: ''
         position: absolute
         inset: 0
-        background: #FFFFFF
+        background:rgb(82, 82, 82)
         opacity: 0
         transition: opacity 0.3s ease
     &:after
@@ -260,3 +260,54 @@
         stroke-width: 2
         stroke-linecap: round
         stroke-linejoin: round
+
+.googleButton
+    width: 100%
+    padding: 14px 0
+    border: none
+    border-radius: 8px
+    background: #fff
+    color: #222
+    font-size: 16px
+    font-weight: 600
+    cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 14px
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08)
+    margin-bottom: 1.5rem
+    margin-top: 1.5rem
+    transition: box-shadow 0.2s, background 0.2s, color 0.2s
+
+    &:hover:not(:disabled)
+        background: #f5f5f5
+        color: #111
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12)
+        border: 1px solid #e0e0e0
+
+    &:disabled
+        opacity: 0.7
+        cursor: not-allowed
+
+.googleIcon
+    width: 28px
+    height: 28px
+
+.divider
+    display: flex
+    align-items: center
+    text-align: center
+    margin: 2rem 0 1rem 0
+    color: #bbb
+
+    &::before,
+    &::after
+        content: ''
+        flex: 1
+        border-bottom: 1px solid #333
+
+    span
+        padding: 0 1rem
+        font-size: 15px
+        color: #888

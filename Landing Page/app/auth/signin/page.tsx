@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import styles from '../auth.module.sass'
-import { signIn } from '@/services/authService'
+import { signIn, signInWithGoogle } from '@/services/authService'
 import { useToast } from '@/components/Toast/Toaster'
 
 export default function SignIn() {
@@ -16,6 +16,7 @@ export default function SignIn() {
         email: '',
         password: ''
     })
+    const [googleLoading, setGoogleLoading] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -34,6 +35,18 @@ export default function SignIn() {
             showToast(error.message)
         } finally {
             setLoading(false)
+        }
+    }
+
+    const handleGoogleSignIn = async () => {
+        setGoogleLoading(true)
+        try {
+            const { error } = await signInWithGoogle();
+            if (error) throw new Error(error.message);
+        } catch (error: any) {
+            showToast(error.message || 'Failed to sign in with Google')
+        } finally {
+            setGoogleLoading(false)
         }
     }
 
@@ -96,6 +109,23 @@ export default function SignIn() {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
+            </button>
+
+            <div className={styles.divider}>
+                <span>or</span>
+            </div>
+            <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                className={styles.googleButton}
+                disabled={googleLoading || loading}
+            >
+                <img
+                    src="/google-icon.svg"
+                    alt="Google"
+                    className={styles.googleIcon}
+                />
+                {googleLoading ? 'Signing in...' : 'Sign in with Google'}
             </button>
         </form>
     )
