@@ -225,7 +225,7 @@ export default function Home() {
                         }}
                     >
                         <Image
-                            src="/images/contract.png"
+                            src="/images/contract.svg"
                             alt="LawBit Hero"
                             width={1200}
                             height={1200}
