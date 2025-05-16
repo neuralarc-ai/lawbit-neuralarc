@@ -9,20 +9,17 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     display: flex
     flex-direction: column
     width: 100%
-    background: rgba(31, 31, 31, 0.8)
-    backdrop-filter: blur(150px)
+    background: rgb(0, 0, 0)
     padding: 40px
-    border-radius: 32px
-    box-shadow: 0 5px 1.5px -4px rgba(5, 5, 5, 0.25), 0 6px 4px -4px rgba(5, 5, 5, 0.1), 0 6px 13px 0 rgba(5, 5, 5, 0.1), 0 24px 24px -16px rgba(5, 5, 5, 0.1), inset 2px 4px 16px 0 rgba(248, 248, 248, 0.06)
+    border-radius: 16px
     position: relative
     font-family: $font-family-fustat
     &:before
         content: ''
         position: absolute
         inset: 0
-        border-radius: 32px
+        border-radius: 16px
         padding: 1px
-        background: linear-gradient(to top right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1))
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
         -webkit-mask-composite: xor
         mask-composite: exclude
@@ -1564,8 +1561,8 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
             transform: rotate(45deg)
     
     input:checked ~ .checkmark
-        background: #FF5CAA
-        border-color: #FF5CAA
+        background:rgb(255, 255, 255)
+        border-color:rgb(255, 255, 255)
     
     input:checked ~ .checkmark:after
         display: block

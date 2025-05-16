@@ -175,17 +175,6 @@ const Navbar = () => {
                 ) : (
                     <div className={styles.placeholder} />
                 )}
-                <Link href="/" className={styles.logoLink}>
-                    <Image
-                        src="/icons/lawbit-preview.svg"
-                        alt="LawBit"
-                        width={78}
-                        height={78}
-                        className={styles.logo}
-                        priority
-                        quality={100}
-                    />
-                </Link>
                 <button
                     className={styles.menuButton}
                     onClick={toggleMenu}

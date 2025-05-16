@@ -1,6 +1,6 @@
 @import ../../styles/variables
 
-$p1: #FF5CAA // Primary color variable
+$p1:rgb(255, 255, 255) // Primary color variable
 
 .container
   display: flex
@@ -9,21 +9,8 @@ $p1: #FF5CAA // Primary color variable
   height: 100%
   color: $n1
   position: relative
-  border-radius: 48px
+  border-radius: 16px
   background: rgba(70, 70, 70, 0.7)
-  border: 1px solid rgba(255, 255, 255, 0.1)
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1)
-  &:before
-    content: ''
-    position: absolute
-    inset: 0px
-    padding: 1px
-    background: linear-gradient(169.29deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)
-    border-radius: 48px
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
-    -webkit-mask-composite: xor
-    mask-composite: exclude
-    pointer-events: none
   animation: containerReveal 1s cubic-bezier(0.16, 1, 0.3, 1)
   transform-origin: center
   perspective: 1000px
@@ -34,18 +21,7 @@ $p1: #FF5CAA // Primary color variable
   height: 100%
   background: rgba(0, 0, 0, 0.2)
   backdrop-filter: blur(24px)
-  border-radius: 40px
-  padding: 2px
-  &:before
-    content: ''
-    position: absolute
-    inset: 0px
-    background: linear-gradient(169.29deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%)
-    border-radius: 40px
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
-    -webkit-mask-composite: xor
-    mask-composite: exclude
-    pointer-events: none
+  border-radius: 16px
 
 .content
   display: flex
@@ -58,17 +34,7 @@ $p1: #FF5CAA // Primary color variable
   height: 100%
   background: rgba(0, 0, 0, 0.3)
   backdrop-filter: blur(24px)
-  border-radius: 32px
-  &:before
-    content: ''
-    position: absolute
-    inset: 0px
-    background: linear-gradient(169.29deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.34) 100%)
-    border-radius: 32px
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
-    -webkit-mask-composite: xor
-    mask-composite: exclude
-    pointer-events: none
+  border-radius: 16px
 
 .title
   font-size: 24px
@@ -553,7 +519,7 @@ $p1: #FF5CAA // Primary color variable
 
 .progressBar
   height: 100%
-  background: linear-gradient(90deg, #FF5CAA, #6950FB)
+  background: linear-gradient(90deg,rgb(177, 177, 177),rgb(158, 158, 158))
   transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1)
   transform-style: preserve-3d
 

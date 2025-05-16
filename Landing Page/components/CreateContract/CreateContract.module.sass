@@ -4,11 +4,10 @@
     display: flex
     gap: 32px
     height: 100%
-    background: rgba(31, 31, 31, 0.8)
+    background: rgb(0, 0, 0)
     backdrop-filter: blur(150px)
     padding: 48px
     border-radius: 32px
-    box-shadow: 0 5px 1.5px -4px rgba(5, 5, 5, 0.25), 0 6px 4px -4px rgba(5, 5, 5, 0.1), 0 6px 13px 0 rgba(5, 5, 5, 0.1), 0 24px 24px -16px rgba(5, 5, 5, 0.1), inset 2px 4px 16px 0 rgba(248, 248, 248, 0.06)
     @media (max-width: 768px)
         padding: 24px
         display: flex
@@ -90,73 +89,60 @@
         background-size: cover
         display: inline-block
 
+.selectWrapper
+    position: relative
+    width: 100%
+
     select
         width: 100%
         padding: 16px 20px
-        border: 1px solid rgba(255, 255, 255, 0.1)
+        border: 1.5px solid rgba(255, 255, 255, 0.1)
         border-radius: 12px
-        background: rgba(255, 255, 255, 0.03)
+        background: rgba(18, 18, 18, 0.3)
         color: #fff
         font-size: 16px
         transition: all 0.3s ease
         cursor: pointer
         appearance: none
-        background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
-        background-repeat: no-repeat
-        background-position: right 20px center
-        background-size: 24px
+        -webkit-appearance: none
+        -moz-appearance: none
+        background: none !important
+        background-image: none !important
         padding-right: 50px
         backdrop-filter: blur(10px)
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1)
         position: relative
         overflow: hidden
 
-        &::before
-            content: ''
-            position: absolute
-            top: 0
-            left: 0
-            right: 0
-            height: 1px
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)
-            animation: shimmer 2s infinite
+        // Hide native arrow in Edge/IE
+        &::-ms-expand
+            display: none
 
-        &::after
-            content: ''
-            position: absolute
-            inset: 0
-            border-radius: 12px
-            padding: 1px
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
-            -webkit-mask-composite: xor
-            mask-composite: exclude
-            pointer-events: none
+        // Hide native arrow in Safari
+        &::-webkit-inner-spin-button,
+        &::-webkit-calendar-picker-indicator
+            display: none
+            -webkit-appearance: none
 
-        &:hover
-            background-color: rgba(255, 255, 255, 0.05)
-            border-color: rgba(255, 255, 255, 0.2)
-            transform: translateY(-1px)
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15)
-
-        &:focus
-            outline: none
-            border-color: rgba(255, 255, 255, 0.3)
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1)
+        // Hide native arrow in Safari (extra)
+        &::-webkit-select-arrow
+            display: none
 
         option
-            background: #1a1a1a
+            background: #1c1c1c
             color: #fff
             padding: 12px
             font-size: 16px
             transition: background-color 0.2s ease
+            -webkit-appearance: none
+            -moz-appearance: none
+            appearance: none
 
             &:hover
                 background-color: rgba(255, 255, 255, 0.1)
 
         optgroup
-            background: #1a1a1a
+            background: #1c1c1c
             color: #fff
             font-weight: 600
             padding: 12px
@@ -164,19 +150,9 @@
             text-transform: uppercase
             letter-spacing: 0.5px
             border-bottom: 1px solid rgba(255, 255, 255, 0.1)
-            margin-top: 8px
-            position: relative
-            overflow: hidden
-
-            &::before
-                content: ''
-                position: absolute
-                top: 0
-                left: 0
-                width: 4px
-                height: 100%
-                background: linear-gradient(to bottom, #FFD700, #FFA500)
-                border-radius: 2px
+            -webkit-appearance: none
+            -moz-appearance: none
+            appearance: none
 
             &:first-child
                 margin-top: 0
@@ -204,6 +180,17 @@
                     transform: translateY(-50%)
                     font-size: 16px
                     opacity: 0.8
+
+        &:hover
+            background-color: rgba(255, 255, 255, 0.05)
+            border-color: rgba(255, 255, 255, 0.2)
+            transform: translateY(-1px)
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15)
+
+        &:focus
+            outline: none
+            border-color: rgba(255, 255, 255, 0.3)
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1)
 
         &.error
             border-color: #ff4d4d
@@ -269,9 +256,8 @@
         font-size: 13px
         gap: 6px
     &.active
-        background: rgba(255, 255, 255, 0.1)
         color: white
-        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05), 0 8px 16px -4px rgba(18, 18, 18, 0.2), inset 0 4px 4px rgba(255, 255, 255, 0.05)
+        border: 1px solid rgba(255, 255, 255, 0.5)
         &:after
             content: ''
             position: absolute
@@ -280,11 +266,11 @@
             border: 1px solid transparent
             background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
             -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
-            -webkit-mask-composite: destination-out
+            -webkit-mask-composite: xor
             mask-composite: exclude
         &:hover
             color: white
-            background: rgba(255, 255, 255, 0.15)
+            background: rgba(255, 255, 255, 0.5)
     &.disabled
         opacity: 0.5
         cursor: not-allowed
@@ -482,8 +468,6 @@
         position: absolute
         inset: 0
         border-radius: 50%
-        background: radial-gradient(circle at center, rgba(138, 48, 255, 0.2) 0%, rgba(248, 66, 178, 0.2) 60%, rgba(248, 91, 66, 0.2) 100%)
-        opacity: 0
         transition: opacity 0.3s ease
     &:hover::after
         opacity: 1
@@ -1153,4 +1137,20 @@
     background-size: contain
     background-repeat: no-repeat
     background-position: center
-    opacity: 0.7 
+    opacity: 0.7
+
+// Add a custom dropdown indicator for Safari
+.selectWrapper::after
+    content: ''
+    position: absolute
+    right: 20px
+    top: 50%
+    transform: translateY(-50%)
+    width: 24px
+    height: 24px
+    pointer-events: none
+    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    background-repeat: no-repeat
+    background-position: center
+    background-size: contain
+    z-index: 1 

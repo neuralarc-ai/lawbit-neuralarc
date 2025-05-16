@@ -1,6 +1,6 @@
 .container
     min-height: 100vh
-    background: #202020
+    background: #000 !important
     color: white
     padding-top: 48px
     position: relative
@@ -8,29 +8,9 @@
     display: flex
     flex-direction: column
 
-.starfieldWrapper
-    position: absolute
-    top: 0
-    left: 0
-    right: 0
-    height: 25%
-    overflow: hidden
-    z-index: 1
-
-.ellipse
-    position: absolute
-    top: -50%
-    width: 100%
-    height: 100%
-    z-index: 1
-    img
-        width: 100%
-        height: 100%
-        object-fit: contain
-
 .header
     padding: 24px 48px
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+    border-bottom: none
     margin-bottom: 48px
 
 .logoWrapper
@@ -50,48 +30,40 @@
     padding: 40px
     flex: 1
     width: 100%
+    background: none !important
+    box-shadow: none !important
+    border: none !important
 
     h1
         margin: 0 0 32px
         font-size: 32px
         font-weight: 600
-        background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.7))
-        -webkit-background-clip: text
-        -webkit-text-fill-color: transparent
+        background: none !important
+        -webkit-background-clip: unset
+        -webkit-text-fill-color: #fff
         text-align: center
 
 .tabsWrapper
     margin-bottom: 50px
     display: flex
     justify-content: center
+    background: none !important
+    box-shadow: none !important
+    border: none !important
 
 .tabs
     position: relative
     display: flex
     width: 320px
     padding: 4px
-    background: rgba(18, 18, 18, 0.4)
-    border-radius: 50px
+    background: none !important
+    border-radius: 0
+    box-shadow: none !important
+    border: 1px solid rgba(255, 255, 255, 0.47)
+    border-radius: 12px
     &:before,
     &:after
-        content: ""
-        position: absolute
-        left: 4px
-        width: calc(50% - 4px)
-        height: 44px
-        border-radius: 50px
-        pointer-events: none
-        transition: transform .2s
-    &:before
-        background: rgba(248, 248, 248, 0.05)
-        box-shadow: 0px 4px 4px 0px rgba(255, 255, 255, 0.05) inset, 0px 8px 16px -4px rgba(18, 18, 18, 0.20)
-    &:after
-        border: 1.5px solid rgba(255, 255, 255, 0.05)
-        mask-image: linear-gradient(172deg, black, transparent 50%)
-    &[data-state="analyzed"]
-        &:before,
-        &:after
-            transform: translateX(100%)
+        display: none !important
 
 .tab
     position: relative
@@ -105,16 +77,15 @@
     font-weight: 600
     color: rgba(255, 255, 255, 0.56)
     transition: color .2s
-    background: none
-    border: none
-    cursor: pointer
+    background: none !important
+    border: none !important
     .tabIcon
         margin-right: 8px
         opacity: 0.56
         transition: opacity .2s
     &:hover,
     &.active
-        color: #fff
+        color: #FFFFFF
         .tabIcon
             opacity: 1
 
@@ -128,21 +99,23 @@
     padding: 48px
     font-size: 16px
     color: rgba(255, 255, 255, 0.7)
-    background: rgba(31, 31, 31, 0.8)
-    border-radius: 32px
+    background: none !important
+    border-radius: 0 !important
     margin: 24px auto
     max-width: 400px
+    box-shadow: none !important
+    border: none !important
 
 .error
     color: #DD473C
-    border: 1px solid rgba(221, 71, 60, 0.2)
+    border: none !important
 
 .empty
     color: rgba(255, 255, 255, 0.7)
     font-style: italic
-    background: rgba(31, 31, 31, 0.8)
-    border-radius: 32px
-    box-shadow: 0 24px 24px -16px rgba(0, 0, 0, 0.5), inset 2px 4px 32px rgba(255, 255, 255, 0.1)
+    background: none !important
+    border-radius: 0 !important
+    box-shadow: none !important
     padding: 32px
     display: flex
     flex-direction: column
@@ -156,12 +129,7 @@
     grid-column: 2
     grid-row: 1
     &:before
-        content: ''
-        position: absolute
-        inset: 0
-        border-radius: 32px
-        opacity: 0.1
-        pointer-events: none
+        display: none !important
     .emptyIcon
         margin-bottom: 24px
         opacity: 0.5
@@ -171,7 +139,7 @@
         line-height: 1.5
 
 .dashboard
-    border-radius: 32px
+    border-radius: 0 !important
     padding: 16px
     min-height: 600px
     width: 100%
@@ -182,23 +150,19 @@
     display: flex
     align-items: center
     justify-content: center
+    background: none !important
+    box-shadow: none !important
+    border: none !important
     &:before
-        content: ""
-        position: absolute
-        inset: 0
-        background: url(/images/gradient.png) no-repeat 50% 50% / cover
-        opacity: 1
-        pointer-events: none
-        border-radius: inherit
-        z-index: 0
+        display: none !important
 
 .dashboardContent
     position: relative
-    background: rgba(31, 31, 31, 0.8)
-    border-radius: 24px
-    border: 1px solid rgba(255, 255, 255, 0.1)
-    box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.03)
-    backdrop-filter: blur(20px)
+    background: none !important
+    border-radius: 0 !important
+    border: none !important
+    box-shadow: none !important
+    backdrop-filter: none !important
     z-index: 1
     height: 100%
     width: 100%
@@ -249,9 +213,9 @@
         font-weight: 600
         color: white
         margin-bottom: 16px
-        background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.7))
-        -webkit-background-clip: text
-        -webkit-text-fill-color: transparent
+        background: none !important
+        -webkit-background-clip: unset
+        -webkit-text-fill-color: #fff
     p
         font-size: 18px
         color: rgba(255, 255, 255, 0.7)

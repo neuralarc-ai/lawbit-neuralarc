@@ -156,20 +156,7 @@ const HistoryPage = () => {
             >
                 
             </motion.div>
-            <motion.div 
-                className={styles.ellipse}
-                variants={ellipseVariants}
-                initial="hidden"
-                animate="visible"
-            >
-                <Image 
-                    src="/images/white-radial.svg"
-                    alt="Radial gradient"
-                    width={1000}
-                    height={1000}
-                    priority
-                />
-            </motion.div>
+            
             <div className={styles.content}>
                 <motion.h1
                     initial={{ opacity: 0, y: -20 }}
@@ -191,7 +178,7 @@ const HistoryPage = () => {
                             onClick={() => setActiveTab('generated')}
                         >
                             <Image 
-                                src="/icons/generated.svg" 
+                                src="/icons/generate.svg" 
                                 alt="Generated" 
                                 width={20} 
                                 height={20}

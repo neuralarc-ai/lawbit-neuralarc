@@ -25,17 +25,6 @@ const Dashboard = () => {
         }
     };
 
-    const ellipseVariants = {
-        hidden: { opacity: 0, scale: 0.8 },
-        visible: {
-            opacity: 1,
-            scale: 1,
-            transition: {
-                duration: 1.5,
-                ease: "easeOut"
-            }
-        }
-    };
 
     return (
         <div className={styles.dashboard}>
@@ -46,16 +35,8 @@ const Dashboard = () => {
                 initial="hidden"
                 animate="visible"
             >
-                
             </motion.div>
-            <motion.div 
-                className={styles.ellipse}
-                variants={ellipseVariants}
-                initial="hidden"
-                animate="visible"
-            >
-                
-            </motion.div>
+            
             <div className={styles.container}>
                 <motion.div 
                     className={styles.tabsWrapper}

@@ -9,11 +9,9 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     display: flex
     flex-direction: column
     width: 100%
-    background: rgba(31, 31, 31, 0.8)
-    backdrop-filter: blur(150px)
+    background: rgb(0, 0, 0)
     padding: 40px
     border-radius: 32px
-    box-shadow: 0 5px 1.5px -4px rgba(5, 5, 5, 0.25), 0 6px 4px -4px rgba(5, 5, 5, 0.1), 0 6px 13px 0 rgba(5, 5, 5, 0.1), 0 24px 24px -16px rgba(5, 5, 5, 0.1), inset 2px 4px 16px 0 rgba(248, 248, 248, 0.06)
     position: relative
     font-family: $font-family-fustat
     &:before
@@ -172,24 +170,8 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     display: flex
     min-width: 400px
     padding: 4px
-    background: rgba(18, 18, 18, 0.40)
+    border: 1px solid rgba(255, 255, 255, 0.12)
     border-radius: 12px
-    &:before,
-    &:after
-        content: ""
-        position: absolute
-        left: 4px
-        width: calc(50% - 4px)
-        height: 44px
-        border-radius: 12px
-        pointer-events: none
-        transition: transform .2s
-    &:before
-        background: rgba(248, 248, 248, 0.05)
-        box-shadow: 0px 4px 4px 0px rgba(255, 255, 255, 0.05) inset, 0px 8px 16px -4px rgba(18, 18, 18, 0.20)
-    &:after
-        border: 1.5px solid rgba(255, 255, 255, 0.05)
-        mask-image: linear-gradient(172deg, black, transparent 50%)
     &[data-state="paste"]
         &:before,
         &:after
@@ -217,9 +199,13 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
         margin-right: 8px
         path
             stroke: currentColor
-    &:hover,
+    &:hover
+        
     &.active
         color: white
+        border: 1px solid rgba(255, 255, 255, 0.76)
+        border-radius: 12px
+        background: transparent
 
 .dropZone
     position: relative
@@ -310,11 +296,11 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     justify-content: center
     gap: 8px
     min-width: 310px
-    box-shadow: 0 8px 24px rgba(138, 48, 255, 0.3)
+
     
     &:hover
         transform: translateY(-2px)
-        box-shadow: 0 8px 24px rgba(138, 48, 255, 0.3)
+
     
     &:disabled
         opacity: 0.7

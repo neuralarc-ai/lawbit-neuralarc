@@ -1,6 +1,6 @@
 @import @/styles/variables
 
-$p1: #FF5CAA // Primary color variable
+$p1:rgb(255, 255, 255) // Primary color variable
 
 .container
     margin-top: 24px
@@ -20,7 +20,7 @@ $p1: #FF5CAA // Primary color variable
         left: 0
         width: 4px
         height: 100%
-        background: linear-gradient(180deg, #8A30FF 0%, #F842B2 100%)
+        background: linear-gradient(180deg,rgb(102, 102, 102) 0%,rgb(255, 255, 255) 100%)
         border-radius: 4px 0 0 4px
 
     &:hover
@@ -107,7 +107,7 @@ $p1: #FF5CAA // Primary color variable
         
         &:before
             content: "•"
-            color: #8A30FF
+            color: #FFFFFF
             font-size: 16px
             line-height: 1
         
@@ -194,8 +194,8 @@ $p1: #FF5CAA // Primary color variable
                 transform: rotate(45deg)
 
         input:checked ~ .checkmark
-            background: #8A30FF
-            border-color: #8A30FF
+            background: #FFFFFF
+            border-color: #FFFFFF
 
         input:checked ~ .checkmark:after
             display: block
@@ -204,7 +204,7 @@ $p1: #FF5CAA // Primary color variable
             background: rgba(255, 255, 255, 0.15)
 
         input:checked:hover ~ .checkmark
-            background: #7929E9
+            background: #FFFFFF
 
     .acceptanceLabel
         color: rgba(255, 255, 255, 0.7)

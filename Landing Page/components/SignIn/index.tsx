@@ -84,17 +84,17 @@ const SignIn = () => {
                 >
                     <h1 className={styles.title}>Sign In</h1>
                     <form onSubmit={handleSubmit} className={styles.form}>
-                        <div className={styles.formGroup}>
-                            <label htmlFor="email">Email</label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
+                    <div className={styles.formGroup}>
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
                                 disabled={isLoading}
-                            />
+                        />
                             {errors.email && <span className={styles.error}>{errors.email}</span>}
                         </div>
                         <div className={styles.formGroup}>
