@@ -1789,13 +1789,6 @@ const CreateContract = () => {
                     >
                         <div className={styles.loadingIcon}>
                             <div className={styles.spinner}></div>
-                            <Image 
-                                src="/icons/lawbit-preview.svg" 
-                                alt="LawBit Logo" 
-                                width={70} 
-                                height={70} 
-                                className={styles.logo}
-                            />
                         </div>
                         <h2 className={styles.loadingText}>Generating Your Contract</h2>
                     </motion.div>

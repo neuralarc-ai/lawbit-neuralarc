@@ -43,7 +43,7 @@ export default function RootLayout({
                     strategy="beforeInteractive"
                 />
             </head>
-            <body>
+            <body className="grain-texture">
                 <Providers>{children}</Providers>
             </body>
         </html>
