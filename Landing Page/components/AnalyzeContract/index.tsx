@@ -742,13 +742,6 @@ const AnalyzeContract = () => {
                             />
                             {!text && (
                                 <div className={styles.pastePlaceholder}>
-                                    <Image 
-                                        src="/icons/lawbit-preview.svg" 
-                                        alt="Lawbit preview" 
-                                        width={120} 
-                                        height={120}
-                                        className={styles.pasteIcon} 
-                                    />
                                     <p className={styles.placeholderText}>
                                         Paste your text here...
                                     </p>

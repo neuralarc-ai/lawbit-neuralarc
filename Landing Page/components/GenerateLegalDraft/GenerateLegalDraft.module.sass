@@ -9,8 +9,8 @@ $p1:rgb(255, 255, 255) // Primary color variable
   height: 100%
   color: $n1
   position: relative
-  border-radius: 16px
-  background: rgba(70, 70, 70, 0.7)
+  border-radius: 12px
+  background: #FFFFFF
   animation: containerReveal 1s cubic-bezier(0.16, 1, 0.3, 1)
   transform-origin: center
   perspective: 1000px
@@ -19,9 +19,9 @@ $p1:rgb(255, 255, 255) // Primary color variable
   position: relative
   width: 100%
   height: 100%
-  background: rgba(0, 0, 0, 0.2)
+  background: #FFFFFF
   backdrop-filter: blur(24px)
-  border-radius: 16px
+  border-radius: 12px
 
 .content
   display: flex
@@ -32,42 +32,29 @@ $p1:rgb(255, 255, 255) // Primary color variable
   padding: 32px
   position: relative
   height: 100%
-  background: rgba(0, 0, 0, 0.3)
+  background: #FFFFFF
   backdrop-filter: blur(24px)
-  border-radius: 16px
+  border-radius: 12px
 
 .title
   font-size: 24px
   font-weight: 600
   margin-bottom: 8px
-  color: $n1
+  color: #000000
 
 .inputArea
   width: 100%
   min-height: 200px
   margin-bottom: 20px
-  border-radius: 16px
-  background: rgba(0, 0, 0, 0.2)
+  border-radius: 12px
+  background: #E8E8E8
   backdrop-filter: blur(10px)
   -webkit-backdrop-filter: blur(10px)
-  border: 1px solid rgba(255, 255, 255, 0.08)
+  border: 1px solid #0000000D
   position: relative
   overflow: hidden
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
   transform-style: preserve-3d
-  &:focus-within
-    transform: translateY(-4px) translateZ(20px)
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3)
-    border-color: rgba(255, 255, 255, 0.3)
-    
-    &::after
-      content: ''
-      position: absolute
-      inset: -1px
-      background: linear-gradient(45deg, rgba(138, 48, 255, 0.2), rgba(248, 66, 178, 0.2))
-      border-radius: 16px
-      z-index: -1
-      animation: inputGlow 2s ease-in-out infinite
 
 @keyframes inputGlow
   0%, 100%
@@ -84,27 +71,22 @@ $p1:rgb(255, 255, 255) // Primary color variable
   padding: 20px
   resize: none
   background: transparent
-  color: $n1
+  color: #000000
   font-size: 16px
   border: none
   outline: none
   font-family: inherit
   &::placeholder
-    color: rgba($n1, 0.5)
+    color: #696969
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
-  transform-style: preserve-3d
-  
-  &:focus
-    transform: scale(1.02) translateZ(10px)
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2)
 
 .legalDisclaimer
   margin-top: 24px
   margin-bottom: 24px
   width: 100%
-  background: rgba(18, 18, 18, 0.3)
-  border: 1px solid rgba(255, 255, 255, 0.1)
-  border-radius: 16px
+  background: #E8E8E8
+  border: 1px solid #0000000D
+  border-radius: 12px
   overflow: hidden
   transition: all 0.3s ease
   position: relative
@@ -120,7 +102,7 @@ $p1:rgb(255, 255, 255) // Primary color variable
   justify-content: space-between
   transition: all 0.3s ease
   margin: 0
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+  border-bottom: 1px solid #0000000D
 
   &:hover
     background: rgba(255, 255, 255, 0.05)
@@ -186,7 +168,7 @@ $p1:rgb(255, 255, 255) // Primary color variable
   align-items: center
   padding: 16px
   background: rgba(255, 255, 255, 0.02)
-  border-top: 1px solid rgba(255, 255, 255, 0.05)
+  border-top: 1px solid #0000000D
   cursor: pointer
   transition: all 0.3s ease
   gap: 0
@@ -312,8 +294,8 @@ $p1:rgb(255, 255, 255) // Primary color variable
   width: auto
   padding: 16px 24px
   border-radius: 12px
-  background: #FFFFFF
-  color: #000000
+  background: #000000
+  color: #FFFFFF
   font-size: 16px
   font-weight: 600
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
@@ -326,20 +308,6 @@ $p1:rgb(255, 255, 255) // Primary color variable
   text-align: center
   margin: 24px auto 0
   gap: 8px
-
-  &::before
-    content: ''
-    position: absolute
-    inset: 0
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent)
-  
-  &:hover:not(:disabled)
-    transform: translateY(-4px) translateZ(20px) scale(1.02)
-    box-shadow: 0 12px 32px rgba(138, 48, 255, 0.4)
-    
-    .arrowIcon
-      transform: translateX(8px) translateZ(10px)
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)
 
   &:disabled
     opacity: 0.7

@@ -77,7 +77,6 @@
 .menuSquare
     width: 72px
     height: 72px
-    background: rgba(248, 248, 248, 0.02)
     backdrop-filter: blur(30px)
     border-radius: 16px
     display: flex
@@ -85,22 +84,12 @@
     justify-content: center
     transition: all 0.3s ease
     position: relative
-    filter: drop-shadow(0 15px 16px rgba(0, 0, 0, 0.1))
-    &:before
-        content: ''
-        position: absolute
-        inset: 0
-        border-radius: 16px
-        padding: 1.5px
-        background: rgba(255, 255, 255, 0.1)
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
-        -webkit-mask-composite: destination-out
-        mask-composite: exclude
+    background: #202020
 
 .menuCircle
     width: 48px
     height: 48px
-    background: rgba(255, 255, 255, 0.05)
+    background: #000000
     border-radius: 50%
     display: flex
     flex-direction: column

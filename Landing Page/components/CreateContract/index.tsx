@@ -2181,13 +2181,6 @@ const CreateContract = () => {
                                     animate={{ opacity: 1 }}
                                     transition={{ duration: 0.3 }}
                                 >
-                                    <Image 
-                                        src="/icons/lawbit-preview.svg" 
-                                        alt="Contract Preview" 
-                                        width={120} 
-                                        height={120}
-                                        className={styles.previewIcon} 
-                                    />
                                     <p className={styles.placeholderText}>
                                         Your generated contract will appear here
                                     </p>
