@@ -51,7 +51,7 @@ const LandingNavbar = () => {
             }}
         >
             <div className={styles.container}>
-                <Logo width={160} height={60} />
+                <h2 className="text-black font-bold text-2xl">Lawbit</h2>
 
                 {/* Hamburger Icon for Mobile */}
                 <div className={styles.mobileMenuToggle} onClick={toggleMobileMenu}>

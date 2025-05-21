@@ -416,13 +416,13 @@ export default function Home() {
                                 {plan.title === 'Free' ? (
                                     <Button 
                                         title={plan.buttonText}
-                                        className={`${styles.pricingButton} ${styles.freeButton}`}
+                                        className={`${styles.freeButton}`}
                                         onClick={() => router.push('/auth/signup')}
                                     />
                                 ) :
                                     <Button 
                                         title="Purchase Now"
-                                        className={`${styles.pricingButton} ${plan.popular ? styles.popularButton : styles.standardButton}`}
+                                        className={`${plan.popular ? styles.popularButton : styles.standardButton}`}
                                         onClick={() => handlePricingButtonClick(plan.title)}
                                     />
                                 }

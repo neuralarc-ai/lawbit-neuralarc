@@ -2,7 +2,7 @@
 
 .main
     min-height: 100vh
-    background: #1c1c1c
+    background: #e8e8e8
     color: white
     overflow-x: hidden
     position: relative
@@ -40,31 +40,13 @@
         align-items: center
         text-align: center
 
-.starfieldWrapper
-    position: absolute
-    top: 0
-    left: 0
-    right: 0
-    height: 10%
-    overflow: hidden
-    z-index: 1
-
-.ellipse
-    position: absolute
-    top: -50%
-    width: 100%
-    height: 70%
-    z-index: 1
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 30%, rgba(255,255,255,0) 70%)
-    filter: blur(100px)
-
 .title
     font-size: 64px
     line-height: 1.2
     margin-bottom: 40px
     max-width: 900px
     span
-        +gradient-text
+        color: #1e1e1e
     @media (max-width: 768px)
         font-size: 40px
         margin-bottom: 32px
@@ -83,7 +65,7 @@
 .description
     font-size: 20px
     line-height: 1.5
-    color: rgba(255, 255, 255, 0.7)
+    color: #202020
     margin-bottom: 40px
     @media (max-width: 768px)
         font-size: 16px
@@ -206,31 +188,18 @@
 .featureCard
     position: relative
     height: 100%
-    background: rgba(31, 31, 31, 0.8)
-    border-radius: 32px
+    background: #fff
+    border-radius: 12px
     padding: 32px
     transition: all 0.3s ease
-    backdrop-filter: blur(50px)
-    box-shadow: 0 5px 1.5px -4px rgba(5, 5, 5, 0.25), 0 6px 4px -4px rgba(5, 5, 5, 0.1)
     text-align: left
-    &:before
-        content: ''
-        position: absolute
-        inset: 0
-        border-radius: 32px
-        border: 1.5px solid transparent
-        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
-        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
-        -webkit-mask-composite: destination-out
-        mask-composite: exclude
-    &:hover
-        transform: translateY(-2px)
     h3
         font-size: 24px
         margin: 24px 0 16px
         text-align: left
+        color: #000
     p
-        color: rgba(255, 255, 255, 0.7)
+        color: #202020
         line-height: 1.6
 
 .iconWrapper
@@ -245,35 +214,21 @@
     position: absolute
     width: 72px
     height: 72px
-    background: rgba(248, 248, 248, 0.02)
-    border-radius: 12px
+    background: #0000000D
+    border-radius: 50px
     display: flex
     align-items: center
     justify-content: center
-    box-shadow: inset 0 4px 8px rgba(255, 255, 255, 0.1)
-    &:before
-        content: ''
-        position: absolute
-        inset: 0
-        border-radius: 12px
-        border: 1.5px solid transparent
-        background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
-        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
-        -webkit-mask-composite: destination-out
-        mask-composite: exclude
 
 .iconCircle
     width: 44px
     height: 44px
     border-radius: 50%
-    background: rgba(248, 248, 248, 0.05)
+    background: #FFFF1E
     display: flex
     align-items: center
     justify-content: center
     transition: all 0.3s ease
-    &:hover
-        transform: scale(1.05)
-        background: rgba(255, 255, 255, 0.05)
 
 .featureCardWrapper
     padding: 0.5px
@@ -311,9 +266,9 @@
         width: 100%
         display: flex
         justify-content: center
-        color: white
+        color: #202020
         span
-            +gradient-text
+            color: #202020
         @media (max-width: 320px)
             font-size: 32px
             margin-bottom: 16px
@@ -327,7 +282,7 @@
     .sectionSubtitle
         font-size: 20px
         line-height: 1.5
-        color: rgba(255, 255, 255, 0.7)
+        color: #202020
         margin-bottom: 48px
         text-align: center
         max-width: 800px
@@ -353,8 +308,8 @@
         gap: 20px
 
 .benefitCard
-    background: linear-gradient(0deg, rgba(248, 248, 248, 0.01) 80%, rgba(248, 248, 248, 0.02) 100%)
-    border-radius: 32px
+    background: #202020
+    border-radius: 8px
     padding: 60px
     text-align: left
     transition: transform 0.3s ease, box-shadow 0.3s ease
@@ -365,10 +320,6 @@
     
     @media (max-width: 768px)
         padding: 32px
-    
-    &:hover
-        transform: translateY(-5px)
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2)
 
 .benefitIcon
     width: 72px
@@ -381,14 +332,11 @@
 
 .benefitTitle
     font-size: 40px
-    font-weight: bold
+    font-weight: semibold
     margin-bottom: 16px
     line-height: 1.2
     text-align: left
-    background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0.8) 100%)
-    -webkit-background-clip: text
-    -webkit-text-fill-color: transparent
-    
+    color: #FFFFFF
     @media (max-width: 1200px)
         font-size: 32px
     
@@ -416,8 +364,6 @@
     display: flex
     justify-content: center
     align-items: center
-    background: linear-gradient(180deg, rgba(31, 31, 31, 0) 0%, rgba(31, 31, 31, 0.6) 100%)
-    
     @media (max-width: 768px)
         padding: 60px 0
 
@@ -442,9 +388,9 @@
             width: 100%
             display: flex
             justify-content: center
-            color: white
+            color: #202020
             span
-                +gradient-text
+                color: #202020
             @media (max-width: 768px)
                 font-size: 32px
                 margin-bottom: 12px
@@ -453,7 +399,7 @@
         .sectionSubtitle
             font-size: 20px
             line-height: 1.5
-            color: rgba(255, 255, 255, 0.7)
+            color: #202020
             text-align: center
             max-width: 600px
             width: 100%
@@ -501,7 +447,7 @@
     .testimonialText
         font-size: 18px
         line-height: 1.6
-        color: rgba(255, 255, 255, 0.9)
+        color: #202020
         margin-bottom: 24px
         
         @media (max-width: 768px)
@@ -623,9 +569,9 @@
         width: 100%
         display: flex
         justify-content: center
-        color: white
+        color: #000
         span
-            +gradient-text
+            color: #000
         @media (max-width: 768px)
             font-size: 32px
             margin-bottom: 16px
@@ -634,7 +580,7 @@
     .sectionSubtitle
         font-size: 20px
         line-height: 1.5
-        color: rgba(255, 255, 255, 0.7)
+        color: #202020
         margin-bottom: 48px
         text-align: center
         max-width: 800px
@@ -661,38 +607,18 @@
 
 .pricingCard
     position: relative
-    background: rgba(248, 248, 248, 0.02)
-    border-radius: 24px
+    background: #fff
+    color: #fff
+    border-radius: 8px
     padding: 32px
-    border: 1px solid rgba(255, 255, 255, 0.1)
-    box-shadow: 0px 5px 1.5px -4px rgba(5, 5, 5, 0.25), 0px 6px 4px -4px rgba(5, 5, 5, 0.1), 0 6px 13px 0 rgba(5, 5, 5, 0.1), 0px 24px 24px -16px rgba(5, 5, 5, 0.1), inset 2px 4px 16px 0px rgba(248, 248, 248, 0.06)
-    backdrop-filter: blur(100px)
-
-    &::before
-        content: ""
-        position: absolute
-        inset: 0
-        padding: 1px
-        border-radius: 24px
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1))
-        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
-        mask-composite: exclude
-        pointer-events: none
-
     &.popular
         position: relative
-        &::before
-            content: ""
-            position: absolute
-            inset: -12px
-            border-radius: 36px
-            z-index: -1
-            padding: 12px
-            background-clip: padding-box
+        background: #202020
+        color: #fff
 
     button
         width: fit-content
-        border-radius: 12px
+        border-radius: 8px
         border-width: 1.5px
         gap: 10px
         padding: 18px 24px
@@ -704,69 +630,38 @@
         font-weight: 600
         cursor: pointer
 
-        &.primary
-            background: #FFFFFF
-            box-shadow: 0 8px 16px -4px rgba(18, 18, 18, 0.2), 0 8px 20px 3px rgba(255, 255, 255, 0.25), inset 0 4px 4px rgba(255, 255, 255, 0.05)
-            border: none
-            color: white
-            &:before
-                content: ''
-                position: absolute
-                inset: 0
-                background: #FFFFFF
-                opacity: 0
-                transition: opacity 0.3s ease
-            &:after
-                content: ''
-                position: absolute
-                inset: 0px
-                border-radius: 12px
-                border: 2px solid transparent
-                background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)) border-box
-                -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
-                -webkit-mask-composite: destination-out
-                mask-composite: exclude
-            &:hover:before
-                opacity: 1
-            span
-                position: relative
-                z-index: 1
-
-        &.secondary
-            background: rgba(255, 255, 255, 0.07)
-            backdrop-filter: blur(100px)
-            color: rgba(255, 255, 255, 0.7)
-            border: 1.5px solid rgba(255, 255, 255, 0.1)
-            &:hover
-                color: rgba(255, 255, 255, 1)
-
 .popularBadge
     position: absolute
     top: -5%
     left: 50%
+    color: #232323
     transform: translateX(-50%)
-    background: rgba(40, 40, 40, 1)
-    border: 1px solid rgba(248, 248, 248, 0.1)
-    backdrop-filter: blur(100px)
+    background: #45FAC2
     padding: 16px 24px
     border-radius: 32px
     font-size: 14px
     font-weight: 500
-    box-shadow: inset 2px 4px 16px 0 rgba(248, 248, 248, 0.06), 0 0 0 2px rgba(18, 18, 18, 0.2)
 
 .price
     margin: 24px 0
     .amount
         font-size: 48px
         font-weight: 600
+        color: #232323
+        .pricingCard.popular &
+            color: #fff
     .period
         font-size: 20px
-        color: rgba(255, 255, 255, 0.6)
+        color: #232323
+        .pricingCard.popular &
+            color: #fff
 
 .planDescription
     font-size: 18px
-    color: rgba(255, 255, 255, 0.7)
+    color: #232323
     margin-bottom: 32px
+    .pricingCard.popular &
+        color: #fff
 
 .features
     list-style: none
@@ -780,17 +675,21 @@
     li
         position: relative
         padding-left: 28px
-        color: rgba(255, 255, 255, 0.8)
+        color: #232323
         text-align: left
         line-height: 1.5
         width: 100%
+        .pricingCard.popular &
+            color: #fff
         &:before
             content: "•"
             position: absolute
             left: 0
-            color: rgba(255, 255, 255, 0.6)
+            color: #232323
             font-size: 20px
             line-height: 1.5
+            .pricingCard.popular &
+                color: #fff
 
 .footer
     position: relative
@@ -920,135 +819,23 @@
     font-size: 18px
     font-weight: 600
     border-radius: 24px
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-    transform: translateY(0)
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12)
     position: relative
     overflow: hidden
     text-transform: uppercase
     letter-spacing: 1px
-    
-    &:before
-        content: ''
-        position: absolute
-        top: 0
-        left: -100%
-        width: 100%
-        height: 100%
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0))
-        z-index: 1
-        opacity: 0
-        transition: all 0.6s ease
-    
-    &:hover
-        transform: translateY(-5px) scale(1.03)
-        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25)
-        
-        &:before
-            opacity: 1
-            left: 100%
-            
 
 .freeButton
-    background: linear-gradient(45deg,rgb(255, 255, 255), #334752)
-    border: 2px solid rgba(255, 255, 255, 0.2)
-    color: black
-    background-size: 150% 150%
-    
-    
-    &:hover
-        background: linear-gradient(45deg,rgb(255, 255, 255),rgb(97, 97, 97))
-        border-color: rgba(255, 255, 255, 0.4)
+    background: #000
+    color: #fff
+    border-radius: 8px
 
 .standardButton
-    background: linear-gradient(45deg,rgb(255, 255, 255),rgb(85, 85, 85))
-    border: 2px solid rgba(255, 255, 255, 0.2)
-    color: black
-    background-size: 150% 150%
-    
-    
-    &:hover
-        background: linear-gradient(45deg,rgb(255, 255, 255),rgb(66, 66, 66))
-        border-color: rgba(255, 255, 255, 0.4)
+    background: #000
+    color: #fff
 
 .popularButton
-    background: linear-gradient(45deg,rgb(255, 255, 255),rgb(56, 56, 56))
-    border: none
-    color: black
-    position: relative
-    z-index: 1
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3), 0 0 0 4px rgba(255, 251, 253, 0.1)
-    background-size: 200% 200%
-    animation: gradientBG 6s ease infinite
-    
-    &:after
-        content: ''
-        position: absolute
-        top: -2px
-        left: -2px
-        right: -2px
-        bottom: -2px
-        background: linear-gradient(45deg,rgb(221, 221, 221),rgb(255, 255, 255),rgb(194, 194, 194),rgb(255, 255, 255))
-        background-size: 400% 400%
-        z-index: -1
-        border-radius: 26px
-        animation: borderAnimation 3s ease-in-out infinite
-        
-    &:hover
-        background: linear-gradient(45deg,rgb(255, 255, 255),rgb(201, 181, 194))
-        box-shadow: 0 15px 30px rgba(244, 236, 255, 0.4), 0 0 0 6px rgba(255, 255, 255, 0.47)
-        transform: translateY(-8px) scale(1.05)
-
-@keyframes shimmer
-    0%
-        left: -100%
-        opacity: 0
-    20%
-        opacity: 1
-    100%
-        left: 100%
-        opacity: 0
-
-@keyframes gradientBG
-    0%
-        background-position: 0% 50%
-    50%
-        background-position: 100% 50%
-    100%
-        background-position: 0% 50%
-
-@keyframes borderAnimation
-    0%
-        background-position: 0% 50%
-    50%
-        background-position: 100% 50%
-    100%
-        background-position: 0% 50%
-
-.btnContent
-    display: flex
-    align-items: center
-    justify-content: center
-    gap: 10px
-    width: 100%
-    
-    span
-        position: relative
-        z-index: 2
-        transition: transform 0.3s ease
-    
-    svg
-        position: relative
-        z-index: 2
-        transition: all 0.3s ease
-        flex-shrink: 0
-    
-    &:hover
-        span
-            transform: translateX(-3px)
-        
-        svg
-            transform: translateX(3px)
+    background: #fff
+    color: #000
 
 .productHunt
     padding: 90px 0
