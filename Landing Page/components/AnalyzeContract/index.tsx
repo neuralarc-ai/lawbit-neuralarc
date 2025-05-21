@@ -616,16 +616,6 @@ const AnalyzeContract = () => {
                         exit={{ opacity: 0 }}
                         className={styles.generatingOverlay}
                     >
-                        <div className={styles.loadingIcon}>
-                            <div className={styles.spinner} />
-                            <Image
-                                src="/icons/logo.svg"
-                                alt="Lawbit Logo"
-                                width={70}
-                                height={70}
-                                className={styles.logo}
-                            />
-                        </div>
                         <div className={styles.loadingText}>Analyzing your contract...</div>
                     </motion.div>
                 )}
