@@ -8,7 +8,6 @@ import styles from './page.module.sass'
 import LandingNavbar from '@/components/LandingNavbar'
 import Button from '@/components/Button'
 import SubscriptionModal from '@/components/SubscriptionModal'
-import StarField from '@/components/StarField'
 import TestimonialCarousel from '../components/TestimonialCarousel'
 import { createClient } from '@/lib/supabase'
 
@@ -464,7 +463,7 @@ export default function Home() {
                                     src="https://api.producthunt.com/widgets/embed-image/v1/product_review.svg?product_id=1053856&theme=dark"
                                     alt="Lawbit - Revolutionize Your Legal Drafting with AI Precision | Product Hunt"
                                     width={250}
-                                    height={54}
+                                    height={100}
                                     className={styles.badgeImage}
                                 />
                             </a>
@@ -501,15 +500,13 @@ export default function Home() {
                             
                             <div className={styles.footerBottom}>
                                 <p>
-                                    Copyright 2025. 
-                                    <span className={styles.separator}>•</span>
+                                    Copyright 2025.   
                                     All rights reserved.
-                                    <span className={styles.separator}>•</span>
                                     A product by
                                     <Image 
                                         src="/neuralpath.svg" 
                                         alt="Neural Paths" 
-                                        width={115} 
+                                        width={100} 
                                         height={30} 
                                         className={styles.neuralPathLogo}
                                     />
@@ -528,8 +525,7 @@ export default function Home() {
                                     height: 'auto',
                                     objectFit: 'contain',
                                     objectPosition: 'bottom right',
-                                    display: 'block',
-                                    marginBottom: '-5px'
+                                    display: 'block'
                                 }}
                                 priority
                             />
