@@ -144,3 +144,19 @@ button
     font-weight: 700
     text-transform: uppercase
     letter-spacing: 0.1em
+
+.grain-texture
+  position: relative
+  overflow: visible
+
+.grain-texture::after 
+  content: ""
+  position: absolute
+  inset: 0
+  background-image: url('/images/grain.svg')
+  background-repeat: no-repeat
+  background-size: cover
+  opacity: 0.7
+  mix-blend-mode: soft-light
+  pointer-events: none
+  z-index: 999

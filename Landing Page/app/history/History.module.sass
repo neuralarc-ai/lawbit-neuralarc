@@ -1,6 +1,6 @@
 .container
     min-height: 100vh
-    background: #000 !important
+    background: #e8e8e8
     color: white
     padding-top: 48px
     position: relative
@@ -40,26 +40,22 @@
         font-weight: 600
         background: none !important
         -webkit-background-clip: unset
-        -webkit-text-fill-color: #fff
+        -webkit-text-fill-color: #000
         text-align: center
 
 .tabsWrapper
     margin-bottom: 50px
     display: flex
     justify-content: center
-    background: none !important
     box-shadow: none !important
-    border: none !important
 
 .tabs
     position: relative
     display: flex
     width: 320px
     padding: 4px
-    background: none !important
+    background: #D4D4D4
     border-radius: 0
-    box-shadow: none !important
-    border: 1px solid rgba(255, 255, 255, 0.47)
     border-radius: 12px
     &:before,
     &:after
@@ -75,19 +71,21 @@
     flex: 1
     font-size: 15px
     font-weight: 600
-    color: rgba(255, 255, 255, 0.56)
+    color: #696969
     transition: color .2s
-    background: none !important
+    border-radius: 8px
     border: none !important
     .tabIcon
         margin-right: 8px
         opacity: 0.56
         transition: opacity .2s
-    &:hover,
     &.active
         color: #FFFFFF
+        background: #202020
         .tabIcon
             opacity: 1
+    &.hover
+        color: #202020
 
 .grid
     display: grid

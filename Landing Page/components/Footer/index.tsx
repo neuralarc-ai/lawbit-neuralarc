@@ -26,7 +26,6 @@ const Footer = () => {
                                 alt="Neural Paths" 
                                 width={140} 
                                 height={60} 
-                                style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '0px' }}
                             />
                     </div>
                      

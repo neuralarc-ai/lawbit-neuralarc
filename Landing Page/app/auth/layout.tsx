@@ -46,7 +46,6 @@ export default function AuthLayout({
             </div>
             
             <div className={styles.header}>
-                <Logo width={150} height={90} />
                 <div className={styles.actions} data-state={isSignUp ? 'signup' : 'signin'}>
                     <Link
                         className={`${styles.link} ${

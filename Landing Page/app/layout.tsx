@@ -36,7 +36,6 @@ export default function RootLayout({
                     name="twitter:description"
                     content="Lawbit - AI for Legal Intelligence"
                 />
-                <meta name="twitter:creator" content="@ui8" />
                 {/* Twitter Summary card images must be at least 120x120px */}
                 <Script
                     src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places&v=beta`}
