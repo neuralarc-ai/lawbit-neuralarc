@@ -1829,6 +1829,9 @@ const CreateContract = () => {
                                     className={styles.generatingProgressBar}
                                     initial={{ width: 0 }}
                                     animate={{ width: `${generationProgress}%` }}
+                            style={{
+                                width: `${generationProgress}%`
+                            }}
                                     transition={{ duration: 0.4, ease: 'easeInOut' }}
                                 />
                             </div>
@@ -1836,14 +1839,18 @@ const CreateContract = () => {
                                 {legalSteps.map((step, idx) => (
                                     <div key={step.title} className={styles.generatingStep}>
                                         <div className={
-                                            idx === generationStep
-                                                ? styles.generatingStepCircleActive
-                                                : styles.generatingStepCircle
+                                            idx < generationStep
+                                                ? styles.generatingStepCircleCompleted
+                                                : idx === generationStep
+                                                    ? styles.generatingStepCircleActive
+                                                    : styles.generatingStepCircle
                                         } />
                                         <div className={
-                                            idx === generationStep
-                                                ? styles.generatingStepTextActive
-                                                : styles.generatingStepText
+                                            idx < generationStep
+                                                ? styles.generatingStepTextCompleted
+                                                : idx === generationStep
+                                                    ? styles.generatingStepTextActive
+                                                    : styles.generatingStepText
                                         }>
                                             <div className={styles.generatingStepTitle}>{step.title}</div>
                                             <div className={styles.generatingStepDesc}>{step.description}</div>

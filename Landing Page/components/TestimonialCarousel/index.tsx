@@ -124,11 +124,7 @@ const TestimonialCarousel = () => {
     }
 
     return (
-        <div className={styles.container}>
-            <div className={styles.starfieldWrapper}>
-                
-            </div>
-            
+        <div className={styles.container}> 
             <div className={styles.carouselContainer}>
                 <AnimatePresence initial={false}>
                     {testimonials.map((testimonial, index) => (

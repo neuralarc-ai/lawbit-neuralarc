@@ -3,7 +3,7 @@
     margin: 0 auto
     padding-top: 48px
     min-height: 100vh
-    color: #FFFFFF
+    color: #000
     position: relative
     display: flex
     flex-direction: column
@@ -29,30 +29,20 @@
 .pageTitle
     font-size: 2rem
     font-weight: 600
-    background: linear-gradient(to right, rgba(138, 48, 255, 1), rgba(248, 66, 178, 1))
-    -webkit-background-clip: text
-    background-clip: text
-    color: transparent
+    color: #000
     margin: 0
 
 .effectiveDate
     font-size: 1rem
-    color: #989898
+    color: #696969
     margin: 0
 
 .section
-    background: rgba(248, 248, 248, 0.05)
-    backdrop-filter: blur(100px)
-    border-radius: 12px
+    background: #A9A9A9
+    border-radius: 8px
     overflow: hidden
     transition: all 0.3s ease
-    border: 1px solid transparent
-    box-shadow: inset 0 4px 4px 0 rgba(255, 255, 255, 0.05), 0 8px 16px -4px rgba(18, 18, 18, 0.2)
     margin-bottom: 1.5rem
-
-    &.active
-        background: rgba(255, 255, 255, 0.08)
-        border-color: rgba(138, 48, 255, 0.3)
 
 .sectionHeader
     display: flex
@@ -62,18 +52,15 @@
     cursor: pointer
     transition: background-color 0.3s ease
 
-    &:hover
-        background: rgba(255, 255, 255, 0.05)
-
 .sectionTitle
     font-size: 1.25rem
     font-weight: 500
-    color: #FFFFFF
+    color: #000
     margin: 0
 
 .arrowIcon
     transition: transform 0.3s ease
-    color: #989898
+    color: #000
 
     &.rotated
         transform: rotate(180deg)
@@ -81,7 +68,7 @@
 .sectionContent
     padding: 0 1.5rem 1.5rem
     display: none
-    color: rgba(255, 255, 255, 0.8)
+    color: #000
     line-height: 1.6
 
     .active &

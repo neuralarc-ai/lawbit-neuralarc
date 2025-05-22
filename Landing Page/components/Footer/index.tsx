@@ -21,12 +21,15 @@ const Footer = () => {
                         <p>
                             Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by&nbsp;
                         </p>
-                        <Image 
+                        <div className={styles.trademarkContainer}>
+                            <Image 
                                 src="/neuralpath.svg" 
                                 alt="Neural Paths" 
                                 width={140} 
                                 height={60} 
                             />
+                            <span className={styles.trademark}>TM</span>
+                        </div>
                     </div>
                      
                 </div>

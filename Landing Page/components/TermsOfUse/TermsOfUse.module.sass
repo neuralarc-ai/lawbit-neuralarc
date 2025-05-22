@@ -3,7 +3,7 @@
     margin: 0 auto
     padding-top: 48px
     min-height: 100vh
-    color: #FFFFFF
+    color: #000
     position: relative
     display: flex
     flex-direction: column
@@ -30,6 +30,7 @@
 .mainContent
     width: 100%
     flex: 1
+    color: #000
 
 .termsContainer
     border-radius: 24px
@@ -48,7 +49,7 @@
 .pageTitle
     font-size: 2rem
     font-weight: 600
-    color: #FFFFFF
+    color: #000
     margin: 0
 
 .effectiveDate
@@ -63,7 +64,7 @@
     p
         font-size: 1.1rem
         line-height: 1.6
-        color: #FFFFFF
+        color: #000
         margin: 0
 
 .sectionsContainer
@@ -72,16 +73,13 @@
     gap: 1rem
 
 .section
-    background: rgba(248, 248, 248, 0.05)
+    background: #A9A9A9
     backdrop-filter: blur(100px)
     border-radius: 12px
     overflow: hidden
     transition: all 0.3s ease
-    border: 1px solid transparent
-    box-shadow: inset 0 4px 4px 0 rgba(255, 255, 255, 0.05), 0 8px 16px -4px rgba(18, 18, 18, 0.2)
-
     &.active
-        background: rgba(255, 255, 255, 0.08)
+        background: #A9A9A9
 
 .sectionHeader
     display: flex
@@ -97,12 +95,12 @@
 .sectionTitle
     font-size: 1.25rem
     font-weight: 500
-    color: #FFFFFF
+    color: #000
     margin: 0
 
 .arrowIcon
     transition: transform 0.3s ease
-    color: #989898
+    color: #000
 
     &.rotated
         transform: rotate(180deg)
@@ -110,7 +108,7 @@
 .sectionContent
     padding: 0 1.5rem 1.5rem
     display: none
-    color: #989898
+    color: #000
     line-height: 1.6
 
     .active &

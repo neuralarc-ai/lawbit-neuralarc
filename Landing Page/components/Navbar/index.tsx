@@ -20,6 +20,8 @@ const Navbar = () => {
     const isTermsPage = pathname === '/terms';
     const isPrivacyPage = pathname === '/privacy';
     const isContractsPage = pathname === '/contracts';
+    const isResponsibleAIPage = pathname === '/responsible-ai';
+    const isDisclaimerPage = pathname === '/disclaimer';
     const supabase = createClient();
 
     useEffect(() => {
@@ -60,7 +62,7 @@ const Navbar = () => {
     const handleBack = () => {
         if (isHistoryPage) {
             router.push('/contracts');
-        } else if (isTermsPage || isPrivacyPage) {
+        } else if (isTermsPage || isPrivacyPage || isDisclaimerPage) {
             router.push('/contracts');
         }
     };
@@ -74,92 +76,10 @@ const Navbar = () => {
         setIsSubscriptionModalOpen(false);
     };
 
-    const navbarVariants = {
-        hidden: { 
-            opacity: 0,
-            y: -20
-        },
-        visible: { 
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.5,
-                ease: "easeOut",
-                staggerChildren: 0.1
-            }
-        }
-    };
-
-    const childVariants = {
-        hidden: { opacity: 0, y: -20 },
-        visible: { 
-            opacity: 1, 
-            y: 0,
-            transition: {
-                duration: 0.5,
-                ease: "easeOut"
-            }
-        }
-    };
-
-    const dialogVariants = {
-        hidden: { 
-            opacity: 0, 
-            scale: 0.9,
-            y: -20
-        },
-        visible: { 
-            opacity: 1, 
-            scale: 1,
-            y: 0,
-            transition: {
-                duration: 0.3,
-                ease: "easeOut"
-            }
-        },
-        exit: { 
-            opacity: 0, 
-            scale: 0.9,
-            y: -20,
-            transition: {
-                duration: 0.2
-            }
-        }
-    };
-
-    const overlayVariants = {
-        hidden: { opacity: 0 },
-        visible: { 
-            opacity: 1,
-            transition: {
-                duration: 0.2
-            }
-        },
-        exit: { 
-            opacity: 0,
-            transition: {
-                duration: 0.2
-            }
-        }
-    };
-
-    const menuItemVariants = {
-        hidden: { opacity: 0, x: -20 },
-        visible: (i: number) => ({
-            opacity: 1,
-            x: 0,
-            transition: {
-                duration: 0.3,
-                delay: i * 0.1,
-                ease: "easeOut"
-            }
-        })
-    };
-
     return (
         <nav className={styles.navbar}>
             <div className={styles.container}>
-                {(isHistoryPage || isTermsPage || isPrivacyPage || isContractsPage) ? (
+                {(isHistoryPage || isTermsPage || isPrivacyPage || isContractsPage || isResponsibleAIPage || isDisclaimerPage) ? (
                 isContractsPage ? (
                     <Link href="/" className={styles.logoLink}>
                         <span className={styles.lawbitText}>Lawbit</span>

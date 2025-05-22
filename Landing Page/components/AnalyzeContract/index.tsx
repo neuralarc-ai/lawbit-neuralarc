@@ -35,11 +35,11 @@ const AnalyzeContract = () => {
 
     // Analysis steps descriptions
     const analysisSteps = [
-        "Uploading your document...",
+        "Analyzing document structure...",
         "Extracting key clauses...",
-        "Analyzing legal language...",
+        "Evaluating legal compliance...",
         "Identifying potential risks...",
-        "Preparing suggestions..."
+        "Generating recommendations..."
     ];
 
     // Update progress during analysis
@@ -68,6 +68,18 @@ const AnalyzeContract = () => {
             setAnalysisStep(0);
         }
     }, [isAnalyzing, analysisProgress]);
+
+    // Show generating overlay while analyzing
+    useEffect(() => {
+        if (isAnalyzing) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [isAnalyzing]);
 
     // Add function to count risk levels in clauses
     const handleRiskCounts = (clauses: ClauseAnalysis[]) => {
@@ -616,7 +628,38 @@ const AnalyzeContract = () => {
                         exit={{ opacity: 0 }}
                         className={styles.generatingOverlay}
                     >
-                        <div className={styles.loadingText}>Analyzing your contract...</div>
+                        <div className={styles.generatingBox}>
+                            <div className={styles.generatingTitle}>Analyzing Contract...</div>
+                            <div className={styles.generatingProgressBarWrapper}>
+                                <div 
+                                    className={styles.generatingProgressBar}
+                                    style={{ width: `${analysisProgress}%` }}
+                                />
+                            </div>
+                            <div className={styles.generatingStepper}>
+                                {analysisSteps.map((step, index) => (
+                                    <div key={index} className={styles.generatingStep}>
+                                        <div 
+                                            className={cn(
+                                                styles.generatingStepCircle,
+                                                index <= analysisStep ? styles.generatingStepCircleCompleted : 
+                                                index === analysisStep ? styles.generatingStepCircleActive : 
+                                                styles.generatingStepCircle
+                                            )}
+                                        />
+                                        <div className={cn(
+                                            styles.generatingStepText,
+                                            index <= analysisStep ? styles.generatingStepTextCompleted : 
+                                            index === analysisStep ? styles.generatingStepTextActive : 
+                                            styles.generatingStepText
+                                        )}>
+                                            <div className={styles.generatingStepTitle}>{step.split('.')[0]}</div>
+                                            <div className={styles.generatingStepDesc}>{step.split('.')[1]}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
