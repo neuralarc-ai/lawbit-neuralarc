@@ -29,7 +29,7 @@ $p1:rgb(255, 255, 255) // Primary color variable
   gap: 24px
   max-width: 100%
   width: 100%
-  padding: 32px
+  padding: 24px
   position: relative
   height: 100%
   background: #FFFFFF
@@ -46,11 +46,8 @@ $p1:rgb(255, 255, 255) // Primary color variable
   width: 100%
   min-height: 200px
   margin-bottom: 20px
-  border-radius: 12px
-  background: #E8E8E8
-  backdrop-filter: blur(10px)
-  -webkit-backdrop-filter: blur(10px)
-  border: 1px solid #0000000D
+  border-radius: 8px
+  background: #F6F6F6
   position: relative
   overflow: hidden
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
@@ -67,7 +64,7 @@ $p1:rgb(255, 255, 255) // Primary color variable
 .textarea
   width: 100%
   height: 100%
-  min-height: 200px
+  min-height: 400px
   padding: 20px
   resize: none
   background: transparent
@@ -293,7 +290,7 @@ $p1:rgb(255, 255, 255) // Primary color variable
   justify-content: center
   width: auto
   padding: 16px 24px
-  border-radius: 12px
+  border-radius: 8px
   background: #000000
   color: #FFFFFF
   font-size: 16px
@@ -364,132 +361,6 @@ $p1:rgb(255, 255, 255) // Primary color variable
   &:disabled
     .arrowIcon
       opacity: 0.5
-
-.generatingOverlay
-  position: fixed
-  top: 0
-  left: 0
-  right: 0
-  bottom: 0
-  background: rgba(0, 0, 0, 0.85)
-  backdrop-filter: blur(10px)
-  display: flex
-  flex-direction: column
-  align-items: center
-  justify-content: center
-  z-index: 1000
-  border-radius: 32px
-  animation: overlayReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1)
-  transform-style: preserve-3d
-
-@keyframes overlayReveal
-  0%
-    opacity: 0
-    transform: scale(0.95) rotateX(5deg)
-    backdrop-filter: blur(0)
-  100%
-    opacity: 1
-    transform: scale(1) rotateX(0)
-    backdrop-filter: blur(10px)
-
-.loadingIcon
-  position: relative
-  width: 120px
-  height: 120px
-  display: flex
-  align-items: center
-  justify-content: center
-
-  .spinner
-    position: absolute
-    top: 0
-    left: 0
-    width: 120px
-    height: 120px
-    border-radius: 50%
-    border: 3px solid transparent
-    border-top: 3px solid rgba(255, 255, 255, 0.87)
-    border-right: 3px solid rgba(255, 255, 255, 0.61)
-    border-bottom: 3px solid rgba(255, 255, 255, 0.23)
-    animation: spin 1.5s linear infinite
-    z-index: 1
-
-  .logo
-    position: absolute
-    top: 50%
-    left: 50%
-    transform: translate(-50%, -50%)
-    width: 70px
-    height: 70px
-    animation: pulse 2s ease-in-out infinite
-    z-index: 2
-
-.spinner
-  position: absolute
-  width: 120px
-  height: 120px
-  border-radius: 50%
-  border: 3px solid transparent
-  border-top: 3px solid rgb(243, 243, 243)
-  border-right: 3px solid rgba(253, 253, 253, 0.71)
-  border-bottom: 3px solid rgba(255, 255, 255, 0.49)
-  animation: spin 1.5s linear infinite
-
-.logo
-  width: 70px
-  height: 70px
-  animation: pulse 2s ease-in-out infinite
-
-.loadingText
-  font-size: 28px
-  font-weight: 600
-  background: linear-gradient(to right, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 50%, rgba(248, 91, 66, 1) 100%)
-  background-size: 200% auto
-  -webkit-background-clip: text
-  -webkit-text-fill-color: transparent
-  animation: gradient 3s ease infinite
-  margin-top: 24px
-
-@keyframes spin
-  0%
-    transform: rotate(0deg)
-  100%
-    transform: rotate(360deg)
-
-@keyframes pulse
-  0%
-    transform: scale(1)
-  50%
-    transform: scale(1.1)
-  100%
-    transform: scale(1)
-
-@keyframes gradient
-  0%
-    background-position: 0% 50%
-  50%
-    background-position: 100% 50%
-  100%
-    background-position: 0% 50%
-
-.loadingDescription
-  font-size: 16px
-  color: rgba($n1, 0.7)
-  margin-bottom: 24px
-  text-align: center
-
-.progressBarContainer
-  width: 300px
-  height: 4px
-  background: rgba(255, 255, 255, 0.1)
-  border-radius: 2px
-  overflow: hidden
-
-.progressBar
-  height: 100%
-  background: linear-gradient(90deg,rgb(177, 177, 177),rgb(158, 158, 158))
-  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1)
-  transform-style: preserve-3d
 
 .resultSection
   width: 100%
@@ -736,34 +607,3 @@ $p1:rgb(255, 255, 255) // Primary color variable
   100%
     opacity: 1
     transform: translateY(0)
-
-@keyframes buttonShine
-  0%
-    transform: translateX(-100%) skewX(-15deg)
-  50%
-    transform: translateX(100%) skewX(-15deg)
-  100%
-    transform: translateX(100%) skewX(-15deg)
-
-@keyframes spin
-  from
-    transform: rotate(0deg)
-  to
-    transform: rotate(360deg)
-
-@keyframes pulse
-  0%
-    opacity: 0.5
-    transform: translate(-50%, -50%) scale(0.95)
-  50%
-    opacity: 1
-    transform: translate(-50%, -50%) scale(1.05)
-  100%
-    opacity: 0.5
-    transform: translate(-50%, -50%) scale(0.95)
-
-@keyframes textShimmer
-  0%, 100%
-    background-position: 0% 50%
-  50%
-    background-position: 100% 50% 

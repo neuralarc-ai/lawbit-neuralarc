@@ -8,7 +8,7 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     flex-direction: column
     width: 100%
     background: #FFFFFF
-    padding: 40px
+    padding: 24px
     border-radius: 12px
     position: relative
     font-family: $font-family-fustat
@@ -28,7 +28,7 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
 
 .dropZone
     width: 100%
-    background: #0000000D
+    background: #F5F5F5
     min-height: 400px
     border-radius: 12px
     display: flex
@@ -103,10 +103,10 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     position: relative
     textarea
         width: 100%
+        border: 1px dashed #B5B5B5
         height: 400px
         padding: 16px 20px
-        background: #0000000D
-        border: 1px solid rgba(255, 255, 255, 0)
+        background: #F5F5F5
         border-radius: 12px
         color: #202020
         font-size: 16px
@@ -144,12 +144,25 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     display: flex
     min-width: 400px
     padding: 4px
-    background: #E8E8E8
-    border-radius: 12px
+    background: #D4D4D4
+    border-radius: 8px
+    
+    // Sliding indicator
+    &::after
+        content: ''
+        position: absolute
+        top: 4px
+        bottom: 4px
+        left: 4px
+        width: calc(50% - 4px)
+        background: #202020
+        border-radius: 6px
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+        z-index: 1
+    
     &[data-state="paste"]
-        &:before,
-        &:after
-            transform: translateX(100%)
+        &::after
+            transform: translateX(calc(100% + 4px))
 
 .tabButton
     position: relative
@@ -163,7 +176,7 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     font-size: 15px
     font-weight: 600
     color: #000
-    transition: color .2s
+    transition: color 0.2s ease
     background: none
     border: none
     cursor: pointer
@@ -173,15 +186,22 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
         margin-right: 8px
         path
             stroke: currentColor
+    
+    // Active state with smooth transition
     &.active
         color: #fff
-        background: #202020
-        border-radius: 8px
+        // Remove background from the active button since we're using the sliding indicator
+        background: transparent
+        // Position the text above the sliding indicator
+        position: relative
+        z-index: 3
+        // Smooth color transition
+        transition: color 0.3s ease 0.1s
 
 .dropZone
     position: relative
     min-height: 400px
-    border: 1.5px dashed #696969
+    border: 1px dashed #B5B5B5
     border-radius: 16px
     display: flex
     flex-direction: column
@@ -190,11 +210,11 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
     gap: 16px
     transition: all 0.3s ease
     cursor: pointer
-    background: #0000000D
+    background: #F5F5F5
     backdrop-filter: blur(20px)
     &:hover, &.dragging
         border-color: #696969
-        background: #0000000D
+        background: #F5F5F5
 
 .fileInput
     position: absolute
@@ -217,12 +237,6 @@ $font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Se
         margin: 4px 0 0
         font-size: 12px
         color: #202020
-
-.pasteZone
-    min-height: 30px
-    border-radius: 12px
-    overflow: hidden
-    background: #0000000D
 
 .pasteInput
     width: 100%

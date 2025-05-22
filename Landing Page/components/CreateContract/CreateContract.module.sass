@@ -39,14 +39,13 @@
             margin-bottom: 6px
     input, textarea, select
         width: 100%
-        padding: 16px 20px
+        padding: 12px 20px
         background: #F6F6F6
         border-radius: 8px
         color: #202020
         font-size: 16px
         resize: none
         transition: all 0.3s ease
-        backdrop-filter: blur(10px)
         @media (max-width: 1000px)
             padding: 14px 16px
             font-size: 15px
@@ -65,6 +64,7 @@
             cursor: not-allowed
             pointer-events: none
             background: rgba(18, 18, 18, 0.1)
+
 .suggestiveText
     font-size: 12px
     color: #202020
@@ -87,44 +87,86 @@
 .selectWrapper
     position: relative
     width: 100%
-    border-radius: 12px
-    border: 1px solid #0000000D
+    margin-bottom: 24px
 
     select
         width: 100%
-        padding: 16px 20px
+        padding: 12px 20px
+        border: 1px solid #E5E5E5
         border-radius: 8px
-        background: #F6F6F6
-        color: #000
-        font-size: 16px
-        transition: all 0.3s ease
-        cursor: pointer
+        background: #F5F5F5
+        color: #202020
+        font-size: 15px
+        font-weight: 400
+        line-height: 1.5
+        transition: all 0.2s ease-in-out
         appearance: none
         -webkit-appearance: none
         -moz-appearance: none
-        padding-right: 50px
-        backdrop-filter: blur(10px)
-        position: relative
-        overflow: hidden
-
-        // Hide native arrow in Edge/IE
+        padding-right: 48px
+        cursor: pointer
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02)
+        
+        &:hover
+            border-color: #C5C5C5
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04)
+            
+        &:focus
+            outline: none
+            border-color: #202020
+            box-shadow: 0 0 0 2px rgba(32, 32, 32, 0.1)
+            
+        &::placeholder
+            color: #8E8E8E
+            opacity: 1
+            
+        // Hide default arrow in all browsers
         &::-ms-expand
             display: none
-
-        // Hide native arrow in Safari
+            
         &::-webkit-inner-spin-button,
         &::-webkit-calendar-picker-indicator
             display: none
             -webkit-appearance: none
-
-        // Hide native arrow in Safari (extra)
+            
         &::-webkit-select-arrow
             display: none
+            
+    // Custom dropdown arrow
+    &::after
+        content: ''
+        position: absolute
+        top: 50%
+        right: 16px
+        width: 16px
+        height: 16px
+        background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%23202020' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A")
+        background-repeat: no-repeat
+        background-position: center
+        transform: translateY(-50%)
+        pointer-events: none
+        transition: transform 0.2s ease
+        
+    &:hover::after
+        opacity: 0.8
+        
+    // Focus state
+    &:focus-within::after
+        transform: translateY(-50%) rotate(180deg)
+        
+    // Disabled state
+    select:disabled
+        background-color: #F8F8F8
+        color: #A0A0A0
+        cursor: not-allowed
+        
+        & + .selectLabel
+            color: #A0A0A0
 
-        option
-            background: #696969
-            color: #fff
-            padding: 12px
+    option
+        background: #696969
+        color: #fff
+        padding: 12px
             font-size: 16px
             transition: background-color 0.2s ease
             -webkit-appearance: none
@@ -236,6 +278,8 @@
     &.active
         color: white
         background: #202020
+        .checkIcon
+            filter: brightness(0) invert(1)
 
 .submitButton
     width: 100%
@@ -286,26 +330,6 @@
 
         &:disabled &
             opacity: 0.7
-
-.loadingText
-    position: relative
-    z-index: 1
-    color: white
-
-.progressBar
-    position: absolute
-    bottom: 0
-    left: 0
-    width: 100%
-    height: 4px
-    background: rgba(255, 255, 255, 0.2)
-    border-radius: 0 0 12px 12px
-    overflow: hidden
-
-.progressFill
-    height: 100%
-    background: rgba(255, 255, 255, 0.8)
-    transition: width 0.3s ease
 
 .previewSection
     flex: 1
@@ -417,49 +441,6 @@
     &:hover
         opacity: 1
 
-.success
-    transform: scale(1.2) !important
-    filter: drop-shadow(0 0 6px rgba(248, 66, 178, 0.5))
-    animation: successPulse 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important
-
-@keyframes successPulse
-    0%
-        transform: scale(0.5)
-        opacity: 0.5
-    50%
-        transform: scale(1.4)
-        opacity: 1
-    100%
-        transform: scale(1.2)
-        opacity: 1
-
-.loading
-    display: flex
-    flex-direction: column
-    align-items: center
-    justify-content: center
-    gap: 24px
-    height: 100%
-    .logo
-        width: 120px
-        height: auto
-        opacity: 1
-    .loadingText
-        font-size: 18px
-        font-weight: 500
-        background: linear-gradient(to right, rgba(247, 248, 248, 0.2) 0%, rgba(247, 248, 248, 1) 50%, rgba(247, 248, 248, 0.2) 100%)
-        background-size: 200% auto
-        color: transparent
-        -webkit-background-clip: text
-        background-clip: text
-        animation: shine 2s linear infinite reverse
-        
-@keyframes shine
-    from
-        background-position: 200% center
-    to
-        background-position: -100% center
-
 .optionalField
     position: relative
     margin-bottom: 24px
@@ -523,71 +504,122 @@
 .contractContent
     font-family: 'Space Mono', monospace
     font-weight: 400
-    line-height: 1.6
-    color: #FFFFFF
+    line-height: 1.7
+    color: #F7F8F8
     width: 100%
     height: 100%
     overflow-y: auto
     overflow-x: hidden
-    text-align: justify
+    text-align: left
     -webkit-text-size-adjust: 100%
     box-sizing: border-box
     max-width: 100%
+    padding: 32px
+    
+    // Style placeholder text
+    .placeholder
+        color: #8E8E8E
+        background: rgba(255, 255, 255, 0.05)
+        padding: 2px 4px
+        border-radius: 4px
+        border: 1px dashed rgba(255, 255, 255, 0.2)
+    
+    // Ensure first letter of each text block is capitalized
+    p:first-letter,
+    li:first-letter,
+    td:first-letter,
+    th:first-letter,
+    h1:first-letter,
+    h2:first-letter,
+    h3:first-letter,
+    h4:first-letter,
+    .sectionText:first-letter
+        text-transform: uppercase
+    
     @media (max-width: 1000px)
-        padding: 16px
-        font-size: 13px
-        line-height: 1.5
+        padding: 24px
+        font-size: 15px
+        line-height: 1.6
     
     h1
-        font-size: 16px
-        @media (max-width: 1000px)
-            font-size: 15px
-        font-weight: bold
-        margin-bottom: 15px
-        color: #FFFFFF
+        font-size: 22px
+        font-weight: 600
+        margin: 32px 0 24px
+        color: #F7F8F8
         text-align: left
         word-break: break-word
         hyphens: auto
         max-width: 100%
         overflow-wrap: break-word
+        line-height: 1.4
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+        padding-bottom: 12px
+        
+        @media (max-width: 1000px)
+            font-size: 20px
+            margin: 24px 0 20px
     
     h2
-        font-size: 14px
-        @media (max-width: 1000px)
-            font-size: 13px
-        font-weight: bold
-        margin-bottom: 10px
-        color: #FFFFFF
+        font-size: 20px
+        font-weight: 600
+        margin: 28px 0 20px
+        color: #F7F8F8
         text-align: left
         word-break: break-word
         hyphens: auto
         max-width: 100%
         overflow-wrap: break-word
+        line-height: 1.4
+        
+        @media (max-width: 1000px)
+            font-size: 18px
+            margin: 24px 0 18px
+    
+    h3
+        font-size: 18px
+        font-weight: 600
+        margin: 24px 0 16px
+        color: #F7F8F8
+        
+        @media (max-width: 1000px)
+            font-size: 16px
     
     p
-        font-size: 12px
-        @media (max-width: 1000px)
-            font-size: 11px
-        margin-bottom: 10px
-        text-align: justify
+        font-size: 16px
+        margin: 0 0 20px
+        text-align: left
         word-break: break-word
         hyphens: auto
         max-width: 100%
         overflow-wrap: break-word
+        line-height: 1.7
+        
+        @media (max-width: 1000px)
+            font-size: 15px
+            margin-bottom: 18px
     
     .listItem
-        font-size: 12px
-        margin-bottom: 8px
+        font-size: 16px
+        margin-bottom: 12px
         display: flex
         align-items: flex-start
-        text-align: justify
+        text-align: left
         word-break: break-word
         hyphens: auto
         max-width: 100%
         overflow-wrap: break-word
+        line-height: 1.7
+        
+        @media (max-width: 1000px)
+            font-size: 15px
+            margin-bottom: 10px
+        
         .bullet
-            margin-right: 8px
+            margin-right: 12px
             flex-shrink: 0
+            color: #F7F8F8
+            font-weight: bold
+            
         span
             flex: 1
             overflow-wrap: break-word
@@ -596,27 +628,45 @@
     .numberedSection
         display: flex
         align-items: flex-start
-        margin-bottom: 8px
+        margin-bottom: 16px
         max-width: 100%
+        
         .number
-            margin-right: 8px
+            margin-right: 12px
             flex-shrink: 0
+            font-weight: 600
+            min-width: 24px
+            
         .sectionText
             flex: 1
             overflow-wrap: break-word
             max-width: 100%
+            font-size: 16px
+            line-height: 1.7
+            
+            @media (max-width: 1000px)
+                font-size: 15px
     
     .keyValue
-        margin-bottom: 8px
+        margin-bottom: 16px
         max-width: 100%
+        display: flex
+        flex-wrap: wrap
+        
         .key
-            font-weight: bold
+            font-weight: 600
             margin-right: 8px
             flex-shrink: 0
+            
         .value
             flex: 1
             overflow-wrap: break-word
             max-width: 100%
+            font-size: 16px
+            line-height: 1.7
+            
+            @media (max-width: 1000px)
+                font-size: 15px
 
 // Custom scrollbar for Safari
 .contractContent::-webkit-scrollbar
@@ -655,7 +705,6 @@
         left: 0
         width: 4px
         height: 100%
-        background: linear-gradient(180deg, #8A30FF 0%, #F842B2 100%)
         border-radius: 4px 0 0 4px
 
     &:hover
@@ -876,146 +925,6 @@
             background: rgba(50, 205, 50, 0.1)
             border: 1px solid rgba(50, 205, 50, 0.3)
 
-// Add the full-screen loading overlay
-.generatingOverlay
-    position: fixed
-    top: 0
-    left: 0
-    right: 0
-    bottom: 0
-    background: rgba(0, 0, 0, 0.85)
-    backdrop-filter: blur(10px)
-    display: flex
-    flex-direction: column
-    align-items: center
-    justify-content: center
-    z-index: 1000
-    border-radius: 32px
-    @media (max-width: 1000px)
-        border-radius: 0
-
-.loadingIcon
-    position: relative
-    width: 120px
-    height: 120px
-    display: flex
-    align-items: center
-    justify-content: center
-    @media (max-width: 1000px)
-        width: 100px
-        height: 100px
-
-.spinner
-    position: absolute
-    width: 120px
-    height: 120px
-    border-radius: 50%
-    border: 3px solid transparent
-    border-top: 3px solid rgba(138, 48, 255, 1)
-    border-right: 3px solid rgba(248, 66, 178, 1)
-    border-bottom: 3px solid rgba(248, 91, 66, 1)
-    animation: spin 1.5s linear infinite
-
-.logo
-    width: 70px
-    height: 70px
-    animation: pulse 2s ease-in-out infinite
-
-.loadingText
-    font-size: 28px
-    @media (max-width: 1000px)
-        font-size: 24px
-    font-weight: 600
-    background: linear-gradient(to right, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 50%, rgba(248, 91, 66, 1) 100%)
-    background-size: 200% auto
-    color: transparent
-    -webkit-background-clip: text
-    background-clip: text
-    animation: shimmerText 3s linear infinite
-
-.loadingDescription
-    font-size: 16px
-    @media (max-width: 1000px)
-        font-size: 14px
-        padding: 0 20px
-    color: rgba(255, 255, 255, 0.7)
-    text-align: center
-    max-width: 500px
-    animation: fadeInOut 2s ease-in-out infinite
-
-.progressBarContainer
-    width: 80%
-    max-width: 400px
-    height: 6px
-    background-color: rgba(255, 255, 255, 0.2)
-    border-radius: 10px
-    overflow: hidden
-    margin-top: 20px
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
-
-.progressBar
-    height: 100%
-    background: linear-gradient(90deg, rgba(138, 48, 255, 1) 0%, rgba(248, 66, 178, 1) 60%, rgba(248, 91, 66, 1) 100%)
-    border-radius: 10px
-    transition: width 0.3s ease
-
-@keyframes spin
-    0%
-        transform: rotate(0deg)
-    100%
-        transform: rotate(360deg)
-
-@keyframes pulse
-    0%, 100%
-        transform: scale(1)
-        opacity: 0.8
-    50%
-        transform: scale(1.1)
-        opacity: 1
-
-@keyframes shimmerText
-    0%
-        background-position: 0% center
-    100%
-        background-position: 200% center
-
-@keyframes fadeInOut
-    0%, 100%
-        opacity: 0.7
-    50%
-        opacity: 1
-        
-@keyframes spin
-    0%
-        transform: rotate(0deg)
-    100%
-        transform: rotate(360deg)
-
-@keyframes pulse
-    0%, 100%
-        transform: scale(1)
-        opacity: 0.8
-    50%
-        transform: scale(1.1)
-        opacity: 1
-
-@keyframes shimmerText
-    0%
-        background-position: 0% center
-    100%
-        background-position: 200% center
-
-@keyframes fadeInOut
-    0%, 100%
-        opacity: 0.7
-    50%
-        opacity: 1
-
-@keyframes shimmer
-    0%
-        transform: translateX(-100%)
-    100%
-        transform: translateX(100%)
 
 // Add a custom dropdown indicator
 .selectWrapper

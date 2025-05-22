@@ -1064,17 +1064,19 @@ const CreateContract = () => {
                             // Check if it's a subsection
                             const subMatch = trimmedLine.match(/^(\d+\.\d+)\.\s(.*)/);
                             if (subMatch) {
+                                const subSectionText = subMatch[2].trim();
                                 items.push({ 
                                     type: 'numberedSection', 
-                                    text: subMatch[2].charAt(0).toUpperCase() + subMatch[2].slice(1).toLowerCase(), 
+                                    text: subSectionText.charAt(0).toUpperCase() + subSectionText.slice(1),
                                     number: subMatch[1], 
                                     level: 2 
                                 });
                             } else if (trimmedLine.startsWith('- ')) {
                                 // It's a list item
+                                const itemText = trimmedLine.substring(2).trim();
                                 items.push({ 
                                     type: 'listItem', 
-                                    text: trimmedLine.substring(2).charAt(0).toUpperCase() + trimmedLine.substring(2).slice(1).toLowerCase()
+                                    text: itemText.charAt(0).toUpperCase() + itemText.slice(1)
                                 });
                             } else {
                                 // Regular paragraph under the section
@@ -1137,21 +1139,23 @@ const CreateContract = () => {
             } 
             // Check if this is a list item
         else if (cleanLine.startsWith('- ')) {
+            const itemText = cleanLine.substring(2).trim();
+            const formattedText = itemText.charAt(0).toUpperCase() + itemText.slice(1);
             return { 
                 type: 'listItem', 
-                text: cleanLine.substring(2).charAt(0).toUpperCase() + cleanLine.substring(2).slice(1).toLowerCase() 
+                text: formattedText
             };
-            }
+        }
             // Check if this is a key-value pair (e.g., "Key: Value")
         else if (cleanLine.includes(': ') && !cleanLine.startsWith(' ')) {
             const [key, ...valueParts] = cleanLine.split(': ');
-            const value = valueParts.join(': '); // Rejoin in case the value itself contains colons
+            const value = valueParts.join(': ').trim(); // Rejoin in case the value itself contains colons
             return { 
                 type: 'keyValue', 
                 key: key.charAt(0).toUpperCase() + key.slice(1).toLowerCase(), 
-                value: value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() 
+                value: value.charAt(0).toUpperCase() + value.slice(1)
             };
-            }
+        }
         // Check for numbered sections with different formats
         // Main sections like "1. DEFINITIONS"
         else if (/^\d+\.\s[A-Z]/.test(cleanLine)) {
@@ -1193,15 +1197,17 @@ const CreateContract = () => {
         else if (/^[A-Z\s]+$/.test(cleanLine) && cleanLine.length > 3) {
             return { 
                 type: 'heading1', 
-                text: cleanLine.charAt(0).toUpperCase() + cleanLine.slice(1).toLowerCase() 
+                text: cleanLine.charAt(0) + cleanLine.slice(1).toLowerCase() 
             };
-            }
+        }
             // Regular paragraph
             else {
-            return { 
-                type: 'paragraph', 
-                text: cleanLine.charAt(0).toUpperCase() + cleanLine.slice(1).toLowerCase() 
-            };
+                const trimmedText = cleanLine.trim();
+                const formattedText = trimmedText.charAt(0).toUpperCase() + trimmedText.slice(1);
+                return { 
+                    type: 'paragraph', 
+                    text: formattedText
+                };
             }
             
         // Default fallback (though shouldn't be needed due to else case above)
@@ -1777,22 +1783,6 @@ const CreateContract = () => {
 
     return (
         <div className={styles.container}>
-            <AnimatePresence mode="wait">
-                {isLoading && (
-                    <motion.div 
-                        className={styles.generatingOverlay}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <div className={styles.loadingIcon}>
-                            <div className={styles.spinner}></div>
-                        </div>
-                        <h2 className={styles.loadingText}>Generating Your Contract</h2>
-                    </motion.div>
-                )}
-            </AnimatePresence>
             
             <div className={styles.formSection}>
                 <form 
@@ -2073,27 +2063,6 @@ const CreateContract = () => {
                                     exit={{ opacity: 0, scale: 0.9 }}
                                     transition={{ duration: 0.3, ease: "easeOut" }}
                                 >
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.2, duration: 0.3 }}
-                                    >
-                                        <Image 
-                                            src="/icons/lawbit-preview.svg" 
-                                            alt="LawBit Logo" 
-                                            width={120} 
-                                            height={120} 
-                                            className={styles.logo}
-                                        />
-                                    </motion.div>
-                                    <motion.div 
-                                        className={styles.loadingText}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.4, duration: 0.3 }}
-                                    >
-                                        Generating...
-                                    </motion.div>
                                 </motion.div>
                             ) : generatedContract ? (
                                 <motion.div 
@@ -2195,6 +2164,15 @@ const CreateContract = () => {
                                 disabled={!isTemplateGenerated}
                             >
                                 Option A
+                                {contractData.preference === 'Option A' && (
+                                    <Image 
+                                        src="/icons/check.svg" 
+                                        alt="Selected" 
+                                        width={16} 
+                                        height={16} 
+                                        className={styles.checkIcon}
+                                    />
+                                )}
                             </button>
                             <button
                                 type="button"
@@ -2206,6 +2184,15 @@ const CreateContract = () => {
                                 disabled={!isTemplateGenerated}
                             >
                                 Option B
+                                {contractData.preference === 'Option B' && (
+                                    <Image 
+                                        src="/icons/check.svg" 
+                                        alt="Selected" 
+                                        width={16} 
+                                        height={16} 
+                                        className={styles.checkIcon}
+                                    />
+                                )}
                             </button>
                         </div>
                     </div>

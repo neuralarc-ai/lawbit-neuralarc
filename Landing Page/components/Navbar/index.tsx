@@ -19,6 +19,7 @@ const Navbar = () => {
     const isHistoryPage = pathname === '/history';
     const isTermsPage = pathname === '/terms';
     const isPrivacyPage = pathname === '/privacy';
+    const isContractsPage = pathname === '/contracts';
     const supabase = createClient();
 
     useEffect(() => {
@@ -158,7 +159,12 @@ const Navbar = () => {
     return (
         <nav className={styles.navbar}>
             <div className={styles.container}>
-                {(isHistoryPage || isTermsPage || isPrivacyPage) ? (
+                {(isHistoryPage || isTermsPage || isPrivacyPage || isContractsPage) ? (
+                isContractsPage ? (
+                    <Link href="/" className={styles.logoLink}>
+                        <span className={styles.lawbitText}>Lawbit</span>
+                    </Link>
+                ) : (
                     <button
                         className={styles.backButton}
                         onClick={handleBack}
@@ -172,9 +178,10 @@ const Navbar = () => {
                             </div>
                         </div>
                     </button>
-                ) : (
-                    <div className={styles.placeholder} />
-                )}
+                )
+            ) : (
+                <div className={styles.placeholder} />
+            )}
                 <button
                     className={styles.menuButton}
                     onClick={toggleMenu}
