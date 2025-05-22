@@ -52,24 +52,6 @@ const benefits = [
     }
 ]
 
-const testimonials = [
-    {
-        text: "I've spent half my time on legal paperwork. LawBit has cut that down by 75%. It's a game-changer for my business.",
-        author: "Jessica Williams",
-        position: "Operations Manager - TechStart Inc"
-    },
-    {
-        text: "As a startup, it was never like this managing legal documents. LawBit makes it easy to stay compliant and grow with confidence.",
-        author: "Michael Chen",
-        position: "Founder - Swift Labs"
-    },
-    {
-        text: "The risk analysis feature gives us peace of mind. We catch potential issues before they become problems.",
-        author: "Sarah Williams",
-        position: "Legal Manager - InnovateCo"
-    }
-]
-
 const pricing = [
     {
         title: 'Free',
@@ -150,56 +132,8 @@ export default function Home() {
         router.push('/');
     };
 
-    const starfieldVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                duration: 1,
-                ease: "easeOut"
-            }
-        }
-    };
-
-    const ellipseVariants = {
-        hidden: { opacity: 0, scale: 0.8 },
-        visible: {
-            opacity: 1,
-            scale: 1,
-            transition: {
-                duration: 1.5,
-                ease: "easeOut"
-            }
-        }
-    };
-
     return (
         <main className={styles.main}>
-            <div className={styles.backgroundElements}>
-                <motion.div 
-                    className={styles.starfieldWrapper}
-                    variants={starfieldVariants}
-                    initial="hidden"
-                    animate="visible"
-                >
-                    
-                </motion.div>
-                <motion.div 
-                    className={styles.ellipse}
-                    variants={ellipseVariants}
-                    initial="hidden"
-                    animate="visible"
-                >
-                    <Image 
-                        src="/images/white-radial.svg"
-                        alt="Radial gradient"
-                        width={1000}
-                        height={1000}
-                        priority
-                    />
-                </motion.div>
-            </div>
-            
             <LandingNavbar />
             
             {/* Hero Section */}
@@ -223,15 +157,6 @@ export default function Home() {
                             ease: [0.04, 0.62, 0.23, 0.98] 
                         }}
                     >
-                        <Image
-                            src="/images/contract.svg"
-                            alt="LawBit Hero"
-                            width={1200}
-                            height={1200}
-                            priority
-                            quality={100}
-                        />
-                    </motion.div>
                     <motion.p 
                         className={styles.description}
                         initial={{ opacity: 0, y: 20 }}
@@ -240,6 +165,14 @@ export default function Home() {
                     >
                         LawBit helps startups and individuals create legal documents and analyze agreements to identify risks instantly
                     </motion.p>
+                        <Image
+                            src="/images/hero.png"
+                            alt="LawBit Hero"
+                            width={1200}
+                            height={1200}
+                            priority
+                        />
+                    </motion.div>
                     
                     {/* Mobile/Tablet Buttons */}
                     <motion.div 
@@ -279,14 +212,12 @@ export default function Home() {
                                 <div className={styles.featureCard}>
                                     <div className={styles.iconWrapper}>
                                         <div className={styles.iconSquare}>
-                                            <div className={styles.iconCircle}>
                                                 <Image 
                                                     src={feature.icon}
                                                     alt={feature.title}
-                                                    width={24}
-                                                    height={24}
+                                                    width={44}
+                                                    height={44}
                                                 />
-                                            </div>
                                         </div>
                                     </div>
                                     <h3>{feature.title}</h3>
@@ -481,7 +412,7 @@ export default function Home() {
                                 <Image 
                                     src="/icons/footer-logo.svg" 
                                     alt="LawBit" 
-                                    width={160} 
+                                    width={100} 
                                     height={55}
                                     priority
                                 />
@@ -506,7 +437,7 @@ export default function Home() {
                                     <Image 
                                         src="/neuralpath.svg" 
                                         alt="Neural Paths" 
-                                        width={100} 
+                                        width={30} 
                                         height={30} 
                                         className={styles.neuralPathLogo}
                                     />

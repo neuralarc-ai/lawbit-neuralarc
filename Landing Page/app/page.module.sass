@@ -2,7 +2,7 @@
 
 .main
     min-height: 100vh
-    background: #e8e8e8
+    background: #FBFAF8
     color: white
     overflow-x: hidden
     position: relative
@@ -220,22 +220,6 @@
     align-items: center
     justify-content: center
 
-.iconCircle
-    width: 44px
-    height: 44px
-    border-radius: 50%
-    background: #FFFF1E
-    display: flex
-    align-items: center
-    justify-content: center
-    transition: all 0.3s ease
-
-.featureCardWrapper
-    padding: 0.5px
-    border-radius: 48px
-    filter: grayscale(1)
-    transition: filter 0.3s ease
-
 // Benefits Section
 .benefits
     padding: 20px 0 16px 0
@@ -308,7 +292,7 @@
         gap: 20px
 
 .benefitCard
-    background: #202020
+    background: #D0C3B5
     border-radius: 8px
     padding: 60px
     text-align: left
@@ -334,9 +318,9 @@
     font-size: 40px
     font-weight: semibold
     margin-bottom: 16px
-    line-height: 1.2
+    line-height: 1.1
     text-align: left
-    color: #FFFFFF
+    color: #000
     @media (max-width: 1200px)
         font-size: 32px
     
@@ -346,8 +330,7 @@
 
 .benefitDescription
     font-size: 20px
-    line-height: 1.6
-    color: rgba(255, 255, 255, 0.7)
+    color: #000
     margin: 0
     text-align: left
     
@@ -613,12 +596,28 @@
     padding: 32px
     &.popular
         position: relative
-        background: #202020
+        background: #1E342F
         color: #fff
+        border-radius: 8px
+        overflow: visible
+        &::before
+            content: ''
+            position: absolute
+            top: 0
+            left: 0
+            right: 0
+            bottom: 0
+            border: 10px solid transparent
+            border-radius: 8px
+            background: linear-gradient(135deg, #D0C3B5, #AEBF98) border-box
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)
+            -webkit-mask-composite: destination-out
+            mask-composite: exclude
+            pointer-events: none
 
     button
         width: fit-content
-        border-radius: 8px
+        border-radius: 4px
         border-width: 1.5px
         gap: 10px
         padding: 18px 24px
@@ -629,6 +628,8 @@
         font-size: 16px
         font-weight: 600
         cursor: pointer
+        .popular &
+            width: 100%
 
 .popularBadge
     position: absolute
@@ -636,7 +637,7 @@
     left: 50%
     color: #232323
     transform: translateX(-50%)
-    background: #45FAC2
+    background: #A7B891
     padding: 16px 24px
     border-radius: 32px
     font-size: 14px
@@ -801,7 +802,6 @@
     .neuralPathLogo
         display: inline-block
         vertical-align: middle
-        margin-left: 8px
         transition: opacity 0.3s ease
         &:hover
             opacity: 0.8

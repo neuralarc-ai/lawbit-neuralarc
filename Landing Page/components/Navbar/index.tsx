@@ -240,13 +240,16 @@ const Navbar = () => {
                                 {user ? (
                                     <>
                                         <a href="/history" className={styles.menuItem}>
-                                            History
+                                            <span>History</span>
+                                            <Image src="/icons/history.svg" alt="History" width={20} height={20} className={styles.menuIcon} />
                                         </a>
                                         <button onClick={openSubscriptionModal} className={styles.menuItem}>
                                             <span>Upgrade Plan</span>
+                                            <Image src="/icons/upgrade.svg" alt="Upgrade" width={20} height={20} className={styles.menuIcon} />
                                         </button>
                                         <button onClick={handleLogout} className={styles.menuItem}>
-                                            Logout
+                                            <span>Logout</span>
+                                            <Image src="/icons/logout.svg" alt="Logout" width={20} height={20} className={styles.menuIcon} />
                                         </button>
                                     </>
                                 ) : (

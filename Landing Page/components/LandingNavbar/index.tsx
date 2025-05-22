@@ -51,7 +51,7 @@ const LandingNavbar = () => {
             }}
         >
             <div className={styles.container}>
-                <h2 className="text-black font-bold text-2xl">Lawbit</h2>
+                <h2 className={styles.h2}>Lawbit</h2>
 
                 {/* Hamburger Icon for Mobile */}
                 <div className={styles.mobileMenuToggle} onClick={toggleMobileMenu}>

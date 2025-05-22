@@ -13,7 +13,6 @@ import { useSupabase } from '@/components/Providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import AddressAutocomplete from '../AddressAutocomplete';
-import Script from 'next/script';
 import LegalDisclaimer from '../LegalDisclaimer'
 
 interface ContractData {
@@ -2184,7 +2183,7 @@ const CreateContract = () => {
                 </div>
                 <div className={styles.actionsSection}>
                     <div className={styles.preferenceSelector}>
-                        <label>Choose a preference</label>
+                        <label className="text-black">Choose a preference</label>
                         <div className={styles.tabSelector}>
                             <button
                                 type="button"

@@ -47,7 +47,7 @@ const HistoryCard = ({
             <div className={styles.card}>
                 <div className={styles.header}>
                     <div className={styles.icon}>
-                        <Image src="/icons/document.svg" alt="icon" width={24} height={24} />
+                        <Image src="/icons/history-document.svg" alt="icon" width={44} height={44} />
                     </div>
                     <div className={styles.typeBadge}>{type}</div>
                 </div>
