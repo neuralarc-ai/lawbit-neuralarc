@@ -644,6 +644,29 @@ const contractCategories: ContractCategory[] = [
     }
 ];
 
+const legalSteps = [
+    {
+        title: 'Document Intake',
+        description: 'Extracting contract details.'
+    },
+    {
+        title: 'Legal Analysis',
+        description: 'Identifying required clauses.'
+    },
+    {
+        title: 'Clause Drafting',
+        description: 'Drafting legal language.'
+    },
+    {
+        title: 'Compliance Check',
+        description: 'Ensuring legal soundness.'
+    },
+    {
+        title: 'Finalization',
+        description: 'Preparing your contract.'
+    }
+];
+
 const CreateContract = () => {
     const { showToast } = useToast();
     const { user } = useSupabase();
@@ -1782,7 +1805,57 @@ const CreateContract = () => {
     };
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} style={{ position: 'relative' }}>
+            {/* Generating Animation Overlay */}
+            <AnimatePresence>
+                {isLoading && (
+                    <motion.div
+                        className={styles.generatingOverlay}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                    >
+                        <motion.div
+                            className={styles.generatingBox}
+                            initial={{ scale: 0.98, y: 20, opacity: 0 }}
+                            animate={{ scale: 1, y: 0, opacity: 1 }}
+                            exit={{ scale: 0.98, y: 20, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: 'easeOut' }}
+                        >
+                            <div className={styles.generatingTitle}>Generating Legal Document...</div>
+                            <div className={styles.generatingProgressBarWrapper}>
+                                <motion.div
+                                    className={styles.generatingProgressBar}
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${generationProgress}%` }}
+                                    transition={{ duration: 0.4, ease: 'easeInOut' }}
+                                />
+                            </div>
+                            <div className={styles.generatingStepper}>
+                                {legalSteps.map((step, idx) => (
+                                    <div key={step.title} className={styles.generatingStep}>
+                                        <div className={
+                                            idx === generationStep
+                                                ? styles.generatingStepCircleActive
+                                                : styles.generatingStepCircle
+                                        } />
+                                        <div className={
+                                            idx === generationStep
+                                                ? styles.generatingStepTextActive
+                                                : styles.generatingStepText
+                                        }>
+                                            <div className={styles.generatingStepTitle}>{step.title}</div>
+                                            <div className={styles.generatingStepDesc}>{step.description}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            {/* End Generating Animation Overlay */}
             
             <div className={styles.formSection}>
                 <form 

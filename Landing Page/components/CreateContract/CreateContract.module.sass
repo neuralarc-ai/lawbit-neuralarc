@@ -88,6 +88,7 @@
     position: relative
     width: 100%
     margin-bottom: 24px
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif
 
     select
         width: 100%
@@ -1099,3 +1100,117 @@
 .prefernceSelector
     .label
         color: #000
+
+.generatingOverlay
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    z-index: 100
+    background: rgba(30, 30, 40, 0.55)
+    backdrop-filter: blur(8px)
+    display: flex
+    align-items: center
+    justify-content: center
+    transition: background 0.3s
+
+.generatingBox
+    background: rgba(255,255,255,0.85)
+    border-radius: 18px
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10)
+    padding: 40px 32px 32px 32px
+    min-width: 340px
+    max-width: 95vw
+    min-height: 320px
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 32px
+    @media (max-width: 600px)
+        padding: 24px 8px
+        min-width: 0
+        width: 100%
+
+.generatingTitle
+    font-size: 1.25rem
+    font-weight: 700
+    color: #232323
+    margin-bottom: 8px
+    letter-spacing: -0.01em
+    text-align: center
+
+.generatingProgressBarWrapper
+    width: 100%
+    height: 6px
+    background: #ececec
+    border-radius: 4px
+    overflow: hidden
+    margin-bottom: 18px
+
+.generatingProgressBar
+    height: 100%
+    background: linear-gradient(90deg, #8A30FF 0%, #3B82F6 100%)
+    border-radius: 4px
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1)
+
+.generatingStepper
+    display: flex
+    flex-direction: column
+    gap: 18px
+    width: 100%
+    max-width: 340px
+
+.generatingStep
+    display: flex
+    align-items: flex-start
+    gap: 16px
+
+.generatingStepCircle
+    width: 18px
+    height: 18px
+    border-radius: 50%
+    background: #e0e0e0
+    border: 2px solid #e0e0e0
+    margin-top: 2px
+    transition: background 0.3s, border 0.3s
+
+.generatingStepCircleActive
+    width: 18px
+    height: 18px
+    border-radius: 50%
+    background: #8A30FF
+    border: 2px solid #3B82F6
+    margin-top: 2px
+    box-shadow: 0 0 0 2px #e0e0e0
+    transition: background 0.3s, border 0.3s
+
+.generatingStepText
+    color: #888
+    font-size: 1rem
+    font-weight: 500
+    display: flex
+    flex-direction: column
+    gap: 2px
+    transition: color 0.3s
+
+.generatingStepTextActive
+    color: #232323
+    font-size: 1rem
+    font-weight: 700
+    display: flex
+    flex-direction: column
+    gap: 2px
+    transition: color 0.3s
+
+.generatingStepTitle
+    font-size: 1rem
+    font-weight: 600
+    margin-bottom: 2px
+
+.generatingStepDesc
+    font-size: 0.92rem
+    font-weight: 400
+    color: #666
+    opacity: 0.85
+    margin-left: 1px
