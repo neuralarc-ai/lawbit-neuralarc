@@ -82,7 +82,15 @@ const Navbar = () => {
                 {(isHistoryPage || isTermsPage || isPrivacyPage || isContractsPage || isResponsibleAIPage || isDisclaimerPage) ? (
                 isContractsPage ? (
                     <Link href="/" className={styles.logoLink}>
-                        <span className={styles.lawbitText}>Lawbit</span>
+                        <div className={styles.logoContainer}>
+                            <Image 
+                                src="/icons/lawbit-logo.svg" 
+                                alt="Lawbit Logo" 
+                                width={130} 
+                                height={40}
+                                priority
+                            />
+                        </div>
                     </Link>
                 ) : (
                     <button

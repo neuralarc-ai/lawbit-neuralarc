@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image';
 import styles from './LandingNavbar.module.sass'
-import Logo from '../Logo'
 import { createClient } from '@/lib/supabase'
 
 const LandingNavbar = () => {
@@ -51,7 +51,15 @@ const LandingNavbar = () => {
             }}
         >
             <div className={styles.container}>
-                <h2 className={styles.h2}>Lawbit</h2>
+                <div className={styles.logoContainer}>
+                    <Image 
+                        src="/icons/lawbit-logo.svg" 
+                        alt="Lawbit Logo" 
+                        width={130} 
+                        height={40}
+                        priority
+                    />
+                </div>
 
                 {/* Hamburger Icon for Mobile */}
                 <div className={styles.mobileMenuToggle} onClick={toggleMobileMenu}>

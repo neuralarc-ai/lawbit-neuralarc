@@ -445,19 +445,13 @@ export default function Home() {
                             </div>
                         </div>
                         
-                        <div className={styles.footerRight}>
+                        <div className="w-auto h-auto object-contain">
                             <Image 
                                 src="/images/footer-illustration.png" 
                                 alt="Footer Illustration" 
-                                width={400} 
-                                height={200}
-                                style={{
-                                    maxWidth: '100%',
-                                    height: 'auto',
-                                    objectFit: 'contain',
-                                    objectPosition: 'bottom right',
-                                    display: 'block'
-                                }}
+                                width={595} 
+                                height={404}
+                                className="w-full h-auto object-contain"
                                 priority
                             />
                         </div>

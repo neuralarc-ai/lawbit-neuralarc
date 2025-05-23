@@ -35,11 +35,11 @@ const AnalyzeContract = () => {
 
     // Analysis steps descriptions
     const analysisSteps = [
-        "Analyzing document structure...",
-        "Extracting key clauses...",
-        "Evaluating legal compliance...",
-        "Identifying potential risks...",
-        "Generating recommendations..."
+        "1. Analyzing document structure...",
+        "2. Extracting key clauses...",
+        "3. Evaluating legal compliance...",
+        "4. Identifying potential risks...",
+        "5. Generating recommendations..."
     ];
 
     // Update progress during analysis
@@ -172,6 +172,8 @@ const AnalyzeContract = () => {
 
         try {
             setIsAnalyzing(true);
+            setAnalysisProgress(0);
+            setAnalysisStep(0);
             setError(null);
 
             // Check token usage before proceeding
@@ -621,6 +623,46 @@ const AnalyzeContract = () => {
     return (
         <div className={styles.container}>
             <AnimatePresence>
+                {isAnalyzing && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className={styles.generatingOverlay}
+                    >
+                        <div className={styles.generatingBox}>
+                            <div className={styles.generatingTitle}>Analyzing Contract...</div>
+                            <div className={styles.generatingProgressBarWrapper}>
+                                <div 
+                                    className={styles.generatingProgressBar}
+                                    style={{ width: `${analysisProgress}%` }}
+                                />
+                            </div>
+                            <div className={styles.generatingStepper}>
+                                {analysisSteps.map((step, index) => (
+                                    <div key={index} className={cn(
+                                        styles.generatingStep,
+                                        index < analysisStep ? styles.generatingStepCompleted : 
+                                        index === analysisStep ? styles.generatingStepActive : ''
+                                    )}>
+                                        <div 
+                                            className={cn(
+                                                styles.generatingStepCircle,
+                                                index < analysisStep ? styles.generatingStepCircleCompleted : 
+                                                index === analysisStep ? styles.generatingStepCircleActive : ''
+                                            )}
+                                        />
+                                        <div className={styles.generatingStepText}>
+                                            <div className={styles.generatingStepTitle}>{step}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            <AnimatePresence>
                 {isGenerating && (
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -664,35 +706,6 @@ const AnalyzeContract = () => {
                 )}
             </AnimatePresence>
             <AnimatePresence mode="wait">
-                {isAnalyzing && (
-                    <motion.div 
-                        className={styles.analyzingOverlay}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <div className={styles.loadingIcon}>
-                            <div className={styles.spinner}></div>
-                            <Image 
-                                src="/icons/lawbit-preview.svg" 
-                                alt="LawBit Logo" 
-                                width={70} 
-                                height={70} 
-                                className={styles.logo}
-                            />
-                        </div>
-                        <h2 className={styles.loadingText}>Analyzing Your Contract</h2>
-                        <p className={styles.loadingDescription}>{analysisSteps[analysisStep]}</p>
-                        <div className={styles.progressBarContainer}>
-                            <div 
-                                className={styles.progressBar} 
-                                style={{ width: `${analysisProgress}%` }}
-                            ></div>
-                        </div>
-                    </motion.div>
-                )}
-                
                 {!showAnalysis ? (
                     <motion.div
                         className={styles.mainContent}
@@ -1288,8 +1301,8 @@ const AnalyzeContract = () => {
                                 onClick={handleDownloadPDF}
                             >
                                 <span>Download Analysis</span>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 4v13m0 0l-4-4m4 4l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 14.1666L5 9.16663M10 14.1666L15 9.16663M10 14.1666V4.16663" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                 </svg>
                             </button>
                         </div>

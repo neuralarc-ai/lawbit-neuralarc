@@ -695,14 +695,14 @@
 
 .footer
     position: relative
-    padding: 80px 0 0 0
     background: #232323
-    overflow: visible
+    overflow: hidden
+    max-height: 365px
 
 .footerContainer
     max-width: 1440px
     margin: 0 auto
-    padding: 0 48px
+    padding-left: 48px
     position: relative
     width: 100%
     @media (max-width: 768px)
@@ -722,6 +722,7 @@
 
 .footerLeft
     display: flex
+    padding-top: 64px
     flex-direction: column
     gap: 32px
     max-width: 700px
@@ -732,10 +733,10 @@
 
 .footerRight
     display: flex
+    padding-top: 24px
     align-items: flex-end
     justify-content: flex-end
     position: relative
-    min-width: 340px
     align-self: flex-end
     margin-bottom: 0
     padding-bottom: 0

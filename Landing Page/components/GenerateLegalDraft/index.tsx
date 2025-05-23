@@ -28,12 +28,27 @@ const GenerateLegalDraft = () => {
     const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
 
-    const generationSteps = [
-        "Generating...",
-        "Structuring...",
-        "Applying...",
-        "Formatting...",
-        "Finalizing..."
+    const legalSteps = [
+        {
+            title: 'Document Intake',
+            description: 'Extracting contract details.'
+        },
+        {
+            title: 'Legal Analysis',
+            description: 'Identifying required clauses.'
+        },
+        {
+            title: 'Clause Drafting',
+            description: 'Drafting legal language.'
+        },
+        {
+            title: 'Compliance Check',
+            description: 'Ensuring legal soundness.'
+        },
+        {
+            title: 'Finalization',
+            description: 'Preparing your contract.'
+        }
     ];
 
     useEffect(() => {
@@ -245,22 +260,52 @@ const GenerateLegalDraft = () => {
             <AnimatePresence>
                 {isGenerating && (
                     <motion.div
+                        className={styles.generatingOverlay}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className={styles.generatingOverlay}
+                        transition={{ duration: 0.25 }}
                     >
-                        <div className={styles.loadingIcon}>
-                            <div className={styles.spinner} />
-                            <Image
-                                src="/icons/lawbit-preview.svg"
-                                alt="Lawbit preview"
-                                width={70}
-                                height={70}
-                                className={styles.logo}
-                            />
-                        </div>
-                        <div className={styles.loadingText}>Generating your legal draft...</div>
+                        <motion.div
+                            className={styles.generatingBox}
+                            initial={{ scale: 0.98, y: 20, opacity: 0 }}
+                            animate={{ scale: 1, y: 0, opacity: 1 }}
+                            exit={{ scale: 0.98, y: 20, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: 'easeOut' }}
+                        >
+                            <div className={styles.generatingTitle}>Generating Legal Document...</div>
+                            <div className={styles.generatingProgressBarWrapper}>
+                                <motion.div
+                                    className={styles.generatingProgressBar}
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${generationProgress}%` }}
+                                    transition={{ duration: 0.4, ease: 'easeInOut' }}
+                                />
+                            </div>
+                            <div className={styles.generatingStepper}>
+                                {legalSteps.map((step, idx) => (
+                                    <div key={step.title} className={styles.generatingStep}>
+                                        <div className={
+                                            idx < generationStep
+                                                ? styles.generatingStepCircleCompleted
+                                                : idx === generationStep
+                                                    ? styles.generatingStepCircleActive
+                                                    : styles.generatingStepCircle
+                                        } />
+                                        <div className={
+                                            idx < generationStep
+                                                ? styles.generatingStepTextCompleted
+                                                : idx === generationStep
+                                                    ? styles.generatingStepTextActive
+                                                    : styles.generatingStepText
+                                        }>
+                                            <div className={styles.generatingStepTitle}>{step.title}</div>
+                                            <div className={styles.generatingStepDesc}>{step.description}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -311,7 +356,7 @@ const GenerateLegalDraft = () => {
                                                 />
                                             </div>
                                             <span className={styles.progressText}>
-                                                {generationSteps[generationStep]}
+                                                {legalSteps[generationStep]?.title || 'Processing...'}
                                             </span>
                                         </>
                                     ) : (
@@ -353,12 +398,14 @@ const GenerateLegalDraft = () => {
                             </div>
                                 <div className={styles.previewActions}>
                                 <button 
-                                    className={styles.actionButton}
+                                    className={styles.backButton}
                                     onClick={() => setShowPreview(false)}
                                 >
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
+                                    <div className={styles.imageWrapper}>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                    </div>
                                 </button>
                                 <div className={styles.actions}>
                                     <button 
@@ -366,37 +413,43 @@ const GenerateLegalDraft = () => {
                                         onClick={handleDownloadDOCX}
                                         disabled={!generatedContract}
                                     >
-                                        <Image src="/icons/word.svg" alt="Word" width={24} height={24} />
+                                        <div className={styles.imageWrapper}>
+                                            <Image src="/icons/word.svg" alt="Word" width={24} height={24} />
+                                        </div>
                                     </button>
                                     <button 
                                         className={cn(styles.actionButton, { [styles.disabled]: !generatedContract })}
                                         onClick={handleDownloadPDF}
                                         disabled={!generatedContract}
                                     >
-                                        <Image src="/icons/pdf.svg" alt="PDF" width={24} height={24} />
+                                        <div className={styles.imageWrapper}>
+                                            <Image src="/icons/pdf.svg" alt="PDF" width={24} height={24} />
+                                        </div>
                                     </button>
                                     <button 
                                         className={cn(styles.actionButton, { [styles.disabled]: !generatedContract })}
                                         onClick={handleCopyText}
                                         disabled={!generatedContract}
                                     >
-                                        {copySuccess ? (
-                                            <Image 
-                                                src="/icons/tick.svg" 
-                                                alt="Copied" 
-                                                width={24} 
-                                                height={24} 
-                                                className={styles.success}
-                                                priority
-                                            />
-                                        ) : (
-                                            <Image 
-                                                src="/icons/copy.svg" 
-                                                alt="Copy" 
-                                                width={24} 
-                                                height={24}
-                                            />
-                                        )}
+                                        <div className={styles.imageWrapper}>
+                                            {copySuccess ? (
+                                                <Image 
+                                                    src="/icons/tick.svg" 
+                                                    alt="Copied" 
+                                                    width={24} 
+                                                    height={24} 
+                                                    className={styles.success}
+                                                    priority
+                                                />
+                                            ) : (
+                                                <Image 
+                                                    src="/icons/copy.svg" 
+                                                    alt="Copy" 
+                                                    width={24} 
+                                                    height={24}
+                                                />
+                                            )}
+                                        </div>
                                     </button>
                                 </div>
                             </div>
