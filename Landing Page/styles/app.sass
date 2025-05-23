@@ -10,30 +10,42 @@
 
 // CSS variables for fonts
 :root
-    --font-fustat: 'Fustat', sans-serif
-    --font-space-mono: 'Space Mono', monospace
+    --font-fustat: 'Fustat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif
+    --font-space-mono: 'Space Mono', 'Courier New', Courier, monospace
 
-*
-    box-sizing: border-box
-    padding: 0
-    margin: 0
-
-html,
-body
-    @extend .fustat
-    background: #F8F7F3
-    color: $n2
+// Apply Fustat font to all elements
+*:not(i):not([class*='icon']):not([class*='fa-'])
+    font-family: var(--font-fustat) !important
     -webkit-font-smoothing: antialiased
     -moz-osx-font-smoothing: grayscale
+    text-rendering: optimizeLegibility
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1
+
+// Base styles
+html,
+body
+    margin: 0
+    padding: 0
+    width: 100%
+    height: 100%
+    background: #F8F7F3
+    color: $n2
     scrollbar-width: thin
     scrollbar-color: rgba(0, 0, 0, 0.5) transparent
+    
     &::-webkit-scrollbar
         width: 8px
+    
     &::-webkit-scrollbar-track
         background: transparent
+    
     &::-webkit-scrollbar-thumb
         background: rgba(0, 0, 0, 0.5)
         border-radius: 4px
+
+// Force Fustat on specific elements
+h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, select, label, span, div
+    font-family: var(--font-fustat) !important
     &::-webkit-scrollbar-thumb:hover
         background: rgba(0, 0, 0, 0.7)
 
