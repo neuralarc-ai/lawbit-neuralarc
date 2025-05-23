@@ -37,7 +37,7 @@ export default function AuthLayout({
     };
 
     return (
-        <div className={styles.auth}>
+        <div className={`${styles.auth} fustat`}>
             <div className={styles.starfieldWrapper}>
                 <motion.div 
                     className={styles.starfieldWrapper}
@@ -54,7 +54,7 @@ export default function AuthLayout({
             
             <div className={styles.authContainer}>
                 <div className={styles.authLeft}>
-                    <div className={styles.logoText}>Lawbit</div>
+                    <div className={`${styles.logoText} fustat`}>Lawbit</div>
                     <div className={styles.authImageContainer}>
                         <Image 
                             src={authImage} 

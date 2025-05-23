@@ -11,7 +11,7 @@ export default function ContractsLayout({
     children: React.ReactNode;
 }) {
     return (
-        <main>
+        <main className="fustat">
             {children}
         </main>
     );

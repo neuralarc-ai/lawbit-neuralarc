@@ -41,7 +41,7 @@ export default function RootLayout({
                 <meta name="product-name" content="Lawbit" />
                 {/* Twitter Card data */}
                 <meta name="twitter:card" content="summary" />
-                <meta name="twitter:site" content="@ampersand" />
+                <meta name="twitter:site" content="@neuralarc_ai" />
                 <meta name="twitter:title" content="Lawbit - AI for Legal Intelligence" />
                 <meta
                     name="twitter:description"
