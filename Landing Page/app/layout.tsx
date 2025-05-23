@@ -1,14 +1,21 @@
 import "@/styles/app.sass";
 import type { Metadata } from "next";
-import { Fustat } from "next/font/google";
+import { Fustat, Space_Mono } from "next/font/google";
 import Providers from "./providers";
 import Script from "next/script";
 
 const fustat = Fustat({
     weight: ["200", "300", "400", "500", "600", "700", "800"],
     subsets: ["latin"],
-    display: "block",
+    display: "swap",
     variable: "--font-fustat",
+});
+
+const spaceMono = Space_Mono({
+    weight: ["400", "700"],
+    subsets: ["latin"],
+    display: "swap",
+    variable: "--font-space-mono",
 });
 
 export const metadata: Metadata = {
@@ -22,8 +29,12 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className={`${fustat.variable}`}>
+        <html lang="en" className={`${fustat.variable} ${spaceMono.variable}`}>
             <head>
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                <link href="https://fonts.googleapis.com/css2?family=Fustat:wght@200..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+            
                 {/* Description no longer than 155 characters */}
                 <meta name="description" content="AI for Legal Intelligence" />
                 {/* Product Name */}
