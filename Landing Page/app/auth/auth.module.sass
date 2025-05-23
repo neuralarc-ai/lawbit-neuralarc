@@ -1,37 +1,69 @@
 @import @/styles/variables
 
-.starfieldWrapper
-    position: absolute
-    top: -5%
-    left: 0
-    right: 0
-    height: 50%
-    width: 100%
-    overflow: hidden
-    z-index: 1
-
-.ellipse
-    position: absolute
-    top: -30%
-    width: 100%
-    height: 100%
-    z-index: 1
-    img
-        width: 100%
-        height: 100%
-        object-fit: contain
-
 .auth
     min-height: 100vh
-    background: #E8E8E8
-    
-    background-size: 32px 32px
+    background: #FBFBF8
     color: white
-    padding-top: 48px
     display: flex
     flex-direction: column
-    align-items: center
     position: relative
+
+    .authContainer
+        display: flex
+        margin: auto
+        max-width: 1440px
+        justify-content: space-between
+        width: 100%
+        min-height: calc(100vh - 72px) // Account for header
+
+    .authLeft
+        min-width: 634px
+        background: linear-gradient(152deg, #765E54 30%, #312119 100%)
+        position: relative
+        display: flex
+        flex-direction: column
+        justify-content: center
+        align-items: center
+        padding: 40px
+        height: calc(90vh - 144px)
+        margin: auto 0
+        border-radius: 20px
+        
+        .logoText
+            position: absolute
+            top: 40px
+            left: 40px
+            font-size: 24px
+            font-weight: 600
+            color: #000
+            
+        .authImageContainer
+            width: 100%
+            height: 100%
+            display: flex
+            justify-content: center
+            align-items: center
+            
+        .authImage
+            width: auto
+            height: auto
+            object-fit: contain
+            mix-blend-mode: overlay
+    
+    .authRight
+        min-width: 564px
+        padding: 24px
+        display: flex
+        flex-direction: column
+        justify-content: center
+        align-items: center
+        overflow-y: auto
+        margin: auto 0
+        position: relative
+            
+    .footer
+        margin-top: auto
+        
     &:before
         content: ''
         position: absolute
@@ -41,10 +73,8 @@
 
 .header
     width: 100%
-    max-width: 1440px
     display: flex
     flex-direction: column
-    align-items: center
     padding: 0 24px
     text-align: center
 
@@ -59,9 +89,9 @@
     z-index: 1
     width: 300px
     padding: 4px
-    background: #D4D4D4
+    background: #F3F0EF
     border-radius: 8px
-    margin-bottom: 64px
+    margin-bottom: 16px
     &:before,
     &:after
         content: ""
@@ -73,7 +103,7 @@
         pointer-events: none
         transition: transform .2s
     &:before
-        background: #202020
+        background: #2B2521
     &:after
         border: 1.5px solid rgba(255, 255, 255, 0.05)
         mask-image: linear-gradient(172deg, black, transparent 50%)
@@ -90,21 +120,18 @@
     align-items: center
     height: 44px
     flex: 1
-    font-size: 15px
+    font-size: 17px
     font-weight: 600
     color: #696969
     transition: color .2s
     text-decoration: none
-    &:hover,
     &.active
         color: white
 
 .container
     width: 100%
-    max-width: 880px
-    margin: 0 auto
+    max-width: 1440px
     padding: 24px
-    justify-content: center
     position: relative
     z-index: 1
     flex: 1
@@ -113,14 +140,16 @@
 
 .form
     width: 100%
-    background: #fff
+    background: #F5F4F1
     border-radius: 16px
-    padding: 48px
-    margin-bottom: 80px
     position: relative
     display: flex
     flex-direction: column
-    align-items: center
+    min-width: 564px
+    
+    .formFields
+        padding: 24px
+        padding-bottom: 0
 
 .field
     width: 100%
@@ -130,13 +159,13 @@
     display: block
     margin-bottom: 12px
     color: #000000
-    font-size: 14px
-    font-weight: 400
+    font-size: 15px
+    font-weight: 500
 
 .input
     width: 100%
     padding: 18px 20px
-    background: transparent
+    background: #FFF
     border: 1px solid #E2E2E2
     border-radius: 10px
     color: #000000
@@ -151,11 +180,11 @@
     display: block
     width: 100%
     text-align: right
-    color:#000000
+    color: #949494
     font-size: 14px
     margin-top: 16px
     margin-bottom: 16px
-    text-decoration: none
+    text-decoration: underline
     transition: opacity 0.3s ease
     position: relative
     z-index: 2
@@ -163,11 +192,29 @@
     &:hover
         opacity: 0.8
 
-.button
+.buttonGroup
+    display: flex
+    gap: 16px
     width: 100%
-    padding: 16px 0
+    height: 104px
+    border-radius: 0 0 16px 16px
+    padding: 24px 24px
+    background: url('/images/auth-gradient.png') no-repeat center center
+    background-size: cover
+
+    .button, .googleButton
+        flex: 1
+        margin: 0
+        min-width: auto
+        padding: 14px 16px
+        font-size: 16px
+        font-weight: 500
+        justify-content: center
+
+.button
+    padding: 16px 27px
     border: none
-    border-radius: 10px
+    border-radius: 4px
     background: #202020
     color: white
     font-size: 16px
@@ -191,6 +238,7 @@
         position: relative
         z-index: 1
         transition: transform 0.3s ease
+        margin-left: 4px
     &:hover svg
         transform: translateX(4px)
     &.analyzing
@@ -228,25 +276,28 @@
         stroke-linejoin: round
 
 .googleButton
-    width: 100%
-    padding: 14px 0
-    border: 1px solid #919191
-    border-radius: 8px
-    background: #fff
-    color: #222
+    padding: 16px 27px
+    border: 1px solid #0000001A
+    border-radius: 4px
+    background: #FFFFFF47
+    color: #000000
     font-size: 16px
-    font-weight: 600
+    font-weight: 500
     cursor: pointer
     display: flex
     align-items: center
     justify-content: center
-    gap: 14px
-    margin-bottom: 1.5rem
-    margin-top: 1.5rem
-    transition: box-shadow 0.2s, background 0.2s, color 0.2s
+    gap: 8px
+    transition: all 0.3s ease
+    min-width: 120px
+    &:hover
+        background: #f8f8f8
     &:disabled
         opacity: 0.7
         cursor: not-allowed
+    .googleIcon
+        width: 20px
+        height: 20px
 
 .googleIcon
     width: 28px

@@ -3,9 +3,13 @@ import Link from 'next/link'
 import styles from './Footer.module.sass'
 import Image from 'next/image'
 
-const Footer = () => {
+interface FooterProps {
+    className?: string;
+}
+
+const Footer: React.FC<FooterProps> = ({ className }) => {
     return (
-        <footer className={styles.footer}>
+        <footer className={`${styles.footer} ${className || ''}`}>
             <div className={styles.container}>
                 <div className={styles.content}>
                     <div className={styles.links}>

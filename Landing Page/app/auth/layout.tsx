@@ -10,6 +10,12 @@ import StarField from '@/components/StarField'
 import Footer from '@/components/Footer'
 import Logo from '@/components/Logo'
 
+// Define image paths
+const AUTH_IMAGES = {
+    login: '/images/login-illustration.png',
+    signup: '/images/signup-illustration.png'
+}
+
 export default function AuthLayout({
     children,
 }: {
@@ -17,6 +23,7 @@ export default function AuthLayout({
 }) {
     const pathname = usePathname()
     const isSignUp = pathname === '/auth/signup'
+    const authImage = isSignUp ? AUTH_IMAGES.signup : AUTH_IMAGES.login
 
     const starfieldVariants = {
         hidden: { opacity: 0 },
@@ -45,28 +52,47 @@ export default function AuthLayout({
                 </div>
             </div>
             
-            <div className={styles.header}>
-                <div className={styles.actions} data-state={isSignUp ? 'signup' : 'signin'}>
-                    <Link
-                        className={`${styles.link} ${
-                            pathname === '/auth/signin' ? styles.active : ''
-                        }`}
-                        href="/auth/signin"
-                    >
-                        Log In
-                    </Link>
-                    <Link
-                        className={`${styles.link} ${
-                            pathname === '/auth/signup' ? styles.active : ''
-                        }`}
-                        href="/auth/signup"
-                    >
-                        Sign Up
-                    </Link>
+            <div className={styles.authContainer}>
+                <div className={styles.authLeft}>
+                    <div className={styles.logoText}>Lawbit</div>
+                    <div className={styles.authImageContainer}>
+                        <Image 
+                            src={authImage} 
+                            alt={isSignUp ? "Sign Up Illustration" : "Login Illustration"} 
+                            width={640} 
+                            height={486}
+                            className={styles.authImage}
+                            priority
+                        />
+                    </div>
+                </div>
+                <div className={styles.authRight}>
+                    <div className={styles.header}>
+                        <div className={styles.actions} data-state={isSignUp ? 'signup' : 'signin'}>
+                            <Link
+                                className={`${styles.link} ${
+                                    pathname === '/auth/signin' ? styles.active : ''
+                                }`}
+                                href="/auth/signin"
+                            >
+                                Log In
+                            </Link>
+                            <Link
+                                className={`${styles.link} ${
+                                    pathname === '/auth/signup' ? styles.active : ''
+                                }`}
+                                href="/auth/signup"
+                            >
+                                Sign Up
+                            </Link>
+                        </div>
+                    </div>
+                    <div className={styles.container}>
+                        {children}
+                    </div>
                 </div>
             </div>
-            <div className={styles.container}>{children}</div>
-            <Footer />
+            <Footer className={styles.footer} />
         </div>
     )
 } 
