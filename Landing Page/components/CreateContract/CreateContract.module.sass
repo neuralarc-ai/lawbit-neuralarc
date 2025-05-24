@@ -165,6 +165,7 @@
     // Rotate arrow when select is focused
     &:focus-within::after
         transform: translateY(-50%) rotate(180deg)
+        
     
     // Error state
     .error
@@ -594,7 +595,7 @@
     max-width: 100%
 
 .contractContent
-    font-family: 'Space Mono', monospace
+    font-family: var(--font-space-mono)
     font-weight: 400
     line-height: 1.7
     color: #F7F8F8
@@ -1108,7 +1109,7 @@
     width: 100%
     height: 100%
     border-radius: 12px
-    z-index: 100
+    z-index: 999
     background: rgba(30, 30, 40, 0.55)
     backdrop-filter: blur(8px)
     display: flex
@@ -1117,67 +1118,85 @@
     transition: background 0.3s
 
 .generatingBox
-    background: rgba(255,255,255,0.85)
-    border-radius: 8px
-    box-shadow: 0 8px 32px rgba(0,0,0,0.10)
-    padding: 40px 32px 32px 32px
+    background: rgba(255, 255, 255, 0.97)
+    border-radius: 16px
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1)
+    padding: 48px 64px
     width: 100%
-    max-width: 100%
-    margin: auto
-    height: 100%
+    max-width: 600px
+    margin: 20px
     display: flex
     flex-direction: column
     align-items: center
     justify-content: center
     gap: 32px
-    @media (max-width: 600px)
-        padding: 24px 8px
-        width: 95%
-        max-width: none
+    border: 1px solid rgba(0, 0, 0, 0.05)
 
 .generatingTitle
-    font-size: 1.25rem
-    font-weight: 700
+    font-size: 24px
+    font-weight: 600
     color: #232323
     margin-bottom: 8px
-    letter-spacing: -0.01em
     text-align: center
+    line-height: 1.4
+    letter-spacing: -0.01em
 
 .generatingProgressBarWrapper
     min-width: 500px
     margin: 0 auto
-    height: 6px
-    background: #D5D5D5
+    height: 8px
+    background: #F0F0F0
     border-radius: 4px
     overflow: hidden
-    margin-bottom: 18px
+    margin-bottom: 24px
+    position: relative
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05)
 
 .generatingProgressBar
     height: 100%
     background: linear-gradient(90deg, #3987BE 0%, #D48EA3 100%)
     border-radius: 4px
-    transition: width 0.4s cubic-bezier(0.4,0,0.2,1)
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1)
+    position: relative
+    overflow: hidden
+
+.generatingProgressBar::after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)
+    animation: shimmer 2s infinite
 
 .generatingStepper
     display: flex
     flex-direction: column
     gap: 24px
     width: 100%
-    max-width: 340px
-    margin: 0 auto
+    max-width: 300px
+    margin-top: 8px
+    justify-content: center
 
 .generatingStep
     display: flex
-    align-items: flex-start
-    gap: 24px
+    align-items: center
+    gap: 16px
+    opacity: 0.6
+    transition: all 0.3s ease
 
 .generatingStepCircle
     width: 36px
     height: 36px
     border-radius: 50%
+    display: flex
     background: #DADADA
+    align-items: center
+    justify-content: center
     border: 12px solid #DADADA
     margin-top: 2px
+    margin-right: 12px
     transition: background 0.3s, border 0.3s
     @media (max-width: 600px)
         width: 32px
@@ -1185,9 +1204,13 @@
         border-width: 10px
 
 .generatingStepCircleCompleted
+    display: flex
+    align-items: center
+    justify-content: center
     width: 36px
     height: 36px
     border-radius: 50%
+    margin-right: 12px
     background: #4C4740
     border: 12px solid #29241E
     margin-top: 2px
@@ -1198,9 +1221,13 @@
         border-width: 10px
 
 .generatingStepCircleActive
+    display: flex
+    align-items: center
+    justify-content: center
     width: 36px
     height: 36px
     border-radius: 50%
+    margin-right: 12px
     background: #4C474073
     border: 12px solid #29241E
     margin-top: 2px
@@ -1209,7 +1236,7 @@
 
 .generatingStepText
     color: #888
-    font-size: 1rem
+    font-size: 24px
     font-weight: 500
     display: flex
     flex-direction: column
@@ -1218,7 +1245,7 @@
 
 .generatingStepTextActive
     color: #202020
-    font-size: 1rem
+    font-size: 24px
     font-weight: 700
     display: flex
     flex-direction: column
@@ -1227,7 +1254,7 @@
 
 .generatingStepTextCompleted
     color: #202020
-    font-size: 1rem
+    font-size: 24px
     font-weight: 500
     display: flex
     flex-direction: column
@@ -1235,12 +1262,12 @@
     transition: color 0.3s
 
 .generatingStepTitle
-    font-size: 1rem
+    font-size: 24px
     font-weight: 600
     margin-bottom: 2px
 
 .generatingStepDesc
-    font-size: 0.92rem
+    font-size: 16px
     font-weight: 400
     color: #666
     opacity: 0.85

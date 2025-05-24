@@ -87,7 +87,7 @@ const Navbar = () => {
                                 src="/icons/lawbit-logo.svg" 
                                 alt="Lawbit Logo" 
                                 width={130} 
-                                height={40}
+                                height={60}
                                 priority
                             />
                         </div>

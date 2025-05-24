@@ -31,14 +31,15 @@ $tablet-width: 1023px
     padding: 0 32px
     display: flex
     align-items: center
-    justify-content: space-between
+    justify-content: flex-start
     background: transparent
     position: relative
+    gap: 48px
     
     .logoContainer
         display: flex
         align-items: center
-        height: 40px
+        height: 60px
         
         img
             height: 100%
@@ -47,6 +48,9 @@ $tablet-width: 1023px
 
     @include mobile
         padding: 0 20px
+        flex-direction: column
+        align-items: center
+        gap: 24px
 
 .logo
     display: flex
@@ -69,7 +73,8 @@ $tablet-width: 1023px
     align-items: center
     gap: 48px
     margin: 0 auto
-
+    padding-left: 130px
+    
     @include tablet
         gap: 24px
 
@@ -78,21 +83,50 @@ $tablet-width: 1023px
     text-decoration: none
     font-size: 16px
     font-weight: 500
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1)
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
     background: none
     border: none
-    padding: 0
+    padding: 8px 0
     cursor: pointer
     position: relative
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.2)
+    overflow: hidden
+    
+    &::before
+        content: ''
+        position: absolute
+        bottom: 0
+        left: 0
+        width: 100%
+        height: 4px
+        background: linear-gradient(90deg, #C6AEA3 0%, #8EE3F0 100%)
+        transform: translateX(-100%)
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease
+        opacity: 0
+        border-radius: 4px
+    
     &:hover
         color: #000
+        
+        &::before
+            transform: translateX(0)
+            opacity: 1
+    
+    &:active
+        transform: translateY(1px)
+    
+    // Active state
+    &.active
+        font-weight: 600
+        color: #000
+        
+        &::before
+            transform: translateX(0)
+            opacity: 1
 
 .buttons
     display: flex
     align-items: center
     gap: 16px
-    margin-left: auto
 
 .button
     padding: 20px 32px
@@ -107,15 +141,32 @@ $tablet-width: 1023px
     border: none
     cursor: pointer
     z-index: 1
+    
+    &::before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 4px
+        padding: 4px
+        background: linear-gradient(90deg, #C6AEA3 0%, #8EE3F0 100%)
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: xor
+        mask-composite: exclude
+        pointer-events: none
+        opacity: 0
+        transition: opacity 0.3s ease
+    
     &::after
-        content: '→'
         margin-left: 8px
         display: inline-block
         transition: transform 0.3s ease
         position: relative
         z-index: 1
+    
     &:hover
-        background: #000
+        &::before
+            opacity: 1
+    
     span
         position: relative
         z-index: 1
@@ -125,12 +176,34 @@ $tablet-width: 1023px
     background: transparent
     padding: 20px 32px
     color: #000
+    border-radius: 4px
     border: 1px solid #202020
     transition: all 0.3s ease
     position: relative
+    z-index: 1
+    
+    &::before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 4px
+        padding: 4px
+        background: linear-gradient(90deg, #C6AEA3 0%, #8EE3F0 100%)
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: xor
+        mask-composite: exclude
+        pointer-events: none
+        opacity: 0
+        transition: opacity 0.3s ease
+    
     &:hover
         color: #fff
-        background: #1c1c1c
+        background: #202020
+        border: 1px solid white
+        &::before
+            opacity: 1
+            border-radius: 4px
+    
     &::after
         display: none
 
@@ -147,6 +220,22 @@ $tablet-width: 1023px
         background: #000
     &:hover svg
         transform: translateX(4px)
+
+.border-beam
+  pointer-events: none
+  position: absolute
+  inset: 0
+  border-radius: inherit
+  border: 1px solid transparent
+  //mask-clip: padding-box, border-box
+  //mask-composite: intersect
+  //mask-image: linear-gradient(transparent, transparent), linear-gradient(#000, #000)
+  z-index: 10
+
+.border-beam-motion
+  position: absolute
+  aspect-ratio: 1 / 1
+  background: linear-gradient(to left, var(--color-from), var(--color-to), transparent)
 
 // Mobile Menu Toggle
 .mobileMenuToggle

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image';
 import styles from './LandingNavbar.module.sass'
 import { createClient } from '@/lib/supabase'
+import { BorderBeam } from '../ui';
 
 const LandingNavbar = () => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -55,21 +56,13 @@ const LandingNavbar = () => {
                     <Image 
                         src="/icons/lawbit-logo.svg" 
                         alt="Lawbit Logo" 
-                        width={130} 
-                        height={40}
+                        width={140} 
+                        height={60}
                         priority
                     />
                 </div>
 
-                {/* Hamburger Icon for Mobile */}
-                <div className={styles.mobileMenuToggle} onClick={toggleMobileMenu}>
-                    <span className={isMobileMenuOpen ? styles.open : ''}></span>
-                    <span className={isMobileMenuOpen ? styles.open : ''}></span>
-                    <span className={isMobileMenuOpen ? styles.open : ''}></span>
-                </div>
-
-                {/* Desktop Navigation */}
-                <div className={styles.desktopNav}>
+                {/* Navigation Links Centered */}
                 <div className={styles.nav}>
                     <button onClick={() => scrollToSection('features')} className={styles.link}>Features</button>
                     <button onClick={() => scrollToSection('benefits')} className={styles.link}>Benefits</button>
@@ -77,6 +70,7 @@ const LandingNavbar = () => {
                     <button onClick={() => scrollToSection('pricing')} className={styles.link}>Pricing</button>
                 </div>
 
+                {/* Buttons */}
                 <div className={styles.buttons}>
                         {isLoggedIn ? (
                             <>
@@ -98,6 +92,12 @@ const LandingNavbar = () => {
                             </>
                         )}
                     </div>
+
+                {/* Hamburger Icon for Mobile */}
+                <div className={styles.mobileMenuToggle} onClick={toggleMobileMenu}>
+                    <span className={isMobileMenuOpen ? styles.open : ''}></span>
+                    <span className={isMobileMenuOpen ? styles.open : ''}></span>
+                    <span className={isMobileMenuOpen ? styles.open : ''}></span>
                 </div>
 
                 {/* Mobile Navigation */}
@@ -113,6 +113,7 @@ const LandingNavbar = () => {
                         {isLoggedIn ? (
                             <>
                                 <Link href="/contracts" className={styles.mobileButton}>
+                                    <BorderBeam />
                                     Generate Draft
                                 </Link>
                                 <button onClick={handleLogout} className={`${styles.mobileButton} ${styles.mobileLoginButton}`}>

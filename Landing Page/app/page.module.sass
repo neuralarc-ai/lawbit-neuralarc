@@ -44,6 +44,7 @@
 .title
     font-size: 64px
     line-height: 1.2
+    font-weight: 600
     margin-bottom: 40px
     max-width: 900px
     span
@@ -194,6 +195,25 @@
     padding: 32px
     transition: all 0.3s ease
     text-align: left
+    overflow: hidden
+    
+    &::before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 12px
+        padding: 4px
+        background: linear-gradient(90deg, #C6AEA3 0%, #8EE3F0 100%)
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: xor
+        mask-composite: exclude
+        pointer-events: none
+        opacity: 0
+        transition: opacity 0.3s ease-in-out
+    
+    &:hover::before
+        opacity: 1
+    
     h3
         font-size: 24px
         margin: 24px 0 16px
@@ -297,8 +317,26 @@
     border-radius: 8px
     padding: 60px
     text-align: left
-    transition: transform 0.3s ease, box-shadow 0.3s ease
-    border: 1px solid rgba(255, 255, 255, 0.1)
+    transition: all 0.3s ease
+    position: relative
+    overflow: hidden
+    
+    &::before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 8px
+        padding: 4px
+        background: linear-gradient(90deg, #C6AEA3 0%, #8EE3F0 100%)
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)
+        -webkit-mask-composite: xor
+        mask-composite: exclude
+        pointer-events: none
+        opacity: 0
+        transition: opacity 0.3s ease
+    
+    &:hover::before
+        opacity: 1
     
     @media (max-width: 1024px)
         padding: 40px

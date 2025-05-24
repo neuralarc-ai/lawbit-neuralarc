@@ -233,24 +233,24 @@ const HistoryPage = () => {
                             ))
                         ) : (
                             <motion.div 
-                                className={styles.dashboard}
+                                className={styles.comingSoon}
                                 variants={itemVariants}
                                 initial="hidden"
                                 animate="visible"
                             >
-                                <div className={styles.dashboardContent}>
-                                    <div className={styles.iconWrapper}>
-                                        <Image 
-                                            src="/icons/document.svg" 
-                                            alt="Document Icon" 
-                                            width={48} 
-                                            height={48}
-                                            className={styles.documentIcon}
-                                        />
-                                    </div>
-                                    <h2>Coming Soon!</h2>
-                                    <p>We&apos;re working on something exciting. Stay tuned for updates!</p>
+                                <div className={styles.comingSoonIcon}>
+                                    <Image 
+                                        src="/icons/document.svg" 
+                                        alt="Analyze" 
+                                        width={64} 
+                                        height={64}
+                                        className={styles.emptyIcon}
+                                    />
                                 </div>
+                                <h2 className={styles.comingSoonTitle}>Almost Ready!</h2>
+                                <p className={styles.comingSoonText}>
+                                    We're working on something amazing! The contract analysis history will be available soon.
+                                </p>
                             </motion.div>
                         )}
                     </motion.div>
