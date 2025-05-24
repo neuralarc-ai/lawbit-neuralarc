@@ -249,7 +249,7 @@ const HistoryPage = () => {
                                 </div>
                                 <h2 className={styles.comingSoonTitle}>Almost Ready!</h2>
                                 <p className={styles.comingSoonText}>
-                                    We're working on something amazing! The contract analysis history will be available soon.
+                                    We are working on something amazing! The contract analysis history will be available soon.
                                 </p>
                             </motion.div>
                         )}

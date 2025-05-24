@@ -53,7 +53,7 @@ const Disclaimer = () => {
                         <div className={styles.sectionContent}>
                             <p className={styles.contentText}>
                                 While we use cutting-edge AI technologies designed to assist with content generation and 
-                                optimization, it's important to acknowledge that AI is not infallible. AI systems can occasionally:
+                                optimization, it is important to acknowledge that AI is not infallible. AI systems can occasionally:
                             </p>
                             <ul className={styles.contentList}>
                                 <li>Misinterpret context or nuance</li>
