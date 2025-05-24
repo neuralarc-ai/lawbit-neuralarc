@@ -90,7 +90,7 @@ const TermsOfUse = () => {
                 <div className={styles.termsContainer}>
                     <div className={styles.headerRow}>
                         <h1 className={styles.pageTitle}>Terms of Use</h1>
-                        <p className={styles.effectiveDate}>Effective Date: 20/02/25</p>
+                        <p className={styles.effectiveDate}>Last Updated: May, 2025</p>
                     </div>
 
                     <div className={styles.sectionsContainer}>

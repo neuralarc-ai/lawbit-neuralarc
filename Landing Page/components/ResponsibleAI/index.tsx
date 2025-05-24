@@ -12,7 +12,7 @@ const ResponsibleAI = () => {
             title: 'Responsible AI at Lawbit',
             content: [
                 'Building Trustworthy Legal AI with Ethics at the Core',
-                'At Lawbit.ai, we believe that the transformative power of artificial intelligence must be grounded in responsibility, fairness, and transparency—especially when applied to the legal domain. As we develop AI tools that support legal analysis, compliance, and decision-making, we recognize the deep impact our technology can have on individuals, businesses, and the justice system.',
+                'At Lawbit, we believe that the transformative power of artificial intelligence must be grounded in responsibility, fairness, and transparency—especially when applied to the legal domain. As we develop AI tools that support legal analysis, compliance, and decision-making, we recognize the deep impact our technology can have on individuals, businesses, and the justice system.',
                 'Our commitment to Responsible AI is embedded in every stage of development—from data collection and model training to deployment and continuous monitoring. We align with global best practices, including the EU\'s Ethics Guidelines for Trustworthy AI and OECD AI Principles, while also staying mindful of local legal and regulatory contexts.'
             ]
         },
@@ -29,7 +29,7 @@ const ResponsibleAI = () => {
         {
             id: 'fairness',
             title: '2. Fairness, Equity & Non-Discrimination',
-            content: 'Lawbit.ai is deeply committed to ensuring fair outcomes. We actively work to identify and mitigate biases in our data sources, algorithms, and outputs—understanding that legal decisions can have profound consequences on people\'s lives. We regularly audit models for disparate impact and retrain when necessary to uphold fairness and equity.'
+            content: 'lawbit.neuralpaths.ai is deeply committed to ensuring fair outcomes. We actively work to identify and mitigate biases in our data sources, algorithms, and outputs—understanding that legal decisions can have profound consequences on people\'s lives. We regularly audit models for disparate impact and retrain when necessary to uphold fairness and equity.'
         },
         {
             id: 'transparency',
@@ -39,7 +39,7 @@ const ResponsibleAI = () => {
         {
             id: 'privacy',
             title: '4. Privacy, Security & Data Governance',
-            content: 'As a legal technology provider, we handle sensitive data with the utmost care. Lawbit.ai implements end-to-end encryption, strict access controls, and anonymization protocols wherever applicable. We adhere to international data protection laws, including the GDPR and Indian DPDP Act, and are continuously improving our data governance framework.'
+            content: 'As a legal technology provider, we handle sensitive data with the utmost care. lawbit.neuralpaths.ai implements end-to-end encryption, strict access controls, and anonymization protocols wherever applicable. We adhere to international data protection laws, including the GDPR and Indian DPDP Act, and are continuously improving our data governance framework.'
         },
         {
             id: 'technical',
@@ -49,18 +49,18 @@ const ResponsibleAI = () => {
         {
             id: 'accountability',
             title: '6. Accountability & Continuous Improvement',
-            content: 'We are accountable for the behavior and impact of our AI systems. Lawbit.ai regularly conducts internal audits, engages third-party evaluators when needed, and encourages user feedback to drive continuous improvement. Any unintended consequences are treated with urgency and transparency.'
+            content: 'We are accountable for the behavior and impact of our AI systems. lawbit.neuralpaths.ai regularly conducts internal audits, engages third-party evaluators when needed, and encourages user feedback to drive continuous improvement. Any unintended consequences are treated with urgency and transparency.'
         },
         {
             id: 'societal',
             title: '7. Societal Benefit & Accessibility',
-            content: 'We aim to democratize access to legal support through technology. Lawbit.ai\'s solutions are designed to reduce complexity, lower barriers to entry, and make compliance easier for startups, SMEs, and underserved communities. Responsible AI, for us, means making legal intelligence more inclusive, equitable, and beneficial to society as a whole.'
+            content: 'We aim to democratize access to legal support through technology. lawbit.neuralpaths.ai\'s solutions are designed to reduce complexity, lower barriers to entry, and make compliance easier for startups, SMEs, and underserved communities. Responsible AI, for us, means making legal intelligence more inclusive, equitable, and beneficial to society as a whole.'
         },
         {
             id: 'commitment',
             title: 'A Living Commitment',
             content: [
-                'Responsible AI at Lawbit.ai is not a one-time checklist—it\'s a living framework. As AI capabilities evolve and legal contexts shift, we continuously revisit our principles, tools, and processes to stay aligned with both ethical standards and real-world needs.',
+                'Responsible AI at lawbit.neuralpaths.ai is not a one-time checklist—it\'s a living framework. As AI capabilities evolve and legal contexts shift, we continuously revisit our principles, tools, and processes to stay aligned with both ethical standards and real-world needs.',
                 'If you\'re a legal professional, researcher, or policymaker interested in how we approach Responsible AI—or want to collaborate on building a better standard for the industry—we\'d love to hear from you.'
             ]
         },
@@ -83,7 +83,7 @@ const ResponsibleAI = () => {
                 <div className={styles.responsibleAIContainer}>
                     <div className={styles.headerRow}>
                         <h1 className={styles.pageTitle}>Responsible AI</h1>
-                        <p className={styles.effectiveDate}>Updated: May 2025</p>
+                        <p className={styles.effectiveDate}>Last Updated: May, 2025</p>
                     </div>
 
                     <div className={styles.sectionsContainer}>
