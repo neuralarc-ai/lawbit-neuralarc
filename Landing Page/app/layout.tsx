@@ -19,8 +19,8 @@ export default function RootLayout({
             <head>
                 {/* Preconnect to Google Fonts */}
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-                
+                <link rel="preconnect" href="https://fonts.gstatic.com" />
+                <link href="https://fonts.googleapis.com/css2?family=Fustat:wght@200..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
                 {/* Preload critical font files */}
                 <link 
                     rel="preload" 
@@ -30,29 +30,6 @@ export default function RootLayout({
                     crossOrigin="anonymous"
                 />
                 
-                {/* Inline critical CSS for fonts */}
-                <style dangerouslySetInnerHTML={{
-                    __html: `
-                        :root {
-                            --font-fustat: ${fustat.style.fontFamily};
-                            --font-space-mono: ${spaceMono.style.fontFamily};
-                        }
-                        
-                        body {
-                            font-family: var(--font-fustat);
-                            -webkit-font-smoothing: antialiased;
-                            -moz-osx-font-smoothing: grayscale;
-                            text-rendering: optimizeLegibility;
-                        }
-                        
-                        ${fontFaces}
-                        
-                        /* Force Fustat on all elements */
-                        *:not(i):not([class*='icon']):not([class*='fa-']) {
-                            font-family: var(--font-fustat) !important;
-                        }
-                    `
-                }} />
                 
                 {/* Standard font loading as fallback */}
                 <link 
