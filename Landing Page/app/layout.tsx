@@ -1,24 +1,8 @@
 import "@/styles/app.sass";
 import type { Metadata } from "next";
-import { Fustat, Space_Mono } from 'next/font/google';
 import Providers from "./providers";
 import Script from "next/script";
-
-// Configure Fustat font with all weights
-const fustat = Fustat({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-fustat',
-  weight: ['200', '300', '400', '500', '600', '700', '800']
-});
-
-// Configure Space Mono font
-const spaceMono = Space_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-space-mono',
-  weight: ['400', '700']
-});
+import { fustat, spaceMono, fontFaces } from './fonts';
 
 export const metadata: Metadata = {
     title: "Lawbit - AI for Legal Intelligence",
@@ -31,12 +15,12 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className={`${fustat.variable} ${spaceMono.variable} font-sans`} style={{ fontFeatureSettings: '"kern" 1, "liga" 1, "calt" 1' }}>
+        <html lang="en" className={`${fustat.variable} ${spaceMono.variable}`}>
             <head>
                 {/* Preconnect to Google Fonts */}
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" />
-                <link href="https://fonts.googleapis.com/css2?family=Fustat:wght@200..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                
                 {/* Preload critical font files */}
                 <link 
                     rel="preload" 
@@ -46,6 +30,29 @@ export default function RootLayout({
                     crossOrigin="anonymous"
                 />
                 
+                {/* Inline critical CSS for fonts */}
+                <style dangerouslySetInnerHTML={{
+                    __html: `
+                        :root {
+                            --font-fustat: ${fustat.style.fontFamily};
+                            --font-space-mono: ${spaceMono.style.fontFamily};
+                        }
+                        
+                        body {
+                            font-family: var(--font-fustat);
+                            -webkit-font-smoothing: antialiased;
+                            -moz-osx-font-smoothing: grayscale;
+                            text-rendering: optimizeLegibility;
+                        }
+                        
+                        ${fontFaces}
+                        
+                        /* Force Fustat on all elements */
+                        *:not(i):not([class*='icon']):not([class*='fa-']) {
+                            font-family: var(--font-fustat) !important;
+                        }
+                    `
+                }} />
                 
                 {/* Standard font loading as fallback */}
                 <link 
@@ -71,7 +78,7 @@ export default function RootLayout({
                     strategy="beforeInteractive"
                 />
             </head>
-            <body className={`bg-[#F8F7F3] grain-texture ${fustat.variable} ${spaceMono.variable}`}>
+            <body className="grain-texture bg-[#F8F7F3]">
                 <Providers>{children}</Providers>
             </body>
         </html>

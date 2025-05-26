@@ -38,7 +38,7 @@ export default function AuthCallback() {
         // Add a small delay to show the loading state
         const timer = setTimeout(() => {
             handleCallback();
-        }, 1000);
+        }, 3000);
 
         return () => clearTimeout(timer);
     }, [router, supabase.auth, showToast]);
@@ -53,7 +53,7 @@ export default function AuthCallback() {
                     </div>
                 </div>
                 <h1 className="text-2xl font-semibold text-gray-800 mb-2">Just a moment</h1>
-                <p className="text-gray-600 mb-6">We're verifying your details...</p>
+                <p className="text-[#202020] mb-6">We are verifying your details...</p>
                 <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
                     <div className="bg-gradient-to-r from-blue-500 to-blue-400 h-full rounded-full animate-[pulse_2s_ease-in-out_infinite] w-full"></div>
                 </div>
