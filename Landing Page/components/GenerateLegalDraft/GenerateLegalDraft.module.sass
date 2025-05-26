@@ -14,14 +14,18 @@ $p1:rgb(255, 255, 255) // Primary color variable
   animation: containerReveal 1s cubic-bezier(0.16, 1, 0.3, 1)
   transform-origin: center
   perspective: 1000px
+  padding: 4px
+  background: linear-gradient(90deg, #3987BE, #D48EA3)
+  background-origin: border-box
+  background-clip: padding-box, border-box
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08)
 
 .innerContainer
   position: relative
   width: 100%
   height: 100%
-  background: #FFFFFF
   backdrop-filter: blur(24px)
-  border-radius: 12px
+  border-radius: 8px
 
 .content
   display: flex
@@ -34,7 +38,7 @@ $p1:rgb(255, 255, 255) // Primary color variable
   height: 100%
   background: #FFFFFF
   backdrop-filter: blur(24px)
-  border-radius: 12px
+  border-radius: 8px
 
 .title
   font-size: 24px
@@ -44,10 +48,10 @@ $p1:rgb(255, 255, 255) // Primary color variable
 
 .inputArea
   width: 100%
-  min-height: 200px
+  min-height: 300px
   margin-bottom: 20px
   border-radius: 8px
-  background: #F6F6F6
+  background: #302D2A
   position: relative
   overflow: hidden
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
@@ -67,8 +71,8 @@ $p1:rgb(255, 255, 255) // Primary color variable
   min-height: 260px
   padding: 20px
   resize: none
-  background: transparent
-  color: #000000
+  background: #302D2A
+  color: #fff
   font-size: 16px
   border: none
   outline: none
@@ -291,7 +295,7 @@ $p1:rgb(255, 255, 255) // Primary color variable
   width: auto
   padding: 16px 24px
   border-radius: 8px
-  background: #000000
+  background: #302D2A
   color: #FFFFFF
   font-size: 16px
   font-weight: 600
@@ -387,9 +391,9 @@ $p1:rgb(255, 255, 255) // Primary color variable
     width: 100%
     height: 100%
     border-radius: 12px
-    z-index: 999
+    z-index: 998
     background: rgba(30, 30, 40, 0.55)
-    backdrop-filter: blur(8px)
+    backdrop-filter: blur(20px)
     display: flex
     align-items: center
     justify-content: center
@@ -420,7 +424,7 @@ $p1:rgb(255, 255, 255) // Primary color variable
     letter-spacing: -0.01em
 
 .generatingProgressBarWrapper
-    min-width: 500px
+    min-width: 400px
     margin: 0 auto
     height: 8px
     background: #F0F0F0
@@ -428,7 +432,6 @@ $p1:rgb(255, 255, 255) // Primary color variable
     overflow: hidden
     margin-bottom: 24px
     position: relative
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05)
 
 .generatingProgressBar
     height: 100%
@@ -456,6 +459,7 @@ $p1:rgb(255, 255, 255) // Primary color variable
     max-width: 300px
     margin-top: 8px
     justify-content: center
+    z-index: 999
 
 .generatingStep
     display: flex
@@ -487,6 +491,7 @@ $p1:rgb(255, 255, 255) // Primary color variable
     justify-content: center
     width: 36px
     height: 36px
+    z-index: 999
     border-radius: 50%
     margin-right: 12px
     background: #4C4740
@@ -509,7 +514,6 @@ $p1:rgb(255, 255, 255) // Primary color variable
     background: #4C474073
     border: 12px solid #29241E
     margin-top: 2px
-    box-shadow: 0 0 0 2px #e0e0e0
     transition: background 0.3s, border 0.3s
 
 .generatingStepText

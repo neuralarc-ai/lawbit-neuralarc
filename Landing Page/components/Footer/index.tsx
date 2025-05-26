@@ -19,11 +19,11 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
                         <span>•</span>
                         <Link href="/disclaimer">AI Enabled Content Notice</Link>
                         <span>•</span>
-                        <Link href="/responsible-ai">Responsible AI</Link>
+                        <Link href="/responsible-ai">Responsible & Ethical AI</Link>
                     </div>
                     <div className={styles.copyright}>
                         <p>
-                            Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by&nbsp;
+                            Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit, A thing by&nbsp;
                         </p>
                         <div className={styles.trademarkContainer}>
                             <Image 

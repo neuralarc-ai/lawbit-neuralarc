@@ -426,7 +426,7 @@ export default function Home() {
                                 <span>•</span>
                                 <a href="/disclaimer">AI Enabled Content Notice</a>
                                 <span>•</span>
-                                <a href="/responsible-ai">Responsible AI</a>
+                                <a href="/responsible-ai">Responsible & Ethical AI</a>
                             </div>
                             
                             <div className={styles.footerBottom}>

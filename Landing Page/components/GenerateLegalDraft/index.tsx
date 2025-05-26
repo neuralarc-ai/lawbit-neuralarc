@@ -30,10 +30,6 @@ const GenerateLegalDraft = () => {
 
     const legalSteps = [
         {
-            title: 'Document Intake',
-            description: 'Extracting contract details.'
-        },
-        {
             title: 'Legal Analysis',
             description: 'Identifying required clauses.'
         },
@@ -171,7 +167,7 @@ const GenerateLegalDraft = () => {
                             new TextRun({
                                 text: generatedContract.content,
                                 size: 24,
-                                font: "Times New Roman"
+                                font: "Space Mono"
                             })
                         ]
                     })

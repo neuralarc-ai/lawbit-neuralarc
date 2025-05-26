@@ -62,7 +62,7 @@ const Navbar = () => {
     const handleBack = () => {
         if (isHistoryPage) {
             router.push('/contracts');
-        } else if (isTermsPage || isPrivacyPage || isDisclaimerPage) {
+        } else if (isTermsPage || isPrivacyPage || isDisclaimerPage || isResponsibleAIPage) {
             router.push('/contracts');
         }
     };
