@@ -1,8 +1,24 @@
 import "@/styles/app.sass";
 import type { Metadata } from "next";
+import { Fustat, Space_Mono } from 'next/font/google';
 import Providers from "./providers";
 import Script from "next/script";
-import { fustat, spaceMono, fontFaces } from './fonts';
+
+// Configure Fustat font with all weights
+const fustat = Fustat({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-fustat',
+  weight: ['200', '300', '400', '500', '600', '700', '800']
+});
+
+// Configure Space Mono font
+const spaceMono = Space_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-space-mono',
+  weight: ['400', '700']
+});
 
 export const metadata: Metadata = {
     title: "Lawbit - AI for Legal Intelligence",
@@ -15,7 +31,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className={`${fustat.variable} ${spaceMono.variable}`}>
+        <html lang="en" className={`${fustat.variable} ${spaceMono.variable} font-sans`} style={{ fontFeatureSettings: '"kern" 1, "liga" 1, "calt" 1' }}>
             <head>
                 {/* Preconnect to Google Fonts */}
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -55,7 +71,7 @@ export default function RootLayout({
                     strategy="beforeInteractive"
                 />
             </head>
-            <body className="bg-[#F8F7F3] grain-texture">
+            <body className={`bg-[#F8F7F3] grain-texture ${fustat.variable} ${spaceMono.variable}`}>
                 <Providers>{children}</Providers>
             </body>
         </html>
