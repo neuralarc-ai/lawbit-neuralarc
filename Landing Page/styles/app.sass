@@ -10,6 +10,10 @@
 
 
 // Base styles
+:root
+    --font-fustat: 'Fustat', sans-serif
+    --font-space-mono: 'Space Mono', monospace
+
 html,
 body
     margin: 0
@@ -18,6 +22,10 @@ body
     height: 100%
     background: #F8F7F3
     color: $n2
+    font-family: var(--font-fustat)
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
     scrollbar-width: thin
     scrollbar-color: rgba(0, 0, 0, 0.5) transparent
     
@@ -35,11 +43,19 @@ a
     color: inherit
     text-decoration: none
 
-button
+button, input, textarea, select
     font-family: var(--font-fustat)
     background: none
     border: 0
     cursor: pointer
+    font-feature-settings: inherit
+    -webkit-font-smoothing: inherit
+    -moz-osx-font-smoothing: inherit
+
+// Set monospace font for code elements
+code, pre, kbd, samp
+    font-family: var(--font-space-mono)
+    font-feature-settings: normal
 
 .section
     position: relative
@@ -68,6 +84,7 @@ button
     font-size: 96px
     line-height: 1
     font-weight: 700
+    font-family: var(--font-fustat)
     letter-spacing: -0.03em
     +d
         font-size: 80px
@@ -80,6 +97,7 @@ button
     font-size: 48px
     line-height: 1.1666666667
     font-weight: 700
+    font-family: var(--font-fustat)
     letter-spacing: -0.02em
     +d
         font-size: 40px

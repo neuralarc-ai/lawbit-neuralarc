@@ -1,23 +1,54 @@
+// app/layout.tsx
 import "@/styles/app.sass";
 import type { Metadata } from "next";
-import { Fustat, Space_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 import Providers from "./providers";
 import Script from "next/script";
 
-// Configure Fustat font with all weights
-const fustat = Fustat({
-  subsets: ['latin'],
+// Configure Fustat font
+const fustat = localFont({
+  src: [
+    {
+      path: '../public/fonts/Fustat/Fustat-VariableFont_wght.ttf',
+      style: 'normal',
+      weight: '100 900'
+    },
+    {
+      path: '../public/fonts/Fustat/Fustat-VariableFont_wght.ttf',
+      style: 'italic',
+      weight: '100 900'
+    }
+  ],
   display: 'swap',
-  variable: '--font-fustat',
-  weight: ['200', '300', '400', '500', '600', '700', '800']
+  variable: '--font-fustat'
 });
 
 // Configure Space Mono font
-const spaceMono = Space_Mono({
-  subsets: ['latin'],
+const spaceMono = localFont({
+  src: [
+    {
+      path: '../public/fonts/SpaceMono/SpaceMono-Regular.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/SpaceMono/SpaceMono-Italic.ttf',
+      weight: '400',
+      style: 'italic',
+    },
+    {
+      path: '../public/fonts/SpaceMono/SpaceMono-Bold.ttf',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/SpaceMono/SpaceMono-BoldItalic.ttf',
+      weight: '700',
+      style: 'italic',
+    },
+  ],
   display: 'swap',
-  variable: '--font-space-mono',
-  weight: ['400', '700']
+  variable: '--font-space-mono'
 });
 
 export const metadata: Metadata = {
@@ -33,34 +64,21 @@ export default function RootLayout({
     return (
         <html lang="en" className={`${fustat.variable} ${spaceMono.variable} font-sans`} style={{ fontFeatureSettings: '"kern" 1, "liga" 1, "calt" 1' }}>
             <head>
-                {/* Preconnect to Google Fonts */}
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" />
-                <link href="https://fonts.googleapis.com/css2?family=Fustat:wght@200..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
-                {/* Preload critical font files */}
-                
-                {/* Standard font loading as fallback */}
-                <link 
-                    href="https://fonts.googleapis.com/css2?family=Fustat:wght@200..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" 
-                    rel="stylesheet"
+                {/* Remove the Google Fonts link */}
+                {/* Add preload for critical fonts */}
+                <link
+                    rel="preload"
+                    href="/fonts/Fustat/Fustat-VariableFont_wght.ttf"
+                    as="font"
+                    type="font/ttf"
                     crossOrigin="anonymous"
                 />
-                
-                {/* Description no longer than 155 characters */}
-                <meta name="description" content="AI for Legal Intelligence" />
-                {/* Product Name */}
-                <meta name="product-name" content="Lawbit" />
-                {/* Twitter Card data */}
-                <meta name="twitter:card" content="summary" />
-                <meta name="twitter:site" content="@neuralarc_ai" />
-                <meta name="twitter:title" content="Lawbit - AI for Legal Intelligence" />
-                <meta
-                    name="twitter:description"
-                    content="Lawbit - AI for Legal Intelligence"
-                />
-                <Script
-                    src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places&v=beta`}
-                    strategy="beforeInteractive"
+                <link
+                    rel="preload"
+                    href="/fonts/SpaceMono/SpaceMono-Regular.ttf"
+                    as="font"
+                    type="font/ttf"
+                    crossOrigin="anonymous"
                 />
             </head>
             <body className={`bg-[#F8F7F3] grain-texture ${fustat.variable} ${spaceMono.variable}`}>
