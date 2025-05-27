@@ -365,30 +365,34 @@ export default function Home() {
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
                             >
                                 {plan.popular && <div className={styles.popularBadge}>MOST POPULAR</div>}
-                                <h3>{plan.title}</h3>
-                                <div className={styles.price}>
-                                    <span className={styles.amount}>{plan.price}</span>
-                                    {plan.period && <span className={styles.period}>{plan.period}</span>}
+                                <div className={styles.cardContent}>
+                                    <h3 className={styles.planTitle}>{plan.title}</h3>
+                                    <div className={styles.price}>
+                                        <span className={styles.amount}>{plan.price}</span>
+                                        {plan.period && <span className={styles.period}>{plan.period}</span>}
+                                    </div>
+                                    <p className={styles.planDescription}>{plan.description}</p>
+                                    <ul className={styles.features}>
+                                        {plan.features.map((feature) => (
+                                            <li key={feature}>{feature}</li>
+                                        ))}
+                                    </ul>
+                                    <div className={styles.cardButtonWrapper}>
+                                        {plan.title === 'Free' ? (
+                                            <Button 
+                                                title={plan.buttonText}
+                                                className={`${styles.freeButton}`}
+                                                onClick={() => router.push('/auth/signup')}
+                                            />
+                                        ) : (
+                                            <Button 
+                                                title="Purchase Now"
+                                                className={`${plan.popular ? styles.popularButton : styles.standardButton}`}
+                                                onClick={() => handlePricingButtonClick(plan.title)}
+                                            />
+                                        )}
+                                    </div>
                                 </div>
-                                <p className={styles.planDescription}>{plan.description}</p>
-                                <ul className={styles.features}>
-                                    {plan.features.map((feature) => (
-                                        <li key={feature}>{feature}</li>
-                                    ))}
-                                </ul>
-                                {plan.title === 'Free' ? (
-                                    <Button 
-                                        title={plan.buttonText}
-                                        className={`${styles.freeButton}`}
-                                        onClick={() => router.push('/auth/signup')}
-                                    />
-                                ) :
-                                    <Button 
-                                        title="Purchase Now"
-                                        className={`${plan.popular ? styles.popularButton : styles.standardButton}`}
-                                        onClick={() => handlePricingButtonClick(plan.title)}
-                                    />
-                                }
                             </motion.div>
                         ))}
                     </div>

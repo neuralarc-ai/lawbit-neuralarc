@@ -643,7 +643,7 @@
         flex-direction: column
         align-items: center
         text-align: center
-        max-width: 1200px
+        max-width: 1340px
         margin: 0 auto
         padding: 0 24px
 
@@ -695,15 +695,37 @@
 .pricingCard
     position: relative
     background: #fff
-    color: #fff
+    color: #232323
     border-radius: 8px
     padding: 32px
+    text-align: left
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    height: 100%
+    
+    // This will push the button to the bottom
+    .cardContent
+        display: flex
+        flex-direction: column
+        height: 100%
+        width: 100%
+    
+    .cardButtonWrapper
+        margin-top: auto
+        padding-top: 24px
+        width: 100%
+        
     &.popular
         position: relative
         background: #1E342F
         color: #fff
         border-radius: 8px
         overflow: visible
+        text-align: left
+        & > *:not(.popularBadge)
+            position: relative
+            z-index: 2
         &::before
             content: ''
             position: absolute
@@ -720,7 +742,7 @@
             pointer-events: none
 
     button
-        width: fit-content
+        width: 100%  // Make all buttons full width by default
         border-radius: 4px
         border-width: 1.5px
         gap: 10px
@@ -732,8 +754,6 @@
         font-size: 16px
         font-weight: 600
         cursor: pointer
-        .popular &
-            width: 100%
 
 .popularBadge
     position: absolute
@@ -748,10 +768,10 @@
     font-weight: 500
 
 .price
-    margin: 24px 0
+    margin: 12px 0
     .amount
         font-size: 48px
-        font-weight: 600
+        font-weight: 700
         color: #232323
         .pricingCard.popular &
             color: #fff
@@ -760,6 +780,24 @@
         color: #232323
         .pricingCard.popular &
             color: #fff
+
+// Plan title styles
+.planTitle
+    font-size: 24px
+    font-weight: 700
+    margin-bottom: 12px
+    color: #202020
+
+// Popular card specific overrides
+.pricingCard.popular
+    .planTitle
+        color: #fff !important
+    
+    .price .amount,
+    .price .period,
+    .planDescription,
+    .features li
+        color: #fff !important
 
 .planDescription
     font-size: 18px
