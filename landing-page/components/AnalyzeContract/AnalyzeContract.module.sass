@@ -1,0 +1,1520 @@
+@import @/styles/variables
+@import './loading-styles'
+
+// Add font family variable at the top
+$font-family-fustat: 'Fustat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif
+
+.container
+    display: flex
+    flex-direction: column
+    width: 100%
+    background: #FFFFFF
+    padding: 24px
+    border-radius: 12px
+    position: relative
+    font-family: $font-family-fustat
+    background: url('/images/pattern.png') center/cover no-repeat
+    background-origin: border-box
+    background-clip: padding-box, border-box
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08)
+
+    .mainContent
+        background: #FFFFFF
+        border-radius: 8px
+        width: 100%
+        height: 100%
+        
+
+.mainContent
+    display: flex
+    flex-direction: column
+    gap: 24px
+    align-items: center
+    width: 100%
+    padding: 24px
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2)
+
+.uploadContainer
+    width: 100%
+    display: flex
+    flex-direction: column
+    gap: 24px
+
+.dropZone
+    width: 100%
+    background: #302D2A
+    min-height: 400px
+    border-radius: 4px
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    padding: 32px
+    gap: 24px
+    transition: all 0.3s ease
+    cursor: pointer
+    &.dragging
+        border-color: rgba(107, 70, 193, 0.5)
+        background: rgba(107, 70, 193, 0.1)
+    &.uploading
+        border-color: rgba(107, 70, 193, 0.3)
+        background: rgba(107, 70, 193, 0.05)
+        cursor: not-allowed
+    &.uploaded
+        border-color: rgba(107, 70, 193, 0.5)
+        background: rgba(107, 70, 193, 0.1)
+        cursor: pointer
+
+.fileInput
+    display: none
+
+.uploadIcon
+    opacity: 0.6
+    transition: opacity 0.3s ease
+    .dropZone:hover &
+        opacity: 1
+    .dropZone.uploading &
+        animation: pulse 2s infinite
+
+.uploadText
+    display: flex
+    flex-direction: row
+    align-items: center
+    gap: 8px
+    text-align: center
+    color: rgba(255, 255, 255, 0.5)
+    font-size: 14px
+    line-height: 20px
+    font-weight: 400
+    margin-top: 16px
+
+    .analyzingText
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.5) 100%)
+        background-size: 200% 100%
+        animation: shimmer 2s infinite linear
+        -webkit-background-clip: text
+        -webkit-text-fill-color: transparent
+        background-clip: text
+        text-fill-color: transparent
+
+@keyframes shimmer
+    0%
+        background-position: 200% 0
+    100%
+        background-position: -200% 0
+
+.chooseFile
+    color: #fff
+    text-decoration: underline
+    cursor: pointer
+    transition: opacity 0.3s ease
+    &:hover
+        opacity: 0.8
+
+.pasteZone
+    width: 100%
+    min-height: 400px
+    position: relative
+    textarea
+        width: 100%
+        border: 1px dashed #B5B5B5
+        height: 400px
+        padding: 16px 20px
+        background: #38312C
+        border-radius: 12px
+        color: #FFF
+        font-size: 16px
+        resize: none
+        transition: all 0.3s ease
+        text-align: left
+
+.pastePlaceholder
+    position: absolute
+    left: 50%
+    top: 50%
+    transform: translate(-50%, -50%)
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 16px
+    pointer-events: none
+    width: 100%
+
+.placeholderText
+    color: #696969
+    font-size: 16px
+    text-align: center
+    margin: 0
+
+.actionsRow
+    width: 100%
+    display: flex
+    justify-content: space-between
+    align-items: center
+    gap: 24px
+
+.tabSelector
+    position: relative
+    display: flex
+    min-width: 400px
+    padding: 4px
+    background: #D4D4D4
+    border-radius: 8px
+    
+    // Sliding indicator
+    &::after
+        content: ''
+        position: absolute
+        top: 4px
+        bottom: 4px
+        left: 4px
+        width: calc(50% - 6px)
+        background: #302D2A
+        border-radius: 6px
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+        z-index: 1
+    
+    &[data-state="paste"]
+        &::after
+            transform: translateX(calc(100% + 4px))
+
+.tabButton
+    position: relative
+    z-index: 2
+    gap: 2px
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 44px
+    flex: 1
+    font-size: 15px
+    font-weight: 600
+    color: #000
+    transition: color 0.2s ease
+    background: none
+    border: none
+    cursor: pointer
+    svg
+        width: 18px
+        height: 18px
+        margin-right: 8px
+        path
+            stroke: #1E342F
+    
+    // Active state with smooth transition
+    &.active
+        color: #fff
+        // Remove background from the active button since we're using the sliding indicator
+        background: transparent
+        // Position the text above the sliding indicator
+        position: relative
+        z-index: 3
+        // Smooth color transition
+        transition: color 0.3s ease 0.1s
+
+.dropZone
+    position: relative
+    min-height: 400px
+    border: 1px dashed #B5B5B5
+    border-radius: 8px
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    gap: 16px
+    transition: all 0.3s ease
+    cursor: pointer
+    background: #38312C
+    backdrop-filter: blur(20px)
+    &:hover, &.dragging
+        border-color: #696969
+        background: #202020
+
+.fileInput
+    position: absolute
+    inset: 0
+    opacity: 0
+    cursor: pointer
+
+.uploadIcon
+    color: rgba(255, 255, 255, 0)
+    transition: color 0.3s ease
+
+.uploadText
+    text-align: center
+    .mainText
+        margin: 0
+        font-size: 16px
+        color: #000
+        font-weight: 500
+    .subText
+        margin: 4px 0 0
+        font-size: 12px
+        color: #000
+
+.pasteInput
+    width: 100%
+    height: 100%
+    min-height: 400px
+    padding: 20px
+    background: transparent
+    border: none
+    color: white
+    font-size: 16px
+    resize: none
+    &::placeholder
+        color: rgba(255, 255, 255, 0.3)
+    &:focus
+        outline: none
+
+.error
+    padding: 12px 16px
+    background: rgba(255, 59, 48, 0.1)
+    border-radius: 12px
+    border: 1px solid rgba(255, 59, 48, 0.3)
+    color: rgba(255, 255, 255, 0.8)
+    font-size: 14px
+
+.analyzeButton
+    padding: 16px 24px
+    border: none
+    border-radius: 8px
+    background: #202020
+    color: #fff
+    font-size: 16px
+    font-weight: 600
+    cursor: pointer
+    transition: all 0.3s ease
+    position: relative
+    overflow: hidden
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 8px
+    min-width: 310px
+
+    
+    &:hover
+        transform: translateY(-2px)
+
+    
+    &:disabled
+        opacity: 0.7
+        cursor: not-allowed
+        transform: none
+        box-shadow: none
+    
+    span
+        position: relative
+        z-index: 1
+        white-space: nowrap
+    
+    svg
+        position: relative
+        z-index: 1
+        transition: transform 0.3s ease
+    
+    &:hover svg
+        transform: translateX(4px)
+    
+    &.analyzing
+        opacity: 0.7
+        cursor: wait
+
+.legalDisclaimer
+    margin-top: 24px
+    margin-bottom: 24px
+    width: 100%
+    background: rgba(18, 18, 18, 0.3)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    border-radius: 12px
+    overflow: hidden
+    transition: all 0.3s ease
+    position: relative
+
+.disclaimerHeader
+    width: 100%
+    padding: 16px
+    background: rgba(255, 255, 255, 0.03)
+    border: none
+    cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: space-between
+    transition: all 0.3s ease
+    margin: 0
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+
+    &:hover
+        background: rgba(255, 255, 255, 0.05)
+
+.disclaimerTitle
+    font-size: 16px
+    font-weight: 600
+    color: rgba(255, 255, 255, 0.9)
+    margin: 0
+    display: flex
+    align-items: center
+    gap: 12px
+
+.chevron
+    width: 24px
+    height: 24px
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+    transform-origin: center
+    color: rgba(255, 255, 255, 0.7)
+    flex-shrink: 0
+
+    &.open
+        transform: rotate(180deg)
+
+.disclaimerContent
+    max-height: 0
+    overflow: hidden
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+    background: rgba(255, 255, 255, 0.02)
+    opacity: 0
+    transform: translateY(-10px)
+    
+    &.open
+        max-height: 500px
+        padding: 20px
+        opacity: 1
+        transform: translateY(0)
+
+.disclaimerText
+    color: rgba(255, 255, 255, 0.7)
+    font-size: 14px
+    line-height: 1.6
+
+    p
+        margin: 16px 0
+        padding-left: 24px
+        position: relative
+        
+        &:first-child
+            margin-top: 0
+            padding-left: 0
+        
+        &:last-child
+            margin-bottom: 0
+        
+        &:not(:first-child)
+            &:before
+                content: ''
+                position: absolute
+                left: 0
+                top: 8px
+                width: 6px
+                height: 6px
+                background: rgba(255, 255, 255, 0.3)
+                border-radius: 50%
+
+.acceptanceRow
+    display: flex
+    align-items: center
+    padding: 16px
+    background: rgba(255, 255, 255, 0.02)
+    border-top: 1px solid rgba(255, 255, 255, 0.05)
+    cursor: pointer
+    transition: all 0.3s ease
+    gap: 0
+        opacity: 0.5
+    pointer-events: none
+    
+    &:hover
+        background: rgba(255, 255, 255, 0.03)
+
+    &.enabled
+        opacity: 1
+        pointer-events: auto
+        cursor: pointer
+
+        .checkbox
+            cursor: pointer
+            pointer-events: auto
+
+            input
+                cursor: pointer
+                pointer-events: auto
+
+            .checkmark
+                cursor: pointer
+                pointer-events: auto
+
+    .checkbox
+        position: relative
+        width: 20px
+        height: 20px
+        margin-right: 0
+        cursor: not-allowed
+        pointer-events: none
+        z-index: 1
+
+        input
+            position: absolute
+            opacity: 0
+            cursor: not-allowed
+            pointer-events: none
+            height: 20px
+            width: 20px
+            z-index: 2
+
+        .checkmark
+            position: absolute
+            top: 0
+            left: 0
+            width: 20px
+            height: 20px
+            background: rgba(255, 255, 255, 0.1)
+            border: 1px solid rgba(255, 255, 255, 0.2)
+            border-radius: 4px
+            transition: all 0.2s ease
+            cursor: not-allowed
+            pointer-events: none
+            z-index: 1
+
+            &:after
+                content: ""
+                position: absolute
+                display: none
+                left: 6px
+                top: 2px
+                width: 5px
+                height: 10px
+                border: solid white
+                border-width: 0 2px 2px 0
+                transform: rotate(45deg)
+
+        input:checked ~ .checkmark
+            background: #8A30FF
+            border-color: #8A30FF
+
+        input:checked ~ .checkmark:after
+            display: block
+
+        &:hover .checkmark
+            background: rgba(255, 255, 255, 0.15)
+
+        input:checked:hover ~ .checkmark
+            background: #7929E9
+
+    .acceptanceLabel
+        font-size: 14px
+        color: rgba(255, 255, 255, 0.9)
+        cursor: pointer
+        margin-left: -4px
+
+    .acceptanceStatus
+        font-size: 12px
+        font-weight: 500
+        padding: 4px 8px
+        border-radius: 12px
+        transition: all 0.3s ease
+        
+        &.pending
+            color: #FFD700
+            background: rgba(255, 215, 0, 0.1)
+            border: 1px solid rgba(255, 215, 0, 0.3)
+            
+        &.accepted
+            color: #32CD32
+            background: rgba(50, 205, 50, 0.1)
+            border: 1px solid rgba(50, 205, 50, 0.3)
+
+.analysisContent
+    width: 100%
+    display: flex
+    flex-direction: column
+    gap: 20px
+    animation: fadeIn 0.5s ease-in-out
+
+@keyframes fadeIn
+    0%
+        opacity: 0
+        transform: translateY(10px)
+    100%
+        opacity: 1
+        transform: translateY(0)
+
+.documentInfo
+    width: 100%
+    display: flex
+    flex-direction: column
+    gap: 18px
+    background: #fff
+    border-radius: 8px
+    padding: 24px
+    
+    .documentTitle
+        font-family: $font-family-fustat
+        font-size: 20px
+        font-weight: 600
+        color: #000
+        margin: 0
+        text-align: center
+
+.infoHeader
+    display: flex
+    gap: 12px
+    background: #2B2521
+    border-radius: 20px
+    overflow: hidden
+    padding: 0
+    margin-bottom: 20px
+    flex-direction: column
+    @media (min-width: 992px)
+        flex-direction: row
+        justify-content: start
+
+.previewSection
+    min-width: 600px
+    display: flex
+    flex-direction: column
+    gap: 12px
+    padding: 20px
+    .sectionHeading
+        font-family: $font-family-fustat
+        font-size: 18px
+        font-weight: 300
+        color: rgba(255, 255, 255, 0.8)
+        margin-bottom: 10px
+        margin-top: 0
+
+.documentPreview
+    background: #38312C
+    flex: 1
+    border-radius: 8px
+    padding: 18px
+    display: flex
+    flex-direction: column
+    gap: 12px
+    margin-bottom: 0
+    max-height: 100%
+    min-height: 200px
+    overflow-y: auto
+    scrollbar-width: thin
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.2)
+    
+    &::-webkit-scrollbar
+        width: 6px
+    &::-webkit-scrollbar-track
+        background: rgba(0, 0, 0, 0.2)
+        border-radius: 3px
+    &::-webkit-scrollbar-thumb
+        background-color: rgba(255, 255, 255, 0.2)
+        border-radius: 3px
+
+.previewText
+    font-size: 20px
+    color: rgba(255, 255, 255, 1)
+    line-height: 1.5
+    margin: 0
+    flex: 1
+    display: block
+    font-weight: 300
+    font-family: $font-family-fustat
+
+.fileInfo
+    margin-top: 16px
+    padding-top: 16px
+
+.fileName
+    display: flex
+    align-items: center
+    justify-content: space-between
+    padding: 16px 24px
+    background: rgba(248, 248, 248, 0.05)
+    backdrop-filter: blur(50px)
+    border-radius: 4px
+    color: white
+    font-size: 18px
+    font-weight: 500
+    position: relative
+
+.deleteButton
+    background: transparent
+    border: none
+    cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: center
+    padding: 4px
+    border-radius: 12px
+    transition: all 0.2s
+    &:hover
+        color: white
+        background: rgba(255, 59, 48, 0.2)
+
+.fileDetails
+    margin-top: 8px
+    display: flex
+    align-items: center
+    gap: 6px
+    font-size: 16px
+    color: rgba(255, 255, 255, 0.5)
+    font-weight: 300
+    font-family: $font-family-fustat
+
+.bullet
+    opacity: 0.5
+
+.infoDetails
+    width: 100%
+    display: flex
+    flex-direction: column
+    gap: 24px
+    padding: 20px
+    @media (min-width: 992px)
+        height: fit-content
+        min-height: 362px
+
+.infoItem
+    margin-bottom: 0
+    
+    label
+        display: block
+        margin-bottom: 10px
+        font-size: 18px
+        color: rgba(255, 255, 255, 0.5)
+        font-weight: 300
+        font-family: $font-family-fustat
+    
+    p
+        margin: 0
+        font-size: 18px
+        color: white
+        font-weight: 400
+        font-family: $font-family-fustat
+
+.riskBadge
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    padding: 6px 14px
+    border-radius: 48px
+    font-size: 18px !important
+    font-weight: 600 !important
+    background: transparent
+    color: white
+    border: 1px solid currentColor
+    
+    &.highRisk
+        color: #202020
+        background: #D3B8AC
+        
+        
+    &.mediumRisk
+        color: #202020
+        background: #B4BFCA
+        
+    &.lowRisk
+        color: #202020
+        background: #C5CFB8
+
+.riskProgressBar
+    width: 100%
+    height: 4px
+    background: rgba(255, 255, 255, 0.1)
+    border-radius: 2px
+    overflow: hidden
+    position: relative
+    margin-top: 8px
+
+.riskProgress
+    height: 100%
+    border-radius: 4px
+    transition: width 0.6s ease
+    position: relative
+    overflow: hidden
+    background: rgba(255, 255, 255, 0.9)
+    box-shadow: 0 0 15px 3px rgba(255, 255, 255, 0.3)
+    
+    &::before
+        content: ''
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        background: inherit
+        filter: blur(8px)
+        opacity: 0.6
+        z-index: -1
+    
+    &::after
+        content: ''
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        background: linear-gradient(90deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.6) 100%)
+        background-size: 200% auto
+        animation: shine 2s linear infinite
+        opacity: 0.8
+
+@keyframes shine
+    to
+        background-position: 200% center
+
+.riskAssessment
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: space-between
+    gap: 10px
+    width: 100%
+
+.riskScore
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    padding: 6px 14px
+    border-radius: 24px
+    font-size: 16px
+    font-weight: 500
+    color: #FF9500
+    background-color: rgba(255, 149, 0, 0.1)
+    border: 1px solid rgba(255, 149, 0, 0.3)
+
+.riskName
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    font-size: 16px
+    font-weight: 300
+    color: white
+    font-family: $font-family-fustat
+
+.highRiskText
+    color: rgb(255, 255, 255)
+    font-weight: 500
+    font-size: 18px !important
+    
+.mediumRiskText
+    color: rgb(255, 255, 255)
+    font-weight: 500
+    font-size: 18px !important
+    
+.lowRiskText
+    color: rgb(255, 255, 255)
+    font-weight: 500
+    font-size: 18px !important
+
+.highRiskScore
+    color: #202020
+    background-color: #D3B8AC
+    font-size: 18px !important
+    font-weight: 600 !important
+    
+.mediumRiskScore
+    color: #202020
+    background-color: #B4BFCA
+    font-size: 18px !important
+    font-weight: 600 !important
+    
+.lowRiskScore
+    color: #202020
+    background-color: #C5CFB8
+    font-size: 18px !important
+    font-weight: 600 !important
+
+.statsList
+    display: flex
+    gap: 12px
+    padding-top: 12px
+    align-items: center
+    justify-content: flex-start
+    flex-wrap: nowrap
+    width: 100%
+    overflow-x: auto
+
+.statItem
+    display: inline-flex
+    align-items: center
+    justify-content: flex-start
+    gap: 8px
+    font-size: 16px
+    color: rgba(255, 255, 255, 0.9)
+    padding: 8px 12px
+    border-radius: 20px
+    background: rgba(0, 0, 0, 0.15)
+    white-space: nowrap
+    border: 1px solid transparent
+    transition: all 0.2s ease
+    min-width: max-content
+    font-weight: 300
+    font-family: $font-family-fustat
+    
+    svg
+        color: currentColor
+
+.highRiskStat
+    background: #D3B8AC
+    color: #202020
+    font-weight: 600
+    svg
+        color: #202020
+    
+.mediumRiskStat
+    background: #B4BFCA
+    color: #202020
+    font-weight: 600
+    svg
+        color: #202020
+    
+.lowRiskStat
+    background: #C5CFB8
+    color: #202020
+    font-weight: 600
+    svg
+        color: #202020
+
+.clauseSection
+    background: #2B2521
+    border-radius: 16px
+    overflow: hidden
+    padding: 24px
+    display: flex
+    flex-direction: column
+    gap: 24px
+    position: relative
+    margin-bottom: 24px
+    border-left: 4px solid transparent
+    transition: transform 0.2s ease, box-shadow 0.2s ease
+    
+    &:hover
+        transform: translateY(-2px)
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2)
+    
+    &.highRisk
+        border-left-color: #D3B8AC
+        
+    &.mediumRisk
+        border-left-color: #B4BFCA
+        
+    &.lowRisk
+        border-left-color: #C5CFB8
+
+.clauseHeader
+    display: flex
+    align-items: center
+    justify-content: space-between
+    h3
+        margin: 0
+        font-size: 24px
+        color: white
+        font-weight: 600
+        font-family: $font-family-fustat
+
+.clauseText
+    font-size: 18px
+    color: #fff
+    line-height: 1.6
+    margin: 0 0 8px
+    font-weight: 300
+    font-family: $font-family-fustat
+
+.extractedText
+    h4
+        margin: 0 0 12px
+        font-size: 20px
+        color: white
+        font-weight: 600
+        font-family: $font-family-fustat
+
+.textBox
+    background: #FFFFFF0D
+    border-radius: 8px
+    padding: 18px
+    position: relative
+    border-left: 3px solid rgba(255, 255, 255, 0.1)
+    .textContent
+        margin: 0
+        font-size: 18px
+        color: #D4D4D4
+        line-height: 1.6
+        padding-right: 30px
+        font-weight: 500
+        font-family: $font-family-fustat
+
+.copyButton
+    position: absolute
+    top: 12px
+    right: 12px
+    background: rgba(0, 0, 0, 0.4)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    border-radius: 6px
+    color: rgba(255, 255, 255, 0.7)
+    padding: 6px
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    transition: all 0.2s
+    &:hover
+        background: rgba(0, 0, 0, 0.5)
+        color: white
+        border-color: rgba(255, 255, 255, 0.2)
+
+.suggestedSection
+    h4
+        margin: 0 0 16px
+        font-size: 20px
+        color: white
+        font-weight: 600
+        font-family: $font-family-fustat
+
+.alternativesList
+    display: flex
+    flex-direction: column
+    gap: 12px
+
+.alternativeItem
+    background: #FFFFFF0D
+    border-radius: 8px
+    overflow: hidden
+    margin-bottom: 12px
+    transition: all 0.3s ease
+    border: 1px solid rgba(255, 255, 255, 0.05)
+    &:last-child
+        margin-bottom: 0
+    &:hover
+        border-color: rgba(255, 255, 255, 0.1)
+    &:has(.alternativeDescription.expanded)
+        .alternativeHeader
+            background: rgba(255, 255, 255, 0.05)
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05)
+            
+.alternativeHeader
+    padding: 16px
+    display: flex
+    align-items: flex-start
+    gap: 12px
+    position: relative
+    cursor: pointer
+    transition: all 0.25s ease
+    border-bottom: 1px solid transparent
+    
+    &:hover
+        background: rgba(255, 255, 255, 0.05)
+    
+    &:active
+        background: rgba(255, 255, 255, 0.08)
+        transform: translateY(1px)
+
+.alternativeText
+    flex: 1
+    margin: 0
+    font-size: 18px
+    color: rgba(255, 255, 255, 1)
+    line-height: 1.5
+    font-weight: 500
+    font-family: $font-family-fustat
+    position: relative
+    
+    &::after
+        content: 'Tap for details'
+        position: absolute
+        right: 0
+        top: 50%
+        transform: translateY(-50%)
+        font-size: 12px
+        color: rgba(255, 255, 255, 0.7)
+        font-style: italic
+        opacity: 0
+        transition: opacity 0.2s ease
+    
+    &:hover .alternativeText::after
+        opacity: 1
+        
+.alternativeItem:has(.alternativeDescription.expanded) .alternativeHeader .alternativeText::after
+    display: none
+
+.alternativeDescription
+    padding: 0
+    max-height: 0
+    overflow: hidden
+    transition: all 0.3s ease-in-out
+    background: rgba(0, 0, 0, 0.3)
+    opacity: 0
+    
+    .descriptionText
+        margin: 0
+        font-size: 16px
+        color: rgba(255, 255, 255, 0.5)
+        line-height: 1.6
+        font-weight: 400
+        font-style: italic
+        font-family: var(--font-urbanist), sans-serif
+    
+    &.expanded
+        max-height: 300px
+        opacity: 1
+        padding: 16px 16px 16px 52px
+
+.downloadButton
+    width: fit-content
+    margin: 12px auto 0
+    padding: 14px 24px
+    border: none
+    color: white
+    border-radius: 4px
+    background: #202020 
+    font-size: 16px
+    font-weight: 500
+    cursor: pointer
+    transition: all 0.2s ease
+    display: flex
+    align-items: center
+    justify-content: space-between
+    font-family: $font-family-fustat
+    
+    &:hover
+        background: #333
+    
+    &:active
+        transform: translateY(1px)
+    
+    span
+        flex: 1
+        text-align: left
+    
+    svg
+        margin-left: 12px
+        width: 20px
+        height: 20px
+
+.riskProgressBar
+    width: 100%
+    height: 6px
+    background: rgba(255, 255, 255, 0.1)
+    border-radius: 2px
+    overflow: hidden
+    position: relative
+
+.riskProgress
+    height: 100%
+    background: linear-gradient(90deg, #3987BE 0%, #D48EA3 100%)
+    border-radius: 2px
+    position: relative
+    transition: width 0.3s ease
+    z-index: 10
+
+.riskBadge
+    display: inline-flex
+    align-items: center
+    padding: 6px 12px
+    border-radius: 48px
+    font-size: 14px
+    font-weight: 500
+    color: #FFC107
+    align-self: flex-start
+
+.documentContainer
+    background: rgba(0, 0, 0, 0.2)
+    border-radius: 16px
+    padding: 24px
+    margin-bottom: 32px
+
+.documentText
+    color: rgba(255, 255, 255, 0.8)
+    font-size: 14px
+    line-height: 1.6
+    margin-bottom: 24px
+    p
+        margin: 0 0 16px
+        &:last-child
+            margin-bottom: 0
+
+.documentFooter
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding-top: 16px
+    border-top: 1px solid rgba(255, 255, 255, 0.1)
+    span
+        color: rgba(255, 255, 255, 0.6)
+        font-size: 14px
+
+.deleteButton
+    width: 32px
+    height: 32px
+    border-radius: 8px
+    background: rgba(255, 255, 255, 0.05)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    color: rgba(255, 255, 255, 0.4)
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    transition: all 0.3s ease
+    &:hover
+        background: rgba(244, 67, 54, 0.1)
+        border-color: #F44336
+        color: #F44336
+
+.analysisGrid
+    display: grid
+    grid-template-columns: 1fr
+    gap: 32px
+    @media (min-width: 768px)
+        grid-template-columns: 1fr 300px
+
+.analysisDetails
+    display: flex
+    flex-direction: column
+    gap: 24px   
+    border-radius: 16px
+    padding: 24px 
+
+.additionalStats
+    display: flex
+    flex-direction: column
+    gap: 8px
+    margin-top: 12px
+    border-top: 1px solid rgba(255, 255, 255, 0.1)
+    padding-top: 12px 
+
+.analysisHeader
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-bottom: 24px
+    
+.backButton
+    display: flex
+    align-items: center
+    gap: 8px
+    padding: 10px 16px
+    background: #302D2A
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    border-radius: 4px
+    color: white
+    font-size: 14px
+    font-weight: 500
+    cursor: pointer
+    transition: all 0.3s ease
+    
+    &:hover
+        background: #202020
+        transform: translateX(-3px)
+    
+    svg
+        transition: transform 0.3s ease
+    
+    &:hover svg
+        transform: translateX(-2px) 
+
+.headerRow
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-bottom: 16px
+    
+    h3
+        margin: 0
+        text-align: center
+        
+
+.keyStatsRow
+    display: flex
+    flex-direction: row
+    gap: 16px
+    margin-top: 8px
+    align-items: center
+    flex-wrap: wrap
+    justify-content: flex-start
+
+.keyStatItem
+    display: flex
+    align-items: center
+    gap: 8px
+    font-size: 15px
+    color: rgba(255, 255, 255, 0.9)
+    font-weight: 300
+    font-family: $font-family-fustat
+    border: 1.5px solid rgba(255, 255, 255, 0.1)
+    padding: 12px 20px
+    border-radius: 48px
+    white-space: nowrap
+
+.keyStatIcon
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 28px
+    height: 28px
+    background: rgba(255, 255, 255, 0.05)
+    border-radius: 50%
+    
+    svg
+        color: rgba(255, 255, 255, 0.7) 
+
+.heading1
+    font-family: $font-family-fustat
+    font-size: 28px
+    font-weight: 600
+    color: white
+    margin: 0
+
+.heading2
+    font-family: $font-family-fustat
+    font-size: 24px
+    font-weight: 600
+    color: white
+    margin: 0
+
+.heading3
+    font-family: $font-family-fustat
+    font-size: 20px
+    font-weight: 600
+    color: white
+    margin: 0
+
+.heading4
+    font-family: $font-family-fustat
+    font-size: 18px
+    font-weight: 300
+    color: rgba(255, 255, 255, 0.5)
+    margin: 0
+    display: inline-flex
+    align-items: center
+
+.sectionHeading
+    font-family: $font-family-fustat
+    font-size: 18px
+    font-weight: 300
+    color: rgba(255, 255, 255, 0.5)
+    margin-bottom: 10px
+    margin-top: 0 
+
+.alternativeNumber
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 36px
+    height: 36px
+    min-width: 24px
+    background: rgba(255, 255, 255, 0.05)
+    border-radius: 50%
+    font-size: 18px
+    color: rgba(255, 255, 255, 0.9)
+    font-weight: 500
+
+.alternativeActions
+    display: flex
+    gap: 8px
+    margin-left: auto
+    .copyButton
+        position: static
+        padding: 6px 12px
+        display: flex
+        align-items: center
+        gap: 6px
+        font-size: 14px
+        background: rgba(0, 0, 0, 0.25)
+        border: 1px solid rgba(255, 255, 255, 0.1)
+        border-radius: 6px
+        color: rgb(255, 255, 255)
+        cursor: pointer
+        transition: all 0.2s
+        &:hover
+            background: rgba(0, 0, 0, 0.35)
+            color: white 
+
+.riskInfo
+    display: flex
+    align-items: center
+    gap: 8px 
+
+.removeFileButton
+    background: transparent
+    border: none
+    padding: 4px
+    cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: center
+    color: rgba(255, 255, 255, 0.6)
+    transition: all 0.2s ease
+    border-radius: 4px
+    &:hover
+        color: #FF3B30
+        background: rgba(255, 59, 48, 0.1)
+    svg
+        width: 20px
+        height: 20px 
+
+.uploadTextContent
+    margin: 0
+    font-size: 18px
+    color: #fff
+    display: flex
+    align-items: center
+    gap: 8px
+    justify-content: center
+
+    .removeFileButton
+        padding: 0
+        background: transparent
+        border: 1px solid #FF3B30
+        padding: 2px
+        cursor: pointer
+        display: flex
+        align-items: center
+        justify-content: center
+        transition: all 0.2s ease
+
+        &:hover
+            color: #FF3B30
+            background: rgba(255, 59, 48, 0.1)
+            border-radius: 4px 
+
+.disclaimerSection
+    .disclaimerHeader
+        .headerContent
+            display: flex
+            align-items: center
+            justify-content: space-between
+            padding: 20px
+            background: rgba(255, 255, 255, 0.03)
+            transition: all 0.3s ease
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+
+            &:hover
+                background: rgba(255, 255, 255, 0.05)
+    
+    .disclaimerTitle
+        font-size: 18px
+        font-weight: 600
+        color: rgba(255, 255, 255, 0.9)
+        margin: 0
+        display: flex
+        align-items: center
+        gap: 12px
+
+        .requiredBadge
+            font-size: 16px
+            font-weight: 500
+            color: #FF453A
+            background: rgba(255, 69, 58, 0.1)
+            padding: 4px 8px
+            border-radius: 12px
+            border: 1px solid rgba(255, 69, 58, 0.3)
+
+        .chevron
+            transition: transform 0.3s ease
+            opacity: 0.7
+            &.open
+                transform: rotate(180deg)
+
+    .disclaimerContent
+        max-height: 0
+        overflow: hidden
+        transition: all 0.3s ease-out
+        background: rgba(255, 255, 255, 0.02)
+
+        &.open
+            max-height: 500px
+            padding: 24px
+    
+    .disclaimerText
+        color: rgba(255, 255, 255, 0.7)
+        font-size: 14px
+        line-height: 1.6
+
+        p
+            margin: 16px 0
+            padding-left: 24px
+            position: relative
+            
+            &:first-child
+                margin-top: 0
+                padding-left: 0
+            
+            &:last-child
+                margin-bottom: 0
+            
+            &:not(:first-child)
+                &:before
+                    content: ''
+                    position: absolute
+                    left: 0
+                    top: 8px
+                    width: 6px
+                    height: 6px
+                    background: rgba(255, 255, 255, 0.3)
+                    border-radius: 50%
+
+    .acceptanceRow
+        display: flex
+        align-items: center
+        justify-content: space-between
+        margin-top: 20px
+        padding-top: 16px
+        border-top: 1px solid rgba(255, 255, 255, 0.1)
+
+.acceptanceContent
+    display: flex
+    align-items: center
+    cursor: pointer
+
+.checkbox
+    position: relative
+    width: 20px
+    height: 20px
+    margin-right: 0
+    cursor: not-allowed
+    pointer-events: none
+    z-index: 1
+
+    input
+        position: absolute
+        opacity: 0
+        cursor: not-allowed
+        pointer-events: none
+
+.acceptanceLabel
+    font-size: 14px
+    color: rgba(255, 255, 255, 0.9)
+    cursor: pointer
+    margin-left: -4px
+
+.acceptanceStatus
+    font-size: 12px
+    font-weight: 600
+    padding: 4px 8px
+    border-radius: 12px
+    margin-left: 12px
+    
+    &.pending
+        color: #FF9500
+        background: rgba(255, 149, 0, 0.1)
+        border: 1px solid rgba(255, 149, 0, 0.3)
+    
+    &.accepted
+        color: #30D158
+        background: rgba(48, 209, 88, 0.1)
+        border: 1px solid rgba(48, 209, 88, 0.3)
+
+.analyzeButton
+    &.disabled
+        opacity: 0.5
+        cursor: not-allowed
+        pointer-events: none
+        background: #202020
+        &:hover
+            transform: none
+            box-shadow: none
+
+    &:disabled
+        opacity: 0.5
+        cursor: not-allowed
+        background: #202020
+        pointer-events: none
+        
+        &:hover
+            transform: none
+            box-shadow: none

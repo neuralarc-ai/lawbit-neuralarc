@@ -1,0 +1,142 @@
+.cardWrapper
+    background: #1B1B1B
+    padding: 16px
+    border-radius: 48px
+    position: relative
+    transition: all 0.3s ease
+    cursor: pointer
+    &:before
+        content: ''
+        position: absolute
+        inset: 0
+        border-radius: 48px
+        opacity: 0
+        transition: opacity 0.3s ease
+        pointer-events: none
+    &:hover
+        &:before
+            opacity: 1
+
+.card
+    background: rgba(31, 31, 31, 0.8)
+    border-radius: 32px
+    overflow: hidden
+    height: 100%
+    transition: all 0.3s ease
+    position: relative
+    box-shadow: 0 24px 24px -16px rgba(0, 0, 0, 0.5), inset 2px 4px 32px rgba(255, 255, 255, 0.1)
+    &:hover
+        transform: translateY(-2px)
+        box-shadow: 0 24px 24px -16px rgba(5, 5, 5, 0.9), inset 0 0 32px rgba(255, 255, 255, 0.08)
+
+.header
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding: 24px 24px 16px 24px
+
+.icon
+    width: 40px
+    height: 40px
+    border-radius: 12px
+    background: rgba(255, 255, 255, 0.05)
+    display: flex
+    align-items: center
+    justify-content: center
+    color: rgba(255, 255, 255, 0.7)
+
+.riskBadge
+    padding: 8px 20px
+    border-radius: 50px
+    font-size: 14px
+    font-weight: 200
+    &.highRisk
+        border: 1px solid #DD473C
+        background: rgba(221, 71, 60, 0.1)
+        color: #FF6B6B
+    &.mediumRisk
+        border: 1px solid #E2B922
+        background: rgba(226, 185, 34, 0.1)
+        color: #FEE176
+    &.lowRisk
+        border: 1px solid #61D18E
+        background: rgba(97, 209, 142, 0.1)
+        color: #61D18E
+
+.content
+    padding: 20px
+    h3
+        margin: 0 0 8px
+        font-size: 18px
+        font-weight: 600
+        color: rgba(255, 255, 255, 0.9)
+
+.date
+    margin: 0 0 16px
+    font-size: 14px
+    color: rgba(255, 255, 255, 0.5)
+
+.riskScore
+    margin-bottom: 20px
+    display: flex
+    flex-direction: column
+    align-items: center
+    padding: 16px
+    background: rgba(0, 0, 0, 0.2)
+    border-radius: 16px
+
+.scoreLabel
+    font-size: 14px
+    color: rgba(255, 255, 255, 0.5)
+    margin-bottom: 8px
+
+.scoreValue
+    font-size: 32px
+    font-weight: 600
+    color: white
+
+.stats
+    display: flex
+    justify-content: space-between
+    margin-bottom: 20px
+    gap: 12px
+
+.statItem
+    flex: 1
+    display: flex
+    flex-direction: column
+    align-items: center
+    padding: 12px
+    background: rgba(0, 0, 0, 0.2)
+    border-radius: 12px
+
+.statLabel
+    font-size: 12px
+    color: rgba(255, 255, 255, 0.5)
+    margin-bottom: 4px
+    text-align: center
+
+.statValue
+    font-size: 18px
+    font-weight: 600
+    color: white
+
+.previewButton
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 8px
+    padding: 12px
+    background: rgba(255, 255, 255, 0.05)
+    border-radius: 12px
+    color: rgba(255, 255, 255, 0.7)
+    font-size: 14px
+    font-weight: 500
+    transition: all 0.3s ease
+    &:hover
+        background: rgba(255, 255, 255, 0.1)
+        color: white
+    svg
+        transition: transform 0.3s ease
+    &:hover svg
+        transform: translateX(4px) 

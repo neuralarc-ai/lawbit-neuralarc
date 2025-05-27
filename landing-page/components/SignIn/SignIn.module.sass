@@ -1,0 +1,161 @@
+.container
+    width: 100%
+    min-height: 100vh
+    background-color: #0A0A0A
+    color: #FFFFFF
+    display: flex
+    flex-direction: column
+
+.mainContent
+    flex: 1
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    padding: 2rem 1rem
+    gap: 2rem
+
+.signInContainer
+    width: 100%
+    max-width: 400px
+    padding: 2rem
+    background: rgba(255, 255, 255, 0.03)
+    border-radius: 16px
+    backdrop-filter: blur(10px)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2)
+
+.title
+    font-size: 24px
+    font-weight: 600
+    text-align: center
+    margin-bottom: 2rem
+    color: white
+
+.form
+    display: flex
+    flex-direction: column
+    gap: 1.5rem
+
+.formGroup
+    display: flex
+    flex-direction: column
+    gap: 0.5rem
+
+    label
+        font-size: 14px
+        font-weight: 500
+        color: rgba(255, 255, 255, 0.7)
+
+    input
+        padding: 12px 16px
+        border-radius: 8px
+        border: 1px solid rgba(255, 255, 255, 0.1)
+        background: rgba(255, 255, 255, 0.05)
+        color: white
+        font-size: 16px
+        transition: all 0.3s ease
+
+        &:focus
+            outline: none
+            border-color: rgba(138, 48, 255, 0.5)
+            box-shadow: 0 0 0 2px rgba(138, 48, 255, 0.2)
+
+        &:disabled
+            opacity: 0.7
+            cursor: not-allowed
+
+.error
+    color: #FF3B77
+    font-size: 12px
+    margin-top: 4px
+
+.submitButton
+    width: 100%
+    padding: 14px
+    border: none
+    border-radius: 8px
+    background: linear-gradient(135deg, #8A30FF 0%, #F842B2 100%)
+    color: white
+    font-size: 16px
+    font-weight: 600
+    cursor: pointer
+    transition: all 0.3s ease
+    margin-top: 1rem
+
+    &:hover:not(:disabled)
+        transform: translateY(-2px)
+        box-shadow: 0 8px 16px rgba(138, 48, 255, 0.3)
+
+    &:disabled
+        opacity: 0.7
+        cursor: not-allowed
+
+.divider
+    display: flex
+    align-items: center
+    text-align: center
+    margin: 1.5rem 0
+    color: rgba(255, 255, 255, 0.5)
+
+    &::before,
+    &::after
+        content: ''
+        flex: 1
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1)
+
+    span
+        padding: 0 1rem
+        font-size: 14px
+
+.googleButton
+    width: 100%
+    padding: 12px
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    border-radius: 8px
+    background: rgba(255, 255, 255, 0.05)
+    color: white
+    font-size: 16px
+    font-weight: 500
+    cursor: pointer
+    transition: all 0.3s ease
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 12px
+
+    &:hover:not(:disabled)
+        background: rgba(255, 255, 255, 0.1)
+        border-color: rgba(255, 255, 255, 0.2)
+
+    &:disabled
+        opacity: 0.7
+        cursor: not-allowed
+
+.googleIcon
+    width: 24px
+    height: 24px
+
+.links
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 1rem
+    margin-top: 1.5rem
+
+    a
+        color: rgba(255, 255, 255, 0.7)
+        text-decoration: none
+        font-size: 14px
+        transition: color 0.3s ease
+
+        &:hover
+            color: white
+
+.forgotPassword
+    color: #FF3B77
+
+.signUp
+    font-weight: 500
+
+// ... rest of the existing styles ... 

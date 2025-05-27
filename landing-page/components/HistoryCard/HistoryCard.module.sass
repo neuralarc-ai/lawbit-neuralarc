@@ -1,0 +1,167 @@
+.card
+    background: #fff
+    border-radius: 8px
+    overflow: hidden
+    height: 100%
+    transition: all 0.3s ease
+    position: relative
+
+.header
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding: 24px 24px 16px 24px
+
+.icon
+    width: 72px
+    height: 72px
+    border-radius: 50px
+    background: #D0C3B59E
+    display: flex
+    align-items: center
+    justify-content: center
+    color: rgba(255, 255, 255, 0.7)
+
+.typeBadge
+    padding: 8px 20px
+    border-radius: 50px
+    font-size: 14px
+    font-weight: 500
+    background: #A8B0B8
+    color: #202020
+
+.content
+    padding: 20px
+    h3
+        margin: 0 0 8px
+        font-size: 18px
+        font-weight: 600
+        color: #000
+
+.date
+    margin: 0 0 16px
+    font-size: 14px
+    color: #696969
+
+.statusRow
+    display: flex
+    align-items: center
+    gap: 16px
+    margin-bottom: 20px
+
+.status
+    padding: 8px 20px
+    border-radius: 50px
+    background: #B7BEAE8A
+    color: #3C4C27
+    font-size: 12px
+    font-weight: 500
+
+.option
+    display: flex
+    align-items: center
+    padding: 8px 20px
+    border-radius: 50px
+    gap: 6px
+    background: #2020200D
+    color: #202020
+    font-size: 14px
+    svg
+        color: #202020
+
+.parties
+    margin-bottom: 20px
+    display: flex
+    flex-direction: column
+    gap: 8px
+
+.party
+    display: flex
+    align-items: center
+    gap: 8px
+    font-size: 14px
+
+.partyLabel
+    color: #696969
+
+.partyValue
+    color: #202020
+
+.stats
+    margin-bottom: 20px
+
+.statsLabel
+    font-size: 14px
+    color: #696969
+    margin-bottom: 8px
+
+.statsTags
+    display: flex
+    flex-wrap: wrap
+    gap: 8px
+
+.statTag
+    padding: 8px 20px
+    border-radius: 50px
+    font-size: 14px
+    border: 1px solid #696969
+    color: #202020
+    display: flex
+    align-items: center
+    gap: 4px
+    &.warning
+        border: 1.5px solid #DD473C
+    &.moreTag
+        background: #D4D4D4
+        color: #202020
+        font-size: 14px
+        cursor: pointer
+        transition: all 0.3s ease
+        &:hover
+            background: #202020
+            color: white
+
+.jurisdictionLabel
+    color: #696969
+
+.jurisdiction
+    font-size: 14px
+    color: #202020
+    span
+        color: #696969
+
+.moreButton
+    padding: 4px 8px
+    border-radius: 6px
+    background: #D4D4D4
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    color: rgba(255, 255, 255, 0.6)
+    font-size: 12px
+    cursor: pointer
+    transition: all 0.3s ease
+    &:hover
+        background: rgba(255, 255, 255, 0.1)
+        color: white
+
+.previewButton
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 8px
+    padding: 12px
+    background: rgba(255, 255, 255, 0.05)
+    border-radius: 12px
+    color: rgba(255, 255, 255, 0.7)
+    font-size: 14px
+    font-weight: 500
+    transition: all 0.3s ease
+    border: none
+    width: 100%
+    cursor: pointer
+    &:hover
+        background: rgba(255, 255, 255, 0.1)
+        color: white
+    img
+        transition: transform 0.3s ease
+    &:hover img
+        transform: translateX(4px) 

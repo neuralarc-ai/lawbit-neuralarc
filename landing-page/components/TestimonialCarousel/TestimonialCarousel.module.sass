@@ -1,0 +1,69 @@
+.container
+    width: 100%
+    max-width: 1400px
+    margin: 0 auto
+    padding: 80px 20px
+    position: relative
+    overflow: hidden
+    background: #F8F7F3
+
+.carouselContainer
+    position: relative
+    height: 300px
+    display: flex
+    align-items: center
+    justify-content: center
+
+.card
+    position: absolute
+    width: 420px
+    background: #fff
+    border-radius: 8px
+    padding: 64px 32px
+    &.active
+        transform: scale(1.1)
+        z-index: 2
+        background: #202020
+        position: relative
+
+.testimonialText
+    color: #000
+    font-size: 16px
+    line-height: 1.6
+    margin-bottom: 24px
+    .card.active &
+        color: #fff
+
+.author
+    color: #000
+    font-size: 18px
+    font-weight: 600
+    margin-bottom: 4px
+    .card.active &
+        color: #fff
+
+.position
+    color: #000
+    font-size: 14px
+    opacity: 0.6
+    .card.active &
+        color: #fff
+
+.navigationDots
+    display: flex
+    justify-content: center
+    gap: 8px
+    margin-top: 40px
+
+.dot
+    width: 8px
+    height: 8px
+    border-radius: 50%
+    background: #D4D4D4
+    cursor: pointer
+    transition: all 0.3s ease
+
+    &.active
+        background: #202020
+        width: 24px
+        border-radius: 4px 

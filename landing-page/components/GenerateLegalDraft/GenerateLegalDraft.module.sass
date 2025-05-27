@@ -1,0 +1,795 @@
+@import ../../styles/variables
+
+$p1:rgb(255, 255, 255) // Primary color variable
+
+.container
+  display: flex
+  flex-direction: column
+  width: 100%
+  height: 100%
+  color: $n1
+  position: relative
+  border-radius: 12px
+  background: #FFFFFF
+  animation: containerReveal 1s cubic-bezier(0.16, 1, 0.3, 1)
+  transform-origin: center
+  perspective: 1000px
+  padding: 24px
+  background: url('/images/pattern.png') center/cover no-repeat
+  background-origin: border-box
+  background-clip: padding-box, border-box
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08)
+
+.innerContainer
+  position: relative
+  width: 100%
+  height: 100%
+  backdrop-filter: blur(24px)
+  border-radius: 8px
+  background: #FFFFFF
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2)
+
+.content
+  display: flex
+  flex-direction: column
+  gap: 24px
+  max-width: 100%
+  width: 100%
+  padding: 24px
+  position: relative
+  height: 100%
+  background: #FFFFFF
+  backdrop-filter: blur(24px)
+  border-radius: 8px
+
+.title
+  font-size: 24px
+  font-weight: 600
+  margin-bottom: 8px
+  color: #000000
+
+.inputArea
+  width: 100%
+  min-height: 300px
+  margin-bottom: 20px
+  border-radius: 8px
+  background: #38312C
+  position: relative
+  overflow: hidden
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
+
+.textarea
+  width: 100%
+  height: 100%
+  min-height: 260px
+  padding: 20px
+  resize: none
+  background: #38312C
+  color: #fff
+  font-size: 16px
+  border: none
+  outline: none
+  font-family: inherit
+  &::placeholder
+    color: #696969
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
+
+.legalDisclaimer
+  margin-top: 24px
+  margin-bottom: 24px
+  width: 100%
+  background: #E8E8E8
+  border: 1px solid #0000000D
+  border-radius: 12px
+  overflow: hidden
+  transition: all 0.3s ease
+  position: relative
+
+.disclaimerHeader
+  width: 100%
+  padding: 16px
+  background: rgba(255, 255, 255, 0.03)
+  border: none
+  cursor: pointer
+  display: flex
+  align-items: center
+  justify-content: space-between
+  transition: all 0.3s ease
+  margin: 0
+  border-bottom: 1px solid #0000000D
+
+  &:hover
+    background: rgba(255, 255, 255, 0.05)
+
+.disclaimerTitle
+  font-size: 16px
+  font-weight: 600
+  color: rgba(255, 255, 255, 0.9)
+  margin: 0
+  display: flex
+  align-items: center
+  gap: 12px
+
+.chevron
+  width: 24px
+  height: 24px
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+  transform-origin: center
+  color: rgba(255, 255, 255, 0.7)
+  flex-shrink: 0
+
+  &.open
+    transform: rotate(180deg)
+
+.disclaimerContent
+  max-height: 0
+  overflow: hidden
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+  background: rgba(255, 255, 255, 0.02)
+  opacity: 0
+  transform: translateY(-10px)
+  
+  &.open
+    max-height: 500px
+    padding: 20px
+    opacity: 1
+    transform: translateY(0)
+
+.disclaimerText
+  color: rgba(255, 255, 255, 0.7)
+  font-size: 14px
+  line-height: 1.6
+  
+  p
+    margin: 12px 0
+    display: flex
+    align-items: flex-start
+    gap: 8px
+    
+    &:before
+      content: "•"
+      color: #8A30FF
+      font-size: 16px
+      line-height: 1
+    
+    &:first-child
+      margin-top: 0
+    &:last-child
+      margin-bottom: 0
+
+.acceptanceRow
+  display: flex
+  align-items: center
+  padding: 16px
+  background: rgba(255, 255, 255, 0.02)
+  border-top: 1px solid #0000000D
+  cursor: pointer
+  transition: all 0.3s ease
+  gap: 0
+  opacity: 0.5
+  pointer-events: none
+  
+  &:hover
+    background: rgba(255, 255, 255, 0.03)
+
+  &.enabled
+    opacity: 1
+    pointer-events: auto
+    cursor: pointer
+
+    .checkbox
+      cursor: pointer
+      pointer-events: auto
+
+      input
+        cursor: pointer
+        pointer-events: auto
+
+      .checkmark
+        cursor: pointer
+        pointer-events: auto
+
+  .checkbox
+    position: relative
+    display: inline-block
+    width: 20px
+    height: 20px
+    margin-right: 0
+    cursor: not-allowed
+    pointer-events: none
+    z-index: 1
+
+    input
+      position: absolute
+      opacity: 0
+      cursor: not-allowed
+      pointer-events: none
+      height: 20px
+      width: 20px
+      z-index: 2
+
+    .checkmark
+      position: absolute
+      top: 0
+      left: 0
+      width: 20px
+      height: 20px
+      background: rgba(255, 255, 255, 0.1)
+      border: 1px solid rgba(255, 255, 255, 0.2)
+      border-radius: 4px
+      transition: all 0.2s ease
+      cursor: not-allowed
+      pointer-events: none
+      z-index: 1
+
+      &:after
+        content: ""
+        position: absolute
+        display: none
+        left: 6px
+        top: 2px
+        width: 5px
+        height: 10px
+        border: solid white
+        border-width: 0 2px 2px 0
+        transform: rotate(45deg)
+
+    input:checked ~ .checkmark
+      background: #8A30FF
+      border-color: #8A30FF
+
+    input:checked ~ .checkmark:after
+      display: block
+
+    &:hover .checkmark
+      background: rgba(255, 255, 255, 0.15)
+
+    input:checked:hover ~ .checkmark
+      background: #7929E9
+
+  .acceptanceLabel
+    color: rgba(255, 255, 255, 0.7)
+    font-size: 14px
+    user-select: none
+    flex: 1
+    font-weight: 500
+    margin-left: -4px
+    padding-left: 0
+
+  .acceptanceStatus
+    font-size: 12px
+    font-weight: 500
+    padding: 4px 8px
+    border-radius: 12px
+    transition: all 0.3s ease
+    
+    &.pending
+      color: #FFD700
+      background: rgba(255, 215, 0, 0.1)
+      border: 1px solid rgba(255, 215, 0, 0.3)
+      
+    &.accepted
+      color: #32CD32
+      background: rgba(50, 205, 50, 0.1)
+      border: 1px solid rgba(50, 205, 50, 0.3)
+
+.actionsRow
+  display: flex
+  justify-content: center
+  align-items: center
+  margin-top: 24px
+  width: 100%
+  position: relative
+
+.generateButton
+  display: flex
+  align-items: center
+  justify-content: center
+  width: auto
+  padding: 16px 24px
+  border-radius: 8px
+  background: #302D2A
+  color: #FFFFFF
+  font-size: 16px
+  font-weight: 600
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
+  transform-style: preserve-3d
+  border: none
+  cursor: pointer
+  position: relative
+  overflow: hidden
+  min-width: 120px
+  text-align: center
+  margin: 24px auto 0
+  gap: 8px
+
+  &:disabled
+    opacity: 0.7
+    cursor: not-allowed
+    transform: none
+    box-shadow: none
+
+  &:active
+    transform: scale(0.98)
+    transition-duration: 0.1s
+
+  &.loading
+    background: linear-gradient(135deg, rgba(138, 48, 255, 0.6) 0%, rgba(248, 66, 178, 0.6) 100%)
+    color: transparent
+    pointer-events: none
+    position: relative
+    overflow: hidden
+
+    &::after
+      content: ''
+      position: absolute
+      top: 0
+      left: -100%
+      width: 50%
+      height: 100%
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0))
+      animation: shimmer 1.5s infinite linear
+
+    .loadingContent
+      position: absolute
+      top: 50%
+      left: 50%
+      transform: translate(-50%, -50%)
+      display: flex
+      align-items: center
+      justify-content: center
+      gap: 8px
+      color: $n1
+      font-size: 14px
+      font-weight: 600
+
+      .spinner
+        width: 16px
+        height: 16px
+        border: 2px solid rgba(255, 255, 255, 0.3)
+        border-top-color: $n1
+        border-radius: 50%
+        animation: spin 0.8s linear infinite
+
+  .arrowIcon
+    transition: transform 0.3s ease
+    transform: translateX(0)
+
+  &:disabled
+    .arrowIcon
+      opacity: 0.5
+
+.resultSection
+  width: 100%
+  padding: 24px
+  background: rgba(41, 41, 41, 0.25)
+  backdrop-filter: blur(10px)
+  border: 1px solid rgba(255, 255, 255, 0.08)
+  border-radius: 16px
+  animation: resultReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+  transform-style: preserve-3d
+
+@keyframes resultReveal
+  0%
+    opacity: 0
+    transform: translateY(30px) rotateX(-10deg)
+  100%
+    opacity: 1
+    transform: translateY(0) rotateX(0)
+
+.generatingOverlay
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: 12px
+    z-index: 998
+    background: rgba(30, 30, 40, 0.55)
+    backdrop-filter: blur(20px)
+    display: flex
+    align-items: center
+    justify-content: center
+    transition: background 0.3s
+
+.generatingBox
+    background: rgba(255, 255, 255, 0.97)
+    border-radius: 16px
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1)
+    padding: 48px 64px
+    width: 100%
+    max-width: 600px
+    margin: 20px
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    gap: 32px
+    border: 1px solid rgba(0, 0, 0, 0.05)
+
+.generatingTitle
+    font-size: 24px
+    font-weight: 600
+    color: #232323
+    margin-bottom: 8px
+    text-align: center
+    line-height: 1.4
+    letter-spacing: -0.01em
+
+.generatingProgressBarWrapper
+    min-width: 400px
+    margin: 0 auto
+    height: 8px
+    background: #F0F0F0
+    border-radius: 4px
+    overflow: hidden
+    margin-bottom: 24px
+    position: relative
+
+.generatingProgressBar
+    height: 100%
+    background: linear-gradient(90deg, #3987BE 0%, #D48EA3 100%)
+    border-radius: 4px
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1)
+    position: relative
+    overflow: hidden
+
+.generatingProgressBar::after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)
+    animation: shimmer 2s infinite
+
+.generatingStepper
+    display: flex
+    flex-direction: column
+    gap: 24px
+    width: 100%
+    max-width: 300px
+    margin-top: 8px
+    justify-content: center
+    z-index: 999
+
+.generatingStep
+    display: flex
+    align-items: center
+    gap: 16px
+    opacity: 0.6
+    transition: all 0.3s ease
+
+.generatingStepCircle
+    width: 36px
+    height: 36px
+    border-radius: 50%
+    display: flex
+    background: #DADADA
+    align-items: center
+    justify-content: center
+    border: 12px solid #DADADA
+    margin-top: 2px
+    margin-right: 12px
+    transition: background 0.3s, border 0.3s
+    @media (max-width: 600px)
+        width: 32px
+        height: 32px
+        border-width: 10px
+
+.generatingStepCircleCompleted
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 36px
+    height: 36px
+    z-index: 999
+    border-radius: 50%
+    margin-right: 12px
+    background: #4C4740
+    border: 12px solid #29241E
+    margin-top: 2px
+    transition: background 0.3s, border 0.3s
+    @media (max-width: 600px)
+        width: 32px
+        height: 32px
+        border-width: 10px
+
+.generatingStepCircleActive
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 36px
+    height: 36px
+    border-radius: 50%
+    margin-right: 12px
+    background: #4C474073
+    border: 12px solid #29241E
+    margin-top: 2px
+    transition: background 0.3s, border 0.3s
+
+.generatingStepText
+    color: #888
+    font-size: 24px
+    font-weight: 500
+    display: flex
+    flex-direction: column
+    gap: 2px
+    transition: color 0.3s
+
+.generatingStepTextActive
+    color: #202020
+    font-size: 24px
+    font-weight: 700
+    display: flex
+    flex-direction: column
+    gap: 2px
+    transition: color 0.3s
+
+.generatingStepTextCompleted
+    color: #202020
+    font-size: 24px
+    font-weight: 500
+    display: flex
+    flex-direction: column
+    gap: 2px
+    transition: color 0.3s
+
+.generatingStepTitle
+    font-size: 24px
+    font-weight: 600
+    margin-bottom: 2px
+
+.generatingStepDesc
+    font-size: 16px
+    font-weight: 400
+    color: #666
+    opacity: 0.85
+    margin-left: 1px
+    
+@keyframes spin
+    from
+        transform: rotate(0deg)
+    to
+        transform: rotate(360deg)
+
+
+.contractContent
+  color: $n1
+  font-size: 14px
+  line-height: 1.6
+  white-space: pre-wrap
+  margin: 24px 0
+  max-height: 500px
+  overflow-y: auto
+  padding: 20px
+  background: rgba(0, 0, 0, 0.2)
+  border-radius: 12px
+  border: 1px solid rgba(255, 255, 255, 0.1)
+  &::-webkit-scrollbar
+    width: 8px
+  &::-webkit-scrollbar-track
+    background: rgba(255, 255, 255, 0.05)
+    border-radius: 4px
+  &::-webkit-scrollbar-thumb
+    background: rgba(255, 255, 255, 0.1)
+    border-radius: 4px
+    &:hover
+      background: rgba(255, 255, 255, 0.2)
+
+.downloadSection
+  display: flex
+  justify-content: center
+  gap: 16px
+  margin-top: 24px
+  flex-wrap: wrap
+
+.previewActions
+    display: flex
+    justify-content: space-between
+    align-items: center
+    width: 100%
+    margin-top: 16px
+
+.actions
+    display: flex
+    gap: 12px
+    align-items: center
+    justify-content: flex-end
+
+.backButton
+    width: 72px
+    height: 72px
+    background: #0000000D
+    border-radius: 50px
+    padding: 14px
+    backdrop-filter: blur(10px)
+    -webkit-backdrop-filter: blur(10px)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    transition: all 0.3s ease
+    color: white
+    
+    .imageWrapper
+        width: 44px
+        height: 44px
+        border-radius: 50%
+        background: #1E342F
+        display: flex
+        align-items: center
+        justify-content: center
+
+.actionButton
+    @extend .backButton
+    
+    .imageWrapper
+        width: 44px
+        height: 44px
+        border-radius: 50%
+        background: #1E342F
+        display: flex
+        align-items: center
+        justify-content: center
+
+    &:active:not(:disabled)
+        transform: translateY(0)
+        background: rgba(255, 255, 255, 0.07)
+
+    &:disabled
+        opacity: 0.5
+        cursor: not-allowed
+        background: rgba(255, 255, 255, 0.02)
+
+    svg
+        width: 24px
+        height: 24px
+        transition: transform 0.3s ease
+
+.newDraftButton
+  display: flex
+  align-items: center
+  justify-content: center
+  margin: 32px auto 0
+  padding: 12px 24px
+  font-size: 14px
+  font-weight: 600
+  color: #1c1c1c
+  background: #FFFFFF
+  border: none
+  border-radius: 30px
+  cursor: pointer
+  transition: all 0.3s ease
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2)
+
+@keyframes spin
+  from
+    transform: rotate(0deg)
+  to
+    transform: rotate(360deg)
+
+@keyframes pulse
+  0%
+    opacity: 0.5
+    transform: translate(-50%, -50%) scale(0.95)
+  50%
+    opacity: 1
+    transform: translate(-50%, -50%) scale(1.05)
+  100%
+    opacity: 0.5
+    transform: translate(-50%, -50%) scale(0.95)
+
+@keyframes shimmer
+  0%
+    transform: translateX(-100%)
+  100%
+    transform: translateX(100%)
+
+.modeToggle
+  display: flex
+  gap: 8px
+  margin-bottom: 24px
+  background: rgba(41, 41, 41, 0.25)
+  padding: 4px
+  border-radius: 12px
+  width: fit-content
+
+.modeButton
+  padding: 8px 16px
+  border-radius: 8px
+  background: transparent
+  color: rgba($n1, 0.7)
+  font-size: 14px
+  font-weight: 500
+  transition: all 0.3s ease
+  border: none
+  cursor: pointer
+
+  &:hover
+    color: $n1
+    background: rgba(255, 255, 255, 0.1)
+
+  &.active
+    background: rgba(255, 255, 255, 0.1)
+    color: $n1
+
+  &:disabled
+    opacity: 0.5
+    cursor: not-allowed
+
+.previewContainer
+  display: flex
+  flex-direction: column
+  gap: 24px
+  width: 100%
+
+.previewContent
+  width: 100%
+  min-height: 400px
+  max-height: 600px
+  overflow-y: auto
+  background: #302D2A
+  border-radius: 16px
+  padding: 24px
+
+.contractText
+  white-space: pre-wrap
+  font-family: 'Space Mono', monospace
+  font-size: 14px
+  line-height: 1.8
+  color: $n1
+  margin: 0
+  letter-spacing: 0.5px
+
+  &::first-line
+    font-weight: bold
+
+.progressText
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  color: $n1
+  font-size: 14px
+  font-weight: 500
+  z-index: 2
+  white-space: nowrap
+
+.progressBar
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  width: 100%
+  height: 100%
+  background: rgba(0, 0, 0, 0.2)
+  z-index: 1
+  border-radius: 8px
+  overflow: hidden
+
+.progressFill
+  height: 100%
+  background: linear-gradient(135deg, rgba($p1, 0.8) 0%, rgba(#6950FB, 0.8) 100%)
+  transition: width 0.3s ease 
+
+@keyframes fadeIn
+  0%
+    opacity: 0
+    transform: scale(0.98)
+  100%
+    opacity: 1
+    transform: scale(1)
+
+@keyframes slideIn
+  0%
+    opacity: 0
+    transform: translateY(-10px)
+  100%
+    opacity: 1
+    transform: translateY(0)
