@@ -10,7 +10,11 @@ import { User } from '@supabase/supabase-js';
 import TokenUsage from '../TokenUsage';
 import SubscriptionModal from '../SubscriptionModal';
 
-const Navbar = () => {
+interface NavbarProps {
+    hideRightMenu?: boolean;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ hideRightMenu = false }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
     const [user, setUser] = useState<User | null>(null);
@@ -22,6 +26,7 @@ const Navbar = () => {
     const isContractsPage = pathname === '/contracts';
     const isResponsibleAIPage = pathname === '/responsible-ai';
     const isDisclaimerPage = pathname === '/disclaimer';
+    const isAuthPage = pathname?.startsWith('/auth');
     const supabase = createClient();
 
     useEffect(() => {
@@ -79,8 +84,8 @@ const Navbar = () => {
     return (
         <nav className={styles.navbar}>
             <div className={styles.container}>
-                {(isHistoryPage || isTermsPage || isPrivacyPage || isContractsPage || isResponsibleAIPage || isDisclaimerPage) ? (
-                isContractsPage ? (
+                {(isHistoryPage || isTermsPage || isPrivacyPage || isContractsPage || isResponsibleAIPage || isDisclaimerPage || isAuthPage) ? (
+                (isContractsPage || isAuthPage) ? (
                     <Link href="/" className={styles.logoLink}>
                         <div className={styles.logoContainer}>
                             <Image 
@@ -95,8 +100,8 @@ const Navbar = () => {
                 ) : (
                     <button
                         className={styles.backButton}
-                        onClick={handleBack}
-                        aria-label="Back"
+                        onClick={() => router.back()}
+                        aria-label="Go back"
                     >
                         <div className={styles.menuSquare}>
                             <div className={styles.menuCircle}>
@@ -110,6 +115,7 @@ const Navbar = () => {
             ) : (
                 <div className={styles.placeholder} />
             )}
+            {!hideRightMenu && (
                 <button
                     className={styles.menuButton}
                     onClick={toggleMenu}
@@ -122,6 +128,7 @@ const Navbar = () => {
                         </div>
                     </div>
                 </button>
+            )}
             </div>
 
             <AnimatePresence>

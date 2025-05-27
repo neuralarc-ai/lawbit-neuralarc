@@ -66,8 +66,13 @@ export default function SignIn() {
                     />
                 </div>
 
-                <div className={styles.field}>
-                    <label className={styles.label}>Password</label>
+                <div className={`${styles.field} ${styles.passwordField}`}>
+                    <div className={styles.labelContainer}>
+                        <label className={`${styles.label} ${styles.inlineLabel}`}>Password</label>
+                        <Link href="/auth/forgot-password" className={styles.forgotPassword}>
+                            Forgot Password?
+                        </Link>
+                    </div>
                     <div className={styles.passwordInputContainer}>
                         <input
                             type={showPassword ? "text" : "password"}
@@ -96,10 +101,6 @@ export default function SignIn() {
                             )}
                         </button>
                     </div>
-                </div>
-
-                <div className={styles.forgotPassword}>
-                    <Link href="/auth/forgot-password">Forgot Password?</Link>
                 </div>
             </div>
 

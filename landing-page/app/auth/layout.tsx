@@ -9,6 +9,7 @@ import { motion } from 'framer-motion'
 import StarField from '@/components/StarField'
 import Footer from '@/components/Footer'
 import Logo from '@/components/Logo'
+import Navbar from '@/components/Navbar'
 
 // Define image paths
 const AUTH_IMAGES = {
@@ -39,6 +40,7 @@ export default function AuthLayout({
     return (
         <div className={`${styles.auth} fustat`}>
             <div className={styles.starfieldWrapper}>
+                <Navbar hideRightMenu={true} />
                 <motion.div 
                     className={styles.starfieldWrapper}
                     variants={starfieldVariants}
@@ -54,13 +56,11 @@ export default function AuthLayout({
             
             <div className={styles.authContainer}>
                 <div className={styles.authLeft}>
-                    <div className={`${styles.logoText} fustat`}>Lawbit</div>
                     <div className={styles.authImageContainer}>
                         <Image 
                             src={authImage} 
                             alt={isSignUp ? "Sign Up Illustration" : "Login Illustration"} 
-                            width={640} 
-                            height={486}
+                            fill
                             className={styles.authImage}
                             priority
                         />

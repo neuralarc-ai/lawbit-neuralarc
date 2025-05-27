@@ -5,7 +5,6 @@
     padding: 80px 20px
     position: relative
     overflow: hidden
-    background: #F8F7F3
 
 .carouselContainer
     position: relative
@@ -23,7 +22,16 @@
     &.active
         transform: scale(1.1)
         z-index: 2
-        background: #202020
+        background: url('/images/testimonial-bg.png')
+        &::after
+            content: ""
+            position: absolute
+            inset: 0
+            margin: 24px
+            border-radius: 8px
+            color: #000
+            background: #fff
+            z-index: -1
         position: relative
 
 .testimonialText
@@ -32,7 +40,7 @@
     line-height: 1.6
     margin-bottom: 24px
     .card.active &
-        color: #fff
+        color: #000
 
 .author
     color: #000
@@ -40,14 +48,14 @@
     font-weight: 600
     margin-bottom: 4px
     .card.active &
-        color: #fff
+        color: #000
 
 .position
     color: #000
     font-size: 14px
     opacity: 0.6
     .card.active &
-        color: #fff
+        color: #000
 
 .navigationDots
     display: flex

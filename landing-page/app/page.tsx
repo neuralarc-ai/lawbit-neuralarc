@@ -15,42 +15,50 @@ const features = [
     {
         icon: '/icons/feature-1.svg',
         title: 'Document Creation',
-        description: 'Generate compliant legal documents in minutes with our AI-powered templates and customization tools.'
+        description: 'Generate compliant legal documents in minutes with our AI-powered templates and customization tools.',
+        bgImage: '/images/feature-1.png'
     },
     {
         icon: '/icons/feature-2.svg',
         title: 'Risk Analysis',
-        description: 'Identify potential issues in contracts before signing with our advanced AI risk assessment technology.'
+        description: 'Identify potential issues in contracts before signing with our advanced AI risk assessment technology.',
+        bgImage: '/images/feature-2.png'
     },
     {
         icon: '/icons/feature-3.svg',
         title: 'Legal Assistance',
-        description: 'Get AI-powered guidance on legal matters with our intelligent assistant that understands legal context.'
+        description: 'Get AI-powered guidance on legal matters with our intelligent assistant that understands legal context.',
+        bgImage: '/images/feature-3.png'
     }
 ]
 
 const benefits = [
     {
         icon: '/icons/choose-1.svg',
-        title: 'Smart legal solutions, without the hefty price tag',
-        description: 'Reduce your legal expenses by automating repetitive tasks and process documents.'
+        title: 'Smart legal help, without big costs',
+        description: 'Reduce your legal expenses by automating repetitive tasks and process documents.',
+        bgImage: '/images/benefit-1.png'
     },
     {
         icon: '/icons/choose-2.svg',
-        title: 'Generate documents at lightning speed',
-        description: 'Generate legal documents in minutes instead of hours with AI assistance.'
+        title: 'Create documents in minutes, not hours',
+        description: 'Generate legal documents in minutes instead of hours with AI assistance.',
+        bgImage: '/images/benefit-2.png'
     },
     {
         icon: '/icons/choose-3.svg',
-        title: 'Catch legal risks before they cost you,  with 95% accuracy',
-        description: 'Our AI has been trained on millions of legal documents to identify potential risks.'
+        title: 'Spot legal risks early, with 95% accuracy',
+        description: 'Our AI has been trained on millions of legal documents to identify potential risks.',
+        bgImage: '/images/benefit-3.png'
     },
     {
         icon: '/icons/choose-4.svg',
-        title: 'Seamless compliance with every legal update',
-        description: 'Our system keeps in sync with the latest legal requirements to ensure compliance.'
+        title: 'Stay compliant with every legal update',
+        description: 'Our system keeps in sync with the latest legal requirements to ensure compliance.',
+        bgImage: '/images/benefit-4.png'
     }
 ]
+
 
 const pricing = [
     {
@@ -209,19 +217,31 @@ export default function Home() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
                             >
-                                <div className={styles.featureCard}>
-                                    <div className={styles.iconWrapper}>
-                                        <div className={styles.iconSquare}>
+                                <div 
+                                    className={styles.featureCardBg}
+                                    style={{
+                                        backgroundImage: `url(${feature.bgImage})`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
+                                    }}
+                                >
+                                    <div className={styles.featureCard}>
+                                        <div className={styles.iconWrapper}>
+                                            <div className={styles.iconSquare}>
                                                 <Image 
                                                     src={feature.icon}
                                                     alt={feature.title}
-                                                    width={44}
-                                                    height={44}
+                                                    width={48}
+                                                    height={48}
+                                                    className={styles.featureIcon}
                                                 />
+                                            </div>
+                                        </div>
+                                        <h3 className={styles.featureTitle}>{feature.title}</h3>
+                                        <div className={styles.featureDescription} data-bg-index={index % 3}>
+                                            <p>{feature.description}</p>
                                         </div>
                                     </div>
-                                    <h3>{feature.title}</h3>
-                                    <p>{feature.description}</p>
                                 </div>
                             </motion.div>
                         ))}
@@ -253,20 +273,33 @@ export default function Home() {
                         {benefits.map((benefit, index) => (
                             <motion.div 
                                 key={benefit.title}
-                                className={styles.benefitCard}
+                                className={styles.benefitCardWrapper}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
+                                style={{
+                                    backgroundImage: `url(${benefit.bgImage})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    borderRadius: '12px',
+                                    padding: '24px'
+                                }}
                             >
-                                <Image 
-                                    src={benefit.icon}
-                                    alt={benefit.title}
-                                    width={72}
-                                    height={72}
-                                    className={styles.benefitIcon}
-                                />
-                                <h3 className={styles.benefitTitle}>{benefit.title}</h3>
-                                <p className={styles.benefitDescription}>{benefit.description}</p>
+                                <div className={styles.benefitCard}>
+                                    <div className={styles.benefitHeader}>
+                                        <div className={styles.benefitIconWrapper}>
+                                            <Image 
+                                                src={benefit.icon}
+                                                alt={benefit.title}
+                                                width={56}
+                                                height={56}
+                                                className={styles.benefitIcon}
+                                            />
+                                        </div>
+                                        <h3 className={styles.benefitTitle}>{benefit.title}</h3>
+                                    </div>
+                                    <p className={styles.benefitDescription}>{benefit.description}</p>
+                                </div>
                             </motion.div>
                         ))}
                     </div>
