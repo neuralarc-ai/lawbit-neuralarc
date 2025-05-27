@@ -2232,7 +2232,7 @@ const CreateContract = () => {
                 </div>
                 <div className={styles.actionsSection}>
                     <div className={styles.preferenceSelector}>
-                        <label className="text-black">Choose a preference</label>
+                        <label className="text-white !important">Choose a preference</label>
                         <div className={styles.tabSelector}>
                             <button
                                 type="button"

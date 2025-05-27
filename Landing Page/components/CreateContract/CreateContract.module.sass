@@ -2,14 +2,18 @@
 
 .container
     display: flex
-    gap: 32px
+    gap: 16px
     height: 100%
     background: #FFFFFF
     backdrop-filter: blur(150px)
     padding: 24px
     border-radius: 16px
+    background: url('/images/pattern.png') center/cover no-repeat
+    background-origin: border-box
+    background-clip: padding-box, border-box
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08)
     @media (max-width: 768px)
-        padding: 24px
+        padding: 16px
         display: flex
         flex-direction: column
         gap: 24px
@@ -18,10 +22,13 @@
 
 .formSection
     flex: 1
-    max-width: 400px
+    max-width: 450px
     @media (max-width: 768px)
         max-width: 100%
         width: 100%
+    background: #FFFFFF
+    border-radius: 8px
+    padding: 24px
 
 .field
     margin-bottom: 24px
@@ -338,9 +345,9 @@
 .tabSelector
     display: flex
     gap: 8px
-    padding: 6px
+    padding: 4px
     background: #FAF9F8
-    border-radius: 12px
+    border-radius: 8px
     backdrop-filter: blur(10px)
     width: 100%
     @media (max-width: 1000px)
@@ -470,7 +477,7 @@
 
 .actionsSection
     display: flex
-    color: #000
+    color: #FFF
     flex-direction: row
     align-items: flex-start
     justify-content: space-between
@@ -493,7 +500,7 @@
 .buttonWrapper
     width: 72px
     height: 72px
-    background: #0000000D
+    background: #302D2A4D
     border-radius: 50px
     padding: 14px
     backdrop-filter: blur(10px)
@@ -1101,7 +1108,7 @@
 
 .prefernceSelector
     .label
-        color: #000
+        color: #FFFFFF !important
 
 .generatingOverlay
     position: absolute

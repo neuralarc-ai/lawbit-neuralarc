@@ -29,10 +29,9 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
                             <Image 
                                 src="/neuralpath.svg" 
                                 alt="Neural Paths" 
-                                width={140} 
+                                width={240} 
                                 height={60} 
                             />
-                            <span className={styles.trademark}>TM</span>
                         </div>
                     </div>
                      
