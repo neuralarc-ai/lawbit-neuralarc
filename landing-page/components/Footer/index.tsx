@@ -26,12 +26,19 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
                             Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit, A thing by&nbsp;
                         </p>
                         <div className={styles.trademarkContainer}>
-                            <Image 
-                                src="/neuralpath.svg" 
-                                alt="Neural Paths" 
-                                width={240} 
-                                height={60} 
-                            />
+                            <a
+                                href="https://neuralarc.ai"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ display: "inline-block" }}
+                            >
+                                <Image 
+                                    src="/neuralpath.svg" 
+                                    alt="Neural Paths" 
+                                    width={240} 
+                                    height={60} 
+                                />
+                            </a>
                         </div>
                     </div>
                      

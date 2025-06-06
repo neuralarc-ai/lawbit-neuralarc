@@ -12,10 +12,7 @@ import Logo from '@/components/Logo'
 import Navbar from '@/components/Navbar'
 
 // Define image paths
-const AUTH_IMAGES = {
-    login: '/images/login-illustration.png',
-    signup: '/images/signup-illustration.png'
-}
+const AUTH_IMAGE = '/images/auth-illustration.png'
 
 export default function AuthLayout({
     children,
@@ -24,12 +21,12 @@ export default function AuthLayout({
 }) {
     const pathname = usePathname()
     const isSignUp = pathname === '/auth/signup'
-    const authImage = isSignUp ? AUTH_IMAGES.signup : AUTH_IMAGES.login
+    const authImage = AUTH_IMAGE
 
     const starfieldVariants = {
         hidden: { opacity: 0 },
         visible: {
-            opacity: 1,
+            opacity: 1, 
             transition: {
                 duration: 1,
                 ease: "easeOut"
@@ -59,7 +56,7 @@ export default function AuthLayout({
                     <div className={styles.authImageContainer}>
                         <Image 
                             src={authImage} 
-                            alt={isSignUp ? "Sign Up Illustration" : "Login Illustration"} 
+                            alt="Auth Illustration"
                             fill
                             className={styles.authImage}
                             priority
