@@ -157,8 +157,8 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                 // Configure request differently based on type
                 if (type === 'jurisdiction') {
                     // For jurisdictions
-                const request = {
-                    input: newValue,
+                    const request = {
+                        input: newValue,
                         types: ['(regions)']
                     };
                     const results = await autocompleteServiceRef.current.getPlacePredictions(request);
@@ -204,6 +204,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                         }
                     }
                 } else {
+                    // For addresses
                     // First query - addresses
                     const addressRequest = {
                         input: newValue,
